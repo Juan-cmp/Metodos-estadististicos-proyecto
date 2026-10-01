@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 2 Introducción y Objetivos | Proyecto final: Métodos Estadísticos</title>
+  <meta name="description" content="Informe y Análisis Estadístico Final del Curso de Métodos Estadísticos." />
+  <meta name="generator" content="bookdown 0.47 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 2 Introducción y Objetivos | Proyecto final: Métodos Estadísticos" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Informe y Análisis Estadístico Final del Curso de Métodos Estadísticos." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 2 Introducción y Objetivos | Proyecto final: Métodos Estadísticos" />
+  
+  <meta name="twitter:description" content="Informe y Análisis Estadístico Final del Curso de Métodos Estadísticos." />
+  
+
+<meta name="author" content="Camilo Padilla &amp; Juan Campo" />
+
+
+<meta name="date" content="2026-10-01" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="eda.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Proyecto Final - Métodos Estadísticos</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Presentación</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#estructura-del-documento"><i class="fa fa-check"></i><b>1.1</b> Estructura del Documento</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introducción y Objetivos</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#contexto"><i class="fa fa-check"></i><b>2.1</b> Contexto</a></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#problem%C3%A1tica"><i class="fa fa-check"></i><b>2.2</b> Problemática</a></li>
+<li class="chapter" data-level="2.3" data-path="intro.html"><a href="intro.html#objetivos-del-proyecto"><i class="fa fa-check"></i><b>2.3</b> Objetivos del Proyecto</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="intro.html"><a href="intro.html#objetivo-general"><i class="fa fa-check"></i><b>2.3.1</b> Objetivo general</a></li>
+<li class="chapter" data-level="2.3.2" data-path="intro.html"><a href="intro.html#objetivos-especificos"><i class="fa fa-check"></i><b>2.3.2</b> Objetivos especificos</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="intro.html"><a href="intro.html#justificaci%C3%B3n"><i class="fa fa-check"></i><b>2.4</b> Justificación</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="eda.html"><a href="eda.html"><i class="fa fa-check"></i><b>3</b> Análisis Exploratorio de Datos (EDA)</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="eda.html"><a href="eda.html#dataset-y-ficha-tecnica"><i class="fa fa-check"></i><b>3.1</b> Dataset y ficha tecnica</a></li>
+<li class="chapter" data-level="3.2" data-path="eda.html"><a href="eda.html#importamos-librerias"><i class="fa fa-check"></i><b>3.2</b> Importamos librerias</a></li>
+<li class="chapter" data-level="3.3" data-path="eda.html"><a href="eda.html#carga-de-datos"><i class="fa fa-check"></i><b>3.3</b> Carga de Datos</a></li>
+<li class="chapter" data-level="3.4" data-path="eda.html"><a href="eda.html#diccionario-de-variables"><i class="fa fa-check"></i><b>3.4</b> Diccionario de Variables</a></li>
+<li class="chapter" data-level="3.5" data-path="eda.html"><a href="eda.html#exploraci%C3%B3n-del-data-set."><i class="fa fa-check"></i><b>3.5</b> Exploración del data set.</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="eda.html"><a href="eda.html#exploraci%C3%B3n-de-la-variable-de-respuesta"><i class="fa fa-check"></i><b>3.5.1</b> Exploración de la variable de respuesta</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="eda.html"><a href="eda.html#anlisis-univariado-de-las-variables"><i class="fa fa-check"></i><b>3.6</b> Anlisis Univariado de las variables</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="eda.html"><a href="eda.html#analisis-boxplot-tiempo-de-curado"><i class="fa fa-check"></i><b>3.6.1</b> Analisis boxplot tiempo de curado</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con Bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Proyecto final: Métodos Estadísticos</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="intro" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">Capítulo 2</span> Introducción y Objetivos<a href="intro.html#intro" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="contexto" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Contexto<a href="intro.html#contexto" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>En la ingeniería civil y los materiales de construcción, la resistencia a la compresión del concreto es una propiedad fundamental que determina la calidad y seguridad de las estructuras. Su propiedad mecánica más crítica es la resistencia a la compresión, ya que determina la capacidad de carga que tiene el material y una estructura de sopartar sin colapasar. De forma tradicional, la verificación de resistencia necesita un periodo estándar de 28 días de curado, es decir el proceso de control de la humedad y la temperatura para garantizar que el cemento mantenga la hidratación adecuada durante sus primeras etapas de endurecimiento.</p>
+</div>
+<div id="problemática" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Problemática<a href="intro.html#problem%C3%A1tica" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>En la industria de la construcción y la ingeniería civil, la resistencia de la compresión de concreto es la propiedad mecánica que garantiza la seguridad de millones de estructuras en el mundo. La sustitución parcial de cemento por ceniza volante tambien conocido como “fly ash” es una alternativa económica y sostenible en la construcción; sin embargo, al ser un material de reacción lenta, existe incertidumbre sobre si compromete la resistencia del concreto en edades tempranas (1 a 7 días) o si la incrementa con un mayor tiempo de curado (28 a 90+ días).</p>
+<p>Por tanto, el problema central radica en determinar estadísticamente: ¿En qué medida el uso de ceniza volante y el tiempo de curado influyen en la resistencia a la compresión del concreto a lo largo de sus distintas etapas de maduración?</p>
+</div>
+<div id="objetivos-del-proyecto" class="section level2 hasAnchor" number="2.3">
+<h2><span class="header-section-number">2.3</span> Objetivos del Proyecto<a href="intro.html#objetivos-del-proyecto" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="objetivo-general" class="section level3 hasAnchor" number="2.3.1">
+<h3><span class="header-section-number">2.3.1</span> Objetivo general<a href="intro.html#objetivo-general" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Evaluar el impacto de la incorporación de ceniza volante (Fly Ash) y del tiempo de curado sobre la resistencia a la compresión del concreto, mediante análisis inferencial y pruebas de hipótesis, para determinar la viabilidad técnica y el comportamiento mecánico de estas formulaciones.</p>
+</div>
+<div id="objetivos-especificos" class="section level3 hasAnchor" number="2.3.2">
+<h3><span class="header-section-number">2.3.2</span> Objetivos especificos<a href="intro.html#objetivos-especificos" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li><p>Estimar los intervalos de confianza y verificar los supuestos de normalidad para la resistencia del concreto y la dosificación de ceniza volante.</p></li>
+<li><p>Comparar la resistencia media a la compresión entre mezclas con y sin ceniza volante, calculando el tamaño del efecto.</p></li>
+</ol>
+<p>3.Evaluar las diferencias de resistencia entre las etapas de curado (temprana, estándar y tardía) mediante análisis de varianza y pruebas post-hoc.</p>
+<ol start="4" style="list-style-type: decimal">
+<li>Determinar el grado de correlación entre la cantidad de ceniza volante dosificada y la resistencia alcanzada en el material.</li>
+</ol>
+</div>
+</div>
+<div id="justificación" class="section level2 hasAnchor" number="2.4">
+<h2><span class="header-section-number">2.4</span> Justificación<a href="intro.html#justificaci%C3%B3n" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>La ceniza volante es un residuo industrial considerablemente más barato que el cemento tradicional; validar su eficacia permite reducir los costos de fabricación de las mezclas sin comprometer la calidad.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="eda.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": false,
+    "twitter": false,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": null,
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["Proyecto_Final_Metodos_Estadisticos.pdf", "Proyecto_Final_Metodos_Estadisticos.epub"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

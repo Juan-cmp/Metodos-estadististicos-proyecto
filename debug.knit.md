@@ -1,18 +1,7 @@
 ---
 title: "Proyecto final: Métodos Estadísticos"
 author: "Camilo Padilla & Juan Campo"
-date: "`r Sys.Date()`"
-site: bookdown::bookdown_site
-documentclass: book
-bibliography: [book.bib]
-biblio-style: apalike
-link-citations: yes
-description: "Informe y Análisis Estadístico Final del Curso de Métodos Estadísticos."
----
----
-title: "Proyecto final: Métodos Estadísticos"
-author: "Camilo Padilla & Juan Campo"
-date: "`r Sys.Date()`"
+date: "2026-10-01"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib]
@@ -33,9 +22,7 @@ En este trabajo se presenta el Análisis Exploratorio de Datos (EDA), pruebas de
 - **Capítulo 2**: Análisis Exploratorio de Datos (EDA).
 - **Capítulos siguientes**: Modelación y Conclusiones.
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.align = 'center')
-```
+
 
 <!--chapter:end:index.Rmd-->
 
@@ -71,11 +58,6 @@ La ceniza volante es un residuo industrial considerablemente más barato que el 
 
 <!--chapter:end:01-introduccion.Rmd-->
 
----
-output:
-  pdf_document: default
-  html_document: default
----
 # Análisis Exploratorio de Datos (EDA) {#eda}
 
 En este capítulo analizamos las variables cuantitativas del dataset de Concrete Compressive Strength (Resistencia del Concreto).
@@ -94,7 +76,8 @@ En este capítulo analizamos las variables cuantitativas del dataset de Concrete
 
 ## Importamos librerias
 
-```{r}
+
+``` r
 library(tidyverse) 
 library(moments) 
 library(patchwork) 
@@ -109,8 +92,10 @@ library(janitor)
 
 ## Carga de Datos
 
-```{r eda-summary, eval=FALSE}
-Concrete_Data <- read_excel("C:/Users/Asus/Downloads/Proyecto_Final_Metodos_Estadisticos (3)/Proyecto_Final_Metodos_Estadisticos/concrete+compressive+strength/Concrete_Data.xls")
+
+``` r
+library(readxl)
+Concrete_Data <- read_excel("concrete+compressive+strength/Concrete_Data.xls")
 
 df<- Concrete_Data
 ```
@@ -135,7 +120,8 @@ Todas las variables son cuantitativas continuas:
 ## Exploración del data set.
 
 Resumimos los nombres de las variables
-```{r}
+
+``` r
 df_clean <- df %>%
   rename(
     cemento          = `Cement (component 1)(kg in a m^3 mixture)`,
@@ -152,7 +138,8 @@ df_clean <- df %>%
 
 ### Exploración de la variable de respuesta
 
-```{r Concrete Compressive strenght}
+
+``` r
 df_clean %>% summarise(n = length(resistencia),
                  media = mean(resistencia),
                  sd = sd(resistencia),
@@ -164,11 +151,18 @@ df_clean %>% summarise(n = length(resistencia),
                  maximo = max(resistencia),
                  asim = skewness(resistencia),
                  curtosis = kurtosis(resistencia))
+```
 
+```
+## # A tibble: 1 × 11
+##       n media    sd mediana   RIC    Q1    Q3 minimo maximo  asim curtosis
+##   <int> <dbl> <dbl>   <dbl> <dbl> <dbl> <dbl>  <dbl>  <dbl> <dbl>    <dbl>
+## 1  1030  35.8  16.7    34.4  22.4  23.7  46.1   2.33   82.6 0.416     2.68
 ```
 Vemos que las 1030 observaciones de mezclas de concreto, tienen una resistencia de comprension de 35.817 MPa, con una desviación estándar de 16.70 MPa. Además, el 50% de las mezclas tienen una resistencia igual o menor a 34.442 MPa. Además, se observa una mezcla de concreto experimental con resistencia de 85.59 MPa siendo esta la observación con mayor Resistencia final a la compresión y otras con la minima resistencia entre las observaciones con 2.33 MPa.
 
-```{r}
+
+``` r
 options(scipen = 999)
 df_clean |> 
   ggplot(aes(x = resistencia)) +
@@ -187,12 +181,18 @@ df_clean |>
   ) +
   theme_bw()
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/unnamed-chunk-3-1.png" alt="plot of chunk unnamed-chunk-3"  />
+<p class="caption">plot of chunk unnamed-chunk-3</p>
+</div>
 la resistencia muestra una distribución con forma parecida a una **simétrica con forma de campana**, centrada en torno a los $35\text{ MPa}$ y abarcando un rango desde los $2.3$ hasta los $82.6\text{ MPa}$. La curva de densidad sugiere un comportamiento cercano a la **distribución normal**, reflejando una muestra equilibrada que abarca desde concretos convencionales hasta mezclas de alto rendimiento.
 ## Exploracion de las varibles independientes
 
 Creamos la siguiente tabla para observar de forma descriptiva las variables independientes que analizaremos y asi complementar el analisis de los boxplots con ella.
 
-```{r}
+
+``` r
 tabla_independientes <- df_clean |> select(ceniza, edad) |> 
   pivot_longer(
     cols = everything(),
@@ -214,10 +214,19 @@ tabla_independientes <- df_clean |> select(ceniza, edad) |>
     curtosis = round(kurtosis(valor), 3))
 
 tabla_independientes
-  
 ```
 
-```{r}
+```
+## # A tibble: 2 × 12
+##   variables     n media    sd mediana   RIC    Q1    Q3 minimo maximo  asim
+##   <chr>     <int> <dbl> <dbl>   <dbl> <dbl> <dbl> <dbl>  <dbl>  <dbl> <dbl>
+## 1 ceniza     1030  54.2  64.0       0  118.     0  118.      0   200. 0.537
+## 2 edad       1030  45.7  63.2      28   49      7   56       1   365  3.26 
+## # ℹ 1 more variable: curtosis <dbl>
+```
+
+
+``` r
 df_clean |> 
   ggplot(aes(x = ceniza)) +
   geom_histogram(
@@ -235,10 +244,15 @@ df_clean |>
   ) +
   theme_bw()
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/unnamed-chunk-5-1.png" alt="plot of chunk unnamed-chunk-5"  />
+<p class="caption">plot of chunk unnamed-chunk-5</p>
+</div>
 La distribución es fuertemente bimodal e inflada en ceros. Presenta una concentración masiva en los $0\text{ kg/m}^3$ correspondiente a las mezclas tradicionales de control ($55\%$ de la muestra), seguida de un segundo agrupamiento entre los $80$ y $160\text{ kg/m}^3$ en aquellas formulaciones donde sí se sustituyó cemento por ceniza. Esta notable asimetría y falta de continuidad confirma la **no normalidad** de la variabl.
 
----
-```{r}
+
+``` r
 df_clean |> 
   ggplot(aes(x = edad)) +
   geom_histogram(
@@ -256,12 +270,17 @@ df_clean |>
   ) +
   theme_bw() 
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/unnamed-chunk-6-1.png" alt="plot of chunk unnamed-chunk-6"  />
+<p class="caption">plot of chunk unnamed-chunk-6</p>
+</div>
 La distribución exhibe un marcado sesgo positivo con picos, concentrando la gran mayoría de las observaciones en los $28\text{ días}$ la cual es la edad estándar de diseño y en periodos tempranos ($\le 7\text{ días}$). La densidad decae drásticamente a partir de los $56\text{ días}$, extendiéndose en una cola larga hasta los $365\text{ días}$, lo cual evidencia una distribución **no normal** explicada por el diseño experimental enfocado en etapas normativas de obra.
 
 ## Anlisis Univariado de las variables
 
-```{r Boxplots-univariado-independientes, fig.height=12, fig.alt=12}
 
+``` r
 # 1. Boxplot de Ceniza Volante
 p1 <- df %>%
   ggplot(aes(x = "", y = `Fly Ash (component 3)(kg in a m^3 mixture)`)) +
@@ -297,9 +316,15 @@ p3 <- df %>%
   theme_bw()
 ```
 
-```{r}
+
+``` r
 p1 
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/unnamed-chunk-7-1.png" alt="plot of chunk unnamed-chunk-7"  />
+<p class="caption">plot of chunk unnamed-chunk-7</p>
+</div>
 ### Analisis boxplot Fly Ash
 
 Se observa una distribución atipica con alta dispersión de los datos,  además por la tabla anterior la media del uso de ceniza en las mezclas es $54.2 kg/m^3$ y una desviación estándar de $64 kg/m^3$
@@ -309,11 +334,16 @@ Sin embargo el diagrama de caja muestra que el 50% de los valores de ceniza coin
 ¿porque hay este comportamiento de los datos centrado en cero?
 esto se debe a que el conjunto de datos contiene mezclas de control convencionales elaboradas exclusivamente con cemento tradicional para servir de base comparativa. Por ende, la ceniza volante actúa como un componente opcional.
 
----
 ### Analisis boxplot tiempo de curado
-```{r}
+
+``` r
 p2
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/unnamed-chunk-8-1.png" alt="plot of chunk unnamed-chunk-8"  />
+<p class="caption">plot of chunk unnamed-chunk-8</p>
+</div>
 
 La variable $\text{Age}$ (días de curado) presenta una concentración en edades tempranas y unagran dispersión, reflejada en un tiempo promedio de curado de $45.7\text{ días}$ y una desviación estándar de $63.2\text{ días}$.
 
@@ -322,54 +352,180 @@ El boxplot nos permite observar una distribución sesgada a la derecha, tambien 
 **¿Por qué existen valores atípicos tan elevados?**  
 En la práctica de la ingeniería civil, los ensayos estándar de control de calidad se realizan de forma rutinaria a los $7$, $14$ y principalmente a los $28\text{ días}$. Los tiempos de curado prolongados ($> 90\text{ días}$) son ensayos de investigación concebidos para evaluar la durabilidad a largo plazo y la reacción tardía de adiciones minerales como la ceniza volante.
 
----
 
 
-```{r}
+
+``` r
 p3
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/unnamed-chunk-9-1.png" alt="plot of chunk unnamed-chunk-9"  />
+<p class="caption">plot of chunk unnamed-chunk-9</p>
+</div>
 
 
 Para la variable objetivo "resistencia", se observa un comportamiento mucho más homogéneo y balanceado, con un promedio de resistencia de $35.8\text{ MPa}$ y una desviación estándar de $16.7\text{ MPa}$.
 
 El 50% de los datos tienen una resistencia menor o igual a $34.5\text{ MPa}$, mostrando una **notable cercanía con el promedio de resistencia de las mezclas de concreto ($35.8\text{ MPa}$)**. En cuanto al rango intercuartílico, el $25\%$ de las mezclas con menor resistencia registran valores iguales o inferiores a $23.7\text{ MPa}$, mientras que el $75\%$ de las muestras se sitúan por debajo de los $46.1\text{ MPa}$. Los bigotes abarcan un rango que va desde un mínimo de $2.3\text{ MPa}$ (concreto de muy baja resistencia) hasta aproximadamente los $80.0\text{ MPa}$. Se aprecian únicamente unos pocos **valores atípicos superiores** que alcanzan un máximo de $82.6\text{ MPa}$.  
 
----
 #Analisis Bivariado
 
-```{r, fig.width= 13, fig.height= 13}
+
+``` r
 df_clean %>% select(ceniza, edad, resistencia) |> 
   ggpairs()
 ```
 
-```{r }
+<div class="figure" style="text-align: center">
+<img src="figure/unnamed-chunk-10-1.png" alt="plot of chunk unnamed-chunk-10"  />
+<p class="caption">plot of chunk unnamed-chunk-10</p>
+</div>
 
+
+``` r
 # --- 1. PRUEBAS ESTADÍSTICAS DE NORMALIDAD ---
 
 # Prueba de Shapiro-Wilk para la variable de respuesta
 shapiro.test(df_clean$resistencia)
+```
 
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  df_clean$resistencia
+## W = 0.97979, p-value = 0.00000000009023
+```
+
+``` r
 # Prueba de Shapiro-Wilk para las variables independientes
 shapiro.test(df_clean$ceniza)
-shapiro.test(df_clean$edad)
+```
 
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  df_clean$ceniza
+## W = 0.76201, p-value < 0.00000000000000022
+```
+
+``` r
+shapiro.test(df_clean$edad)
+```
+
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  df_clean$edad
+## W = 0.59071, p-value < 0.00000000000000022
+```
+
+``` r
 # Tip: Si deseas aplicar la prueba a TODAS las columnas al mismo tiempo
 lapply(df_clean, shapiro.test)
+```
 
+```
+## $cemento
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  X[[i]]
+## W = 0.95896, p-value < 0.00000000000000022
+## 
+## 
+## $escoria
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  X[[i]]
+## W = 0.81241, p-value < 0.00000000000000022
+## 
+## 
+## $ceniza
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  X[[i]]
+## W = 0.76201, p-value < 0.00000000000000022
+## 
+## 
+## $agua
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  X[[i]]
+## W = 0.9804, p-value = 0.0000000001473
+## 
+## 
+## $superplast
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  X[[i]]
+## W = 0.86605, p-value < 0.00000000000000022
+## 
+## 
+## $agregado_grueso
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  X[[i]]
+## W = 0.98245, p-value = 0.0000000008346
+## 
+## 
+## $agregado_fino
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  X[[i]]
+## W = 0.98067, p-value = 0.0000000001843
+## 
+## 
+## $edad
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  X[[i]]
+## W = 0.59071, p-value < 0.00000000000000022
+## 
+## 
+## $resistencia
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  X[[i]]
+## W = 0.97979, p-value = 0.00000000009023
+```
 
+``` r
 # --- 2. VALIDACIÓN VISUAL (Q-Q PLOTS) ---
 
 # Gráfico para la Resistencia
 qqnorm(df_clean$resistencia, pch = 1, frame = FALSE, 
        main = "Gráfico Q-Q: Resistencia a la Compresión")
 qqline(df_clean$resistencia, col = "red", lwd = 2)
+```
 
+<div class="figure" style="text-align: center">
+<img src="figure/unnamed-chunk-11-1.png" alt="plot of chunk unnamed-chunk-11"  />
+<p class="caption">plot of chunk unnamed-chunk-11</p>
+</div>
+
+``` r
 # Gráfico para la Edad
 qqnorm(df_clean$edad, pch = 1, frame = FALSE, 
        main = "Gráfico Q-Q: Tiempo de Curado (Edad)")
 qqline(df_clean$edad, col = "red", lwd = 2)
-
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/unnamed-chunk-11-2.png" alt="plot of chunk unnamed-chunk-11"  />
+<p class="caption">plot of chunk unnamed-chunk-11</p>
+</div>
 1. Interpretación del Gráfico Q-Q para la Resistencia a la Compresión
 
 Comportamiento central: En el centro del gráfico, la gran mayoría de los puntos se alinean bastante bien sobre la línea diagonal roja. Esto indica que los valores medios de resistencia (alrededor de los 35 MPa) tienen un comportamiento muy cercano a una distribución simétrica normal.
@@ -377,16 +533,123 @@ Comportamiento central: En el centro del gráfico, la gran mayoría de los punto
 Desviación en los extremos (Colas): El gráfico seguramente muestra que los puntos se separan ligeramente de la línea roja en el extremo inferior (esquina inferior izquierda) y en el extremo superior (esquina superior derecha).
 
 Conclusión: Esta pequeña desviación en los extremos es típica de variables que están acotadas (la resistencia no puede ser negativa) o que tienen unos pocos valores atípicamente altos (mezclas de muy alto rendimiento). Esto concuerda con tu prueba de Shapiro-Wilk ($W = 0.97979$), donde la variable se ve "casi" normal en el centro, pero las ligeras desviaciones en las colas hacen que la prueba estadística la rechace matemáticamente.
-```{r}
+
+``` r
 # Pruebas estadísticas (Shapiro-Wilk)
 shapiro.test(df_clean$cemento)
+```
+
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  df_clean$cemento
+## W = 0.95896, p-value < 0.00000000000000022
+```
+
+``` r
 shapiro.test(df_clean$agua)
+```
+
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  df_clean$agua
+## W = 0.9804, p-value = 0.0000000001473
+```
+
+``` r
 shapiro.test(df_clean$agregado_grueso)
+```
+
+```
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  df_clean$agregado_grueso
+## W = 0.98245, p-value = 0.0000000008346
+```
+
+``` r
 # (Puedes copiar y pegar para el resto de variables)
 
 # Aplicar Shapiro-Wilk a todas las columnas de df_clean de un solo golpe
 resultados_normalidad <- lapply(df_clean, shapiro.test)
 resultados_normalidad
+```
+
+```
+## $cemento
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  X[[i]]
+## W = 0.95896, p-value < 0.00000000000000022
+## 
+## 
+## $escoria
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  X[[i]]
+## W = 0.81241, p-value < 0.00000000000000022
+## 
+## 
+## $ceniza
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  X[[i]]
+## W = 0.76201, p-value < 0.00000000000000022
+## 
+## 
+## $agua
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  X[[i]]
+## W = 0.9804, p-value = 0.0000000001473
+## 
+## 
+## $superplast
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  X[[i]]
+## W = 0.86605, p-value < 0.00000000000000022
+## 
+## 
+## $agregado_grueso
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  X[[i]]
+## W = 0.98245, p-value = 0.0000000008346
+## 
+## 
+## $agregado_fino
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  X[[i]]
+## W = 0.98067, p-value = 0.0000000001843
+## 
+## 
+## $edad
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  X[[i]]
+## W = 0.59071, p-value < 0.00000000000000022
+## 
+## 
+## $resistencia
+## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  X[[i]]
+## W = 0.97979, p-value = 0.00000000009023
 ```
 Al evaluar las nueve variables del conjunto de datos mediante la prueba de normalidad de Shapiro-Wilk, se obtienen las siguientes conclusiones estadísticas para documentar en tu Análisis Exploratorio de Datos (EDA):
 
@@ -400,15 +663,27 @@ Impacto metodológico para el modelo: Dado que las variables no son normales por
 
 
 
-```{r}
+
+``` r
 # Gráficos Q-Q para ver visualmente la distribución
 qqnorm(df_clean$agua, pch = 1, frame = FALSE, main = "Gráfico Q-Q: Cantidad de Agua")
 qqline(df_clean$agua, col = "red", lwd = 2)
+```
 
+<div class="figure" style="text-align: center">
+<img src="figure/unnamed-chunk-13-1.png" alt="plot of chunk unnamed-chunk-13"  />
+<p class="caption">plot of chunk unnamed-chunk-13</p>
+</div>
+
+``` r
 qqnorm(df_clean$cemento, pch = 1, frame = FALSE, main = "Gráfico Q-Q: Cemento")
 qqline(df_clean$cemento, col = "red", lwd = 2)
-
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/unnamed-chunk-13-2.png" alt="plot of chunk unnamed-chunk-13"  />
+<p class="caption">plot of chunk unnamed-chunk-13</p>
+</div>
 2. Interpretación del Gráfico Q-Q para el Tiempo de Curado (Edad)
 
 Falta de alineación y forma de "escalera": Al mirar este gráfico, los puntos no siguen una línea recta continua. En su lugar, vas a ver agrupaciones densas de puntos dispuestas de forma horizontal (como si fueran escalones) y muy separadas de la línea roja de referencia.
