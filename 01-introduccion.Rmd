@@ -1,0 +1,29 @@
+# Introducción y Objetivos {#intro}
+
+## Contexto
+
+En la ingeniería civil y los materiales de construcción, la resistencia a la compresión del concreto es una propiedad fundamental que determina la calidad y seguridad de las estructuras. Su propiedad mecánica más crítica es la resistencia a la compresión, ya que determina la capacidad de carga que tiene el material y una estructura de sopartar sin colapasar. De forma tradicional, la verificación de resistencia necesita un periodo estándar de 28 días de curado, es decir el proceso de control de la humedad y la temperatura para garantizar que el cemento mantenga la hidratación adecuada durante sus primeras etapas de endurecimiento.
+
+## Problemática
+En la industria de la construcción y la ingeniería civil, la resistencia de la compresión de concreto es la propiedad mecánica que garantiza la seguridad de millones de estructuras en el mundo. La sustitución parcial de cemento por ceniza volante tambien conocido como "fly ash" es una alternativa económica y sostenible en la construcción; sin embargo, al ser un material de reacción lenta, existe incertidumbre sobre si compromete la resistencia del concreto en edades tempranas (1 a 7 días) o si la incrementa con un mayor tiempo de curado (28 a 90+ días).
+
+Por tanto, el problema central radica en determinar estadísticamente: ¿En qué medida el uso de ceniza volante y el tiempo de curado influyen en la resistencia a la compresión del concreto a lo largo de sus distintas etapas de maduración?
+
+## Objetivos del Proyecto
+### Objetivo general
+Evaluar el impacto de la incorporación de ceniza volante (Fly Ash) y del tiempo de curado sobre la resistencia a la compresión del concreto, mediante análisis inferencial y pruebas de hipótesis, para determinar la viabilidad técnica y el comportamiento mecánico de estas formulaciones.
+
+### Objetivos especificos 
+
+1. Estimar los intervalos de confianza y verificar los supuestos de normalidad para la resistencia del concreto y la dosificación de ceniza volante. 
+
+2. Comparar la resistencia media a la compresión entre mezclas con y sin ceniza volante, calculando el tamaño del efecto. 
+
+3.Evaluar las diferencias de resistencia entre las etapas de curado (temprana, estándar y tardía) mediante análisis de varianza y pruebas post-hoc.
+
+4. Determinar el grado de correlación entre la cantidad de ceniza volante dosificada y la resistencia alcanzada en el material. 
+    
+## Justificación
+
+La ceniza volante es un residuo industrial considerablemente más barato que el cemento tradicional; validar su eficacia permite reducir los costos de fabricación de las mezclas sin comprometer la calidad.
+

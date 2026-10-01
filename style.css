@@ -1,0 +1,19 @@
+p.caption {
+  color: #777;
+  margin-top: 10px;
+}
+p code {
+  white-space: inherit;
+}
+pre {
+  word-break: normal;
+  word-wrap: normal;
+}
+pre code {
+  white-space: inherit;
+}
+blockquote {
+  border-left: 4px solid #007acc;
+  padding-left: 15px;
+  color: #555;
+}

@@ -1,0 +1,10 @@
+book_filename: "Proyecto_Final_Metodos_Estadisticos"
+output_dir: "docs"
+delete_merged_file: true
+language:
+  ui:
+    chapter_name: "Capítulo "
+rmd_files:
+  - "index.Rmd"
+  - "01-introduccion.Rmd"
+  - "02-eda-concrete.Rmd"

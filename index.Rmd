@@ -1,0 +1,27 @@
+---
+title: "Proyecto final: Métodos Estadísticos"
+author: "Camilo Padilla & Juan Campo"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib]
+biblio-style: apalike
+link-citations: yes
+description: "Informe y Análisis Estadístico Final del Curso de Métodos Estadísticos."
+---
+
+# Presentación
+
+Este documento contiene el proyecto final del curso de **Métodos Estadísticos**. 
+
+En este trabajo se presenta el Análisis Exploratorio de Datos (EDA), pruebas de hipótesis, modelación y conclusiones referentes al conjunto de datos Concrete Compressive Strength (Resistencia del Concreto).
+
+## Estructura del Documento
+
+- **Capítulo 1**: Introducción y Objetivos del Estudio.
+- **Capítulo 2**: Análisis Exploratorio de Datos (EDA).
+- **Capítulos siguientes**: Modelación y Conclusiones.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.align = 'center')
+```
