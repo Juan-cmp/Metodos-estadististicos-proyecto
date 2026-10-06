@@ -27,6 +27,9 @@ library(rstatix)
 library(lmtest)   
 library(car)      
 library(janitor)  
+library(knitr)
+library(kableExtra)
+library(nortest)
 ```
 
 ## Carga de Datos
@@ -43,17 +46,47 @@ Aclaramos que cada observacion representa un ensayo de laboratorio con una recet
 
 Todas las variables son cuantitativas continuas:
 
-| Variable | Nombre en Dataset | Tipo | Unidad | Descripción |
-|:--------------|:--------------|:--------------|:--------------|:--------------|
-| **1. Cemento** | `Cement` | Entrada (Indep.) | $\text{kg/m}^3$ | Componente aglutinante principal. |
-| **2. Escoria de alto horno** | `Blast_Furnace_Slag` | Entrada (Indep.) | $\text{kg/m}^3$ | Subproducto siderúrgico que mejora durabilidad. |
-| **3. Ceniza volante** | `Fly_Ash` | Entrada (Indep.) | $\text{kg/m}^3$ | Subproducto de centrales térmicas. |
-| **4. Agua** | `Water` | Entrada (Indep.) | $\text{kg/m}^3$ | Cantidad de agua. |
-| **5. Superplastificante** | `Superplasticizer` | Entrada (Indep.) | $\text{kg/m}^3$ | Aditivo químico que reduce necesidad de agua. |
-| **6. Agregado Grueso** | `Coarse_Aggregate` | Entrada (Indep.) | $\text{kg/m}^3$ | Grava / Piedra chancada. |
-| **7. Agregado Fino** | `Fine_Aggregate` | Entrada (Indep.) | $\text{kg/m}^3$ | Arena. |
-| **8. Edad** | `Age` | Entrada (Indep.) | Días ($1 \text{ a } 365$) | Tiempo de maduración/curado del concreto. |
-| **9. Resistencia** | `Concrete_Compressive_Strength` | **Salida (Dependiente)** | $\text{MPa}$ | Resistencia final a la compresión. |
+```{r tabla-diccionario}
+diccionario_variables <- tibble(
+  variable = c(
+    "Cemento", "Escoria de alto horno", "Ceniza volante", "Agua",
+    "Superplastificante", "Agregado Grueso", "Agregado Fino", "Edad", "Resistencia"
+  ),
+  nombre_dataset = c(
+    "Cement", "Blast_Furnace_Slag", "Fly_Ash", "Water", "Superplasticizer",
+    "Coarse_Aggregate", "Fine_Aggregate", "Age", "Concrete_Compressive_Strength"
+  ),
+  tipo = c(
+    rep("Entrada (Indep.)", 8), "Salida (Dependiente)"
+  ),
+  unidad = c(
+    rep("kg/m^3", 7), "Dias (1 a 365)", "MPa"
+  ),
+  descripcion = c(
+    "Componente aglutinante principal.",
+    "Subproducto siderurgico que mejora durabilidad.",
+    "Subproducto de centrales termicas.",
+    "Cantidad de agua.",
+    "Aditivo quimico que reduce necesidad de agua.",
+    "Grava / Piedra chancada.",
+    "Arena.",
+    "Tiempo de maduracion/curado del concreto.",
+    "Resistencia final a la compresion."
+  )
+)
+
+diccionario_variables |>
+  knitr::kable(
+    caption = "Diccionario de variables del conjunto de datos",
+    format = ifelse(knitr::is_latex_output(), "latex", "html")
+  ) |>
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    latex_options = c("striped", "hold_position", "scale_down"),
+    full_width = FALSE,
+    position = "center"
+  )
+```
 
 ## Exploración del data set.
 
@@ -73,10 +106,91 @@ df_clean <- df %>%
   )
 ```
 
+## Calidad y estructura de los datos
+
+```{r calidad-datos}
+calidad_datos <- tibble(
+  variable = names(df_clean),
+  clase = map_chr(df_clean, ~ class(.x)[1]),
+  tipo = map_chr(df_clean, typeof),
+  faltantes = map_int(df_clean, ~ sum(is.na(.x))),
+  valores_unicos = map_int(df_clean, n_distinct)
+)
+
+calidad_datos |>
+  knitr::kable(
+    caption = "Calidad y estructura de los datos",
+    digits = 0,
+    format = ifelse(knitr::is_latex_output(), "latex", "html")
+  ) |>
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    latex_options = c("striped", "hold_position"),
+    full_width = FALSE,
+    position = "center"
+  )
+
+duplicados <- tibble(
+  indicador = "Filas duplicadas",
+  cantidad = sum(duplicated(df_clean))
+)
+
+duplicados |>
+  knitr::kable(
+    caption = "Filas duplicadas del conjunto de datos",
+    format = ifelse(knitr::is_latex_output(), "latex", "html")
+  ) |>
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    latex_options = c("striped", "hold_position"),
+    full_width = FALSE,
+    position = "center"
+  )
+```
+
+## Tabla descriptiva de las variables
+
+```{r tabla-descriptiva}
+tabla_descriptiva <- df_clean |>
+  pivot_longer(
+    cols = everything(),
+    names_to = "variable",
+    values_to = "valor"
+  ) |>
+  group_by(variable) |>
+  summarise(
+    n = sum(!is.na(valor)),
+    media = mean(valor, na.rm = TRUE),
+    sd = sd(valor, na.rm = TRUE),
+    mediana = median(valor, na.rm = TRUE),
+    RIC = IQR(valor, na.rm = TRUE),
+    Q1 = quantile(valor, 0.25, na.rm = TRUE),
+    Q3 = quantile(valor, 0.75, na.rm = TRUE),
+    minimo = min(valor, na.rm = TRUE),
+    maximo = max(valor, na.rm = TRUE),
+    asim = skewness(valor, na.rm = TRUE),
+    curtosis = kurtosis(valor, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+tabla_descriptiva |>
+  knitr::kable(
+    caption = "Estadisticas descriptivas de las nueve variables",
+    digits = 3,
+    format = ifelse(knitr::is_latex_output(), "latex", "html")
+  ) |>
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    latex_options = c("striped", "hold_position", "scale_down"),
+    full_width = FALSE,
+    position = "center"
+  )
+```
+
 ### Exploración de la variable de respuesta
 
 ```{r Concrete Compressive strenght}
-df_clean %>% summarise(n = length(resistencia),
+tabla_resistencia <- df_clean %>% summarise(n = length(resistencia),
                  media = mean(resistencia),
                  sd = sd(resistencia),
                  mediana = median(resistencia),
@@ -88,6 +202,18 @@ df_clean %>% summarise(n = length(resistencia),
                  asim = skewness(resistencia),
                  curtosis = kurtosis(resistencia))
 
+tabla_resistencia |>
+  knitr::kable(
+    caption = "Estadisticas descriptivas de la resistencia a la compresion",
+    digits = 3,
+    format = ifelse(knitr::is_latex_output(), "latex", "html")
+  ) |>
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    latex_options = c("striped", "hold_position", "scale_down"),
+    full_width = FALSE,
+    position = "center"
+  )
 ```
 Vemos que las 1030 observaciones de mezclas de concreto, tienen una resistencia de comprension de 35.817 MPa, con una desviación estándar de 16.70 MPa. Además, el 50% de las mezclas tienen una resistencia igual o menor a 34.442 MPa. Además, se observa una mezcla de concreto experimental con resistencia de 85.59 MPa siendo esta la observación con mayor Resistencia final a la compresión y otras con la minima resistencia entre las observaciones con 2.33 MPa.
 
@@ -136,7 +262,18 @@ tabla_independientes <- df_clean |> select(ceniza, edad) |>
     asim    = round(skewness(valor), 3),
     curtosis = round(kurtosis(valor), 3))
 
-tabla_independientes
+tabla_independientes |>
+  knitr::kable(
+    caption = "Estadisticas descriptivas de ceniza volante y edad",
+    digits = 3,
+    format = ifelse(knitr::is_latex_output(), "latex", "html")
+  ) |>
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    latex_options = c("striped", "hold_position", "scale_down"),
+    full_width = FALSE,
+    position = "center"
+  )
   
 ```
 
@@ -254,86 +391,296 @@ Para la variable objetivo "resistencia", se observa un comportamiento mucho más
 
 El 50% de los datos tienen una resistencia menor o igual a $34.5\text{ MPa}$, mostrando una **notable cercanía con el promedio de resistencia de las mezclas de concreto ($35.8\text{ MPa}$)**. En cuanto al rango intercuartílico, el $25\%$ de las mezclas con menor resistencia registran valores iguales o inferiores a $23.7\text{ MPa}$, mientras que el $75\%$ de las muestras se sitúan por debajo de los $46.1\text{ MPa}$. Los bigotes abarcan un rango que va desde un mínimo de $2.3\text{ MPa}$ (concreto de muy baja resistencia) hasta aproximadamente los $80.0\text{ MPa}$. Se aprecian únicamente unos pocos **valores atípicos superiores** que alcanzan un máximo de $82.6\text{ MPa}$.  
 
-#Analisis Bivariado
+## Analisis Bivariado
 
 ```{r, fig.width= 13, fig.height= 13}
-df_clean %>% select(ceniza, edad, resistencia) |> 
+df_clean |> 
   ggpairs()
 ```
 
-```{r }
 
-# --- 1. PRUEBAS ESTADÍSTICAS DE NORMALIDAD ---
-
-# Prueba de Shapiro-Wilk para la variable de respuesta
-shapiro.test(df_clean$resistencia)
-
-# Prueba de Shapiro-Wilk para las variables independientes
-shapiro.test(df_clean$ceniza)
-shapiro.test(df_clean$edad)
-
-# Tip: Si deseas aplicar la prueba a TODAS las columnas al mismo tiempo
-lapply(df_clean, shapiro.test)
-
-
-# --- 2. VALIDACIÓN VISUAL (Q-Q PLOTS) ---
-
-# Gráfico para la Resistencia
-qqnorm(df_clean$resistencia, pch = 1, frame = FALSE, 
-       main = "Gráfico Q-Q: Resistencia a la Compresión")
-qqline(df_clean$resistencia, col = "red", lwd = 2)
-
-# Gráfico para la Edad
-qqnorm(df_clean$edad, pch = 1, frame = FALSE, 
-       main = "Gráfico Q-Q: Tiempo de Curado (Edad)")
-qqline(df_clean$edad, col = "red", lwd = 2)
-
-```
-1. Interpretación del Gráfico Q-Q para la Resistencia a la Compresión
-
-Comportamiento central: En el centro del gráfico, la gran mayoría de los puntos se alinean bastante bien sobre la línea diagonal roja. Esto indica que los valores medios de resistencia (alrededor de los 35 MPa) tienen un comportamiento muy cercano a una distribución simétrica normal.
-
-Desviación en los extremos (Colas): El gráfico seguramente muestra que los puntos se separan ligeramente de la línea roja en el extremo inferior (esquina inferior izquierda) y en el extremo superior (esquina superior derecha).
-
-Conclusión: Esta pequeña desviación en los extremos es típica de variables que están acotadas (la resistencia no puede ser negativa) o que tienen unos pocos valores atípicamente altos (mezclas de muy alto rendimiento). Esto concuerda con tu prueba de Shapiro-Wilk ($W = 0.97979$), donde la variable se ve "casi" normal en el centro, pero las ligeras desviaciones en las colas hacen que la prueba estadística la rechace matemáticamente.
+### Creacion de nuevas variables
 ```{r}
-# Pruebas estadísticas (Shapiro-Wilk)
-shapiro.test(df_clean$cemento)
-shapiro.test(df_clean$agua)
-shapiro.test(df_clean$agregado_grueso)
-# (Puedes copiar y pegar para el resto de variables)
-
-# Aplicar Shapiro-Wilk a todas las columnas de df_clean de un solo golpe
-resultados_normalidad <- lapply(df_clean, shapiro.test)
-resultados_normalidad
+df_fe <- df_clean |> 
+  mutate(
+    # 1. Razón Agua / Cementante (Agua / [Cemento + Ceniza])
+    razon_agua_cementante = agua / (cemento + ceniza),
+    
+    # 2. Porcentaje de Cemento sustituido por Ceniza (0% a ~50%)
+    pct_ceniza = (ceniza / (cemento + ceniza)) * 100,
+    
+    # 3. Clasificación del reemplazo en niveles (para futuros ANOVAs)
+    nivel_ceniza = factor(case_when(
+      pct_ceniza == 0 ~ "0% (Control)",
+      pct_ceniza > 0 & pct_ceniza <= 20 ~ "Bajo (<= 20%)",
+      pct_ceniza > 20 ~ "Alto (> 20%)"
+    ), levels = c("0% (Control)", "Bajo (<= 20%)", "Alto (> 20%)")),
+    
+    # 4. Transformación Logarítmica de la Edad (Linealiza la ganancia de resistencia)
+    log_edad = log(edad),
+    
+    # 5. Etapas estándar de curado
+    etapa_curado = factor(case_when(
+      edad <= 7 ~ "Temprano (<= 7d)",
+      edad > 7 & edad <= 28 ~ "Estándar (14-28d)",
+      edad > 28 ~ "Tardío (> 28d)"
+    ), levels = c("Temprano (<= 7d)", "Estándar (14-28d)", "Tardío (> 28d)"))
+  )
 ```
-Al evaluar las nueve variables del conjunto de datos mediante la prueba de normalidad de Shapiro-Wilk, se obtienen las siguientes conclusiones estadísticas para documentar en tu Análisis Exploratorio de Datos (EDA):
 
-Rechazo generalizado de la normalidad: Todas las variables analizadas arrojaron un p-valor estrictamente inferior al nivel de significancia de $0.05$. En consecuencia, se rechaza la hipótesis nula ($H_0$) para todo el conjunto de datos y se concluye estadísticamente que ninguna variable sigue una distribución normal perfecta.   
+### Tabla descriptiva de las nuevas variables
 
-Variables con desviación severa (Alta asimetría o inflación de ceros): Las variables edad ($W = 0.59071$), ceniza ($W = 0.76201$), escoria ($W = 0.81241$) y superplast ($W = 0.86605$) presentan las violaciones más fuertes al supuesto de normalidad, reflejadas en los estadísticos $W$ más bajos y p-valores menores a $0.00000000000000022$. Esto corrobora el análisis gráfico preliminar: la edad tiene saltos marcados por los tiempos estándar de curado, mientras que los aditivos presentan una enorme concentración de ceros (mezclas que no los incluyen).   
+```{r tabla-nuevas-variables-numericas}
+tabla_nuevas_numericas <- df_fe |>
+  select(razon_agua_cementante, pct_ceniza, log_edad) |>
+  pivot_longer(
+    cols = everything(),
+    names_to = "variable",
+    values_to = "valor"
+  ) |>
+  group_by(variable) |>
+  summarise(
+    n = sum(!is.na(valor)),
+    media = mean(valor, na.rm = TRUE),
+    sd = sd(valor, na.rm = TRUE),
+    mediana = median(valor, na.rm = TRUE),
+    minimo = min(valor, na.rm = TRUE),
+    maximo = max(valor, na.rm = TRUE),
+    asim = skewness(valor, na.rm = TRUE),
+    curtosis = kurtosis(valor, na.rm = TRUE),
+    .groups = "drop"
+  )
 
-Variables con aproximación a la normalidad (Sensibilidad de la prueba): Las variables agregado_grueso ($W = 0.98245$), agregado_fino ($W = 0.98067$), agua ($W = 0.9804$), resistencia ($W = 0.97979$) y cemento ($W = 0.95896$) poseen un estadístico $W$ muy cercano a $1$. Aunque sus p-valores obligan a rechazar la normalidad teórica (fluctuando en el orden de $10^{-10}$ a $10^{-12}$), la estructura de sus datos es razonablemente simétrica y acampanada. El rechazo se explica principalmente por la hipersensibilidad de la prueba de Shapiro-Wilk ante tamaños de muestra grandes ($N=1030$), donde cualquier desviación milimétrica de la campana de Gauss resulta estadísticamente significativa.   
+tabla_nuevas_numericas |>
+  knitr::kable(
+    caption = "Estadisticas descriptivas de las nuevas variables numericas",
+    digits = 3,
+    format = ifelse(knitr::is_latex_output(), "latex", "html")
+  ) |>
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    latex_options = c("striped", "hold_position", "scale_down"),
+    full_width = FALSE,
+    position = "center"
+  )
+```
 
-Impacto metodológico para el modelo: Dado que las variables no son normales por naturaleza, no se recomienda utilizar correlaciones paramétricas simples (como Pearson) para medir sus relaciones, sino alternativas robustas como la correlación de Spearman. Además, la regresión múltiple exigirá validar la normalidad directamente sobre los residuos predictivos y no sobre estas variables independientes aisladas, contemplando posibles transformaciones logarítmicas para las variables del primer grupo (edad y aditivos).
+```{r tabla-nuevas-variables-categoricas}
+tabla_nuevas_categoricas <- bind_rows(
+  df_fe |>
+    count(nivel_ceniza, name = "frecuencia") |>
+    transmute(variable = "nivel_ceniza", categoria = as.character(nivel_ceniza), frecuencia),
+  df_fe |>
+    count(etapa_curado, name = "frecuencia") |>
+    transmute(variable = "etapa_curado", categoria = as.character(etapa_curado), frecuencia)
+)
 
+tabla_nuevas_categoricas |>
+  knitr::kable(
+    caption = "Frecuencias de las nuevas variables categoricas",
+    format = ifelse(knitr::is_latex_output(), "latex", "html")
+  ) |>
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    latex_options = c("striped", "hold_position"),
+    full_width = FALSE,
+    position = "center"
+  )
+```
 
+## Pruebas de normalidad
 
-```{r}
-# Gráficos Q-Q para ver visualmente la distribución
-qqnorm(df_clean$agua, pch = 1, frame = FALSE, main = "Gráfico Q-Q: Cantidad de Agua")
-qqline(df_clean$agua, col = "red", lwd = 2)
+La prueba de Lilliefors evalúa la hipótesis nula de que una variable procede de una distribución normal. Para cada variable se utiliza un nivel de significancia de $\alpha = 0.05$. Si el p-valor es menor que $0.05$, se rechaza la normalidad.
 
-qqnorm(df_clean$cemento, pch = 1, frame = FALSE, main = "Gráfico Q-Q: Cemento")
+### Cemento
+
+```{r normalidad-cemento}
+resultado_cemento <- nortest::lillie.test(df_clean$cemento)
+resultado_cemento
+```
+
+El p-valor de la prueba de Lilliefors permite decidir si la variable **cemento** puede considerarse normal. La conclusión debe acompañarse del gráfico Q-Q, prestando atención a la alineación de los puntos en el centro y en las colas.
+
+```{r qq-cemento}
+qqnorm(df_clean$cemento, pch = 1, frame = FALSE,
+  main = "Gráfico Q-Q: Cemento")
 qqline(df_clean$cemento, col = "red", lwd = 2)
-
 ```
-2. Interpretación del Gráfico Q-Q para el Tiempo de Curado (Edad)
 
-Falta de alineación y forma de "escalera": Al mirar este gráfico, los puntos no siguen una línea recta continua. En su lugar, vas a ver agrupaciones densas de puntos dispuestas de forma horizontal (como si fueran escalones) y muy separadas de la línea roja de referencia.
+### Escoria
 
-Por qué ocurre esto (Asimetría severa): Esta desviación extrema ocurre porque el tiempo de curado no es una variable continua natural en este experimento. Los laboratoristas toman medidas en días fijos normativos (3, 7, 14, 28, 56 días, etc.), creando "saltos" en la distribución. Además, como la enorme mayoría de las pruebas se hacen a los 28 días y muy pocas llegan a un año (365 días), la distribución tiene un sesgo altísimo hacia la izquierda.
+```{r normalidad-escoria}
+resultado_escoria <- nortest::lillie.test(df_clean$escoria)
+resultado_escoria
+```
 
-Conclusión: La trayectoria de los puntos corrobora visualmente el pésimo resultado de su prueba de Shapiro-Wilk ($W = 0.59071$). La edad presenta una desviación radical respecto al modelo de campana de Gauss, confirmando una distribución discreta, marcadamente sesgada hacia la derecha (valores tempranos) y con una cola larga.
+El p-valor de la prueba de Lilliefors permite decidir si la variable **escoria** sigue una distribución normal. El gráfico Q-Q permite identificar desviaciones asociadas con asimetría, colas o concentración de valores.
+
+```{r qq-escoria}
+qqnorm(df_clean$escoria, pch = 1, frame = FALSE,
+  main = "Gráfico Q-Q: Escoria de alto horno")
+qqline(df_clean$escoria, col = "red", lwd = 2)
+```
+
+### Ceniza volante
+
+```{r normalidad-ceniza}
+resultado_ceniza <- nortest::lillie.test(df_clean$ceniza)
+resultado_ceniza
+```
+
+El p-valor de la prueba de Lilliefors permite decidir si la variable **ceniza volante** sigue una distribución normal. La concentración de observaciones en cero puede reflejarse como una desviación visible respecto de la línea del gráfico Q-Q.
+
+```{r qq-ceniza}
+qqnorm(df_clean$ceniza, pch = 1, frame = FALSE,
+  main = "Gráfico Q-Q: Ceniza volante")
+qqline(df_clean$ceniza, col = "red", lwd = 2)
+```
+
+### Agua
+
+```{r normalidad-agua}
+resultado_agua <- nortest::lillie.test(df_clean$agua)
+resultado_agua
+```
+
+El p-valor de la prueba de Lilliefors permite decidir si la variable **agua** puede considerarse normal. La validación visual debe comprobar si los puntos siguen aproximadamente la línea de referencia.
+
+```{r qq-agua}
+qqnorm(df_clean$agua, pch = 1, frame = FALSE,
+  main = "Gráfico Q-Q: Agua")
+qqline(df_clean$agua, col = "red", lwd = 2)
+```
+
+### Superplastificante
+
+```{r normalidad-superplast}
+resultado_superplast <- nortest::lillie.test(df_clean$superplast)
+resultado_superplast
+```
+
+El p-valor de la prueba de Lilliefors permite decidir si la variable **superplastificante** sigue una distribución normal. El gráfico Q-Q ayuda a identificar el efecto de posibles valores cero y de las desviaciones en las colas.
+
+```{r qq-superplast}
+qqnorm(df_clean$superplast, pch = 1, frame = FALSE,
+  main = "Gráfico Q-Q: Superplastificante")
+qqline(df_clean$superplast, col = "red", lwd = 2)
+```
+
+### Agregado grueso
+
+```{r normalidad-agregado-grueso}
+resultado_agregado_grueso <- nortest::lillie.test(df_clean$agregado_grueso)
+resultado_agregado_grueso
+```
+
+El p-valor de la prueba de Lilliefors permite decidir si la variable **agregado grueso** puede considerarse normal. La alineación de los puntos con la recta roja proporciona la comprobación visual correspondiente.
+
+```{r qq-agregado-grueso}
+qqnorm(df_clean$agregado_grueso, pch = 1, frame = FALSE,
+  main = "Gráfico Q-Q: Agregado grueso")
+qqline(df_clean$agregado_grueso, col = "red", lwd = 2)
+```
+
+### Agregado fino
+
+```{r normalidad-agregado-fino}
+resultado_agregado_fino <- nortest::lillie.test(df_clean$agregado_fino)
+resultado_agregado_fino
+```
+
+El p-valor de la prueba de Lilliefors permite decidir si la variable **agregado fino** sigue una distribución normal. El gráfico Q-Q permite observar si existen desviaciones sistemáticas en el centro o en los extremos.
+
+```{r qq-agregado-fino}
+qqnorm(df_clean$agregado_fino, pch = 1, frame = FALSE,
+  main = "Gráfico Q-Q: Agregado fino")
+qqline(df_clean$agregado_fino, col = "red", lwd = 2)
+```
+
+### Edad
+
+```{r normalidad-edad}
+resultado_edad <- nortest::lillie.test(df_clean$edad)
+resultado_edad
+```
+
+El p-valor de la prueba de Lilliefors permite decidir si la variable **edad** sigue una distribución normal. Debido a la concentración en edades de ensayo específicas y a la cola hacia edades largas, el gráfico Q-Q debe revisarse especialmente en forma de escalera y en sus extremos.
+
+```{r qq-edad}
+qqnorm(df_clean$edad, pch = 1, frame = FALSE,
+  main = "Gráfico Q-Q: Edad de curado")
+qqline(df_clean$edad, col = "red", lwd = 2)
+```
+
+### Resistencia
+
+```{r normalidad-resistencia}
+resultado_resistencia <- nortest::lillie.test(df_clean$resistencia)
+resultado_resistencia
+```
+
+El p-valor de la prueba de Lilliefors permite decidir si la variable **resistencia** puede considerarse normal. El gráfico Q-Q permite evaluar si la aproximación visual a la normalidad se mantiene en el centro y en las colas.
+
+```{r qq-resistencia}
+qqnorm(df_clean$resistencia, pch = 1, frame = FALSE,
+  main = "Gráfico Q-Q: Resistencia a la compresión")
+qqline(df_clean$resistencia, col = "red", lwd = 2)
+```
+
+### Resumen de las pruebas de normalidad
+
+```{r tabla-pruebas-normalidad}
+tabla_normalidad <- tibble(
+  variable = c(
+    "Cemento", "Escoria", "Ceniza volante", "Agua",
+    "Superplastificante", "Agregado grueso", "Agregado fino",
+    "Edad", "Resistencia"
+  ),
+  estadistico_D = c(
+    unname(resultado_cemento$statistic),
+    unname(resultado_escoria$statistic),
+    unname(resultado_ceniza$statistic),
+    unname(resultado_agua$statistic),
+    unname(resultado_superplast$statistic),
+    unname(resultado_agregado_grueso$statistic),
+    unname(resultado_agregado_fino$statistic),
+    unname(resultado_edad$statistic),
+    unname(resultado_resistencia$statistic)
+  ),
+  p_valor = c(
+    resultado_cemento$p.value,
+    resultado_escoria$p.value,
+    resultado_ceniza$p.value,
+    resultado_agua$p.value,
+    resultado_superplast$p.value,
+    resultado_agregado_grueso$p.value,
+    resultado_agregado_fino$p.value,
+    resultado_edad$p.value,
+    resultado_resistencia$p.value
+  )
+) |>
+  mutate(
+    decision = if_else(
+      p_valor < 0.05,
+      "Rechazar normalidad",
+      "No rechazar normalidad"
+    )
+  )
+
+tabla_normalidad |>
+  knitr::kable(
+    caption = "Resumen de las pruebas de normalidad de Lilliefors",
+    digits = 4,
+    format = ifelse(knitr::is_latex_output(), "latex", "html")
+  ) |>
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    latex_options = c("striped", "hold_position", "scale_down"),
+    full_width = FALSE,
+    position = "center"
+  )
+```
+
+En conjunto, la prueba de Lilliefors y los gráficos Q-Q deben interpretarse de manera complementaria. Con $n = 1030$, pequeñas desviaciones pueden producir p-valores significativos; por ello, la decisión estadística debe acompañarse de la forma observada en los gráficos y del contexto de cada variable. Para asociaciones entre variables que no cumplan normalidad, se recomienda considerar la correlación de Spearman. En modelos de regresión, la normalidad debe evaluarse principalmente sobre los residuos y no sobre cada variable predictora de manera aislada.
 
 

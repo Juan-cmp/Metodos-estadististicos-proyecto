@@ -107,18 +107,33 @@
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \usepackage[]{natbib}
 \bibliographystyle{apalike}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
 \hypersetup{
-  pdftitle={Proyecto final: Métodos Estadísticos},
+  pdftitle={Análisis estadístico del efecto de la ceniza volante sobre la resistencia del concreto},
   pdfauthor={Camilo Padilla \& Juan Campo},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 
-\title{Proyecto final: Métodos Estadísticos}
+\title{Análisis estadístico del efecto de la ceniza volante sobre la resistencia del concreto}
 \author{Camilo Padilla \& Juan Campo}
-\date{2026-10-01}
+\date{2026-10-06}
 
 \begin{document}
 \maketitle
@@ -129,9 +144,9 @@
 }
 \chapter{Presentación}\label{presentaciuxf3n}
 
-Este documento contiene el proyecto final del curso de \textbf{Métodos Estadísticos}.
+Este proyecto presenta un análisis estadístico de la resistencia a la compresión del concreto a partir del conjunto de datos \textbf{Concrete Compressive Strength}, compuesto por 1.030 mezclas experimentales.
 
-En este trabajo se presenta el Análisis Exploratorio de Datos (EDA), pruebas de hipótesis, modelación y conclusiones referentes al conjunto de datos Concrete Compressive Strength (Resistencia del Concreto).
+El estudio examina la relación entre la incorporación de ceniza volante, el tiempo de curado y la resistencia alcanzada por el concreto. Para ello, se aplican técnicas de análisis exploratorio, pruebas de hipótesis, comparación de grupos, análisis de correlación y modelación estadística, con el propósito de evaluar el comportamiento del material y la viabilidad del uso de la ceniza volante como sustituto parcial del cemento.
 
 \section{Estructura del Documento}\label{estructura-del-documento}
 
@@ -220,6 +235,8 @@ En este capítulo analizamos las variables cuantitativas del dataset de Concrete
 \FunctionTok{library}\NormalTok{(lmtest)   }
 \FunctionTok{library}\NormalTok{(car)      }
 \FunctionTok{library}\NormalTok{(janitor)  }
+\FunctionTok{library}\NormalTok{(knitr)}
+\FunctionTok{library}\NormalTok{(kableExtra)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -240,40 +257,79 @@ Aclaramos que cada observacion representa un ensayo de laboratorio con una recet
 
 Todas las variables son cuantitativas continuas:
 
-{\def\LTcaptype{none} % do not increment counter
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}
-  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2000}}@{}}
-\toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-Variable
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Nombre en Dataset
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Tipo
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Unidad
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-Descripción
-\end{minipage} \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-\textbf{1. Cemento} & \texttt{Cement} & Entrada (Indep.) & \(\text{kg/m}^3\) & Componente aglutinante principal. \\
-\textbf{2. Escoria de alto horno} & \texttt{Blast\_Furnace\_Slag} & Entrada (Indep.) & \(\text{kg/m}^3\) & Subproducto siderúrgico que mejora durabilidad. \\
-\textbf{3. Ceniza volante} & \texttt{Fly\_Ash} & Entrada (Indep.) & \(\text{kg/m}^3\) & Subproducto de centrales térmicas. \\
-\textbf{4. Agua} & \texttt{Water} & Entrada (Indep.) & \(\text{kg/m}^3\) & Cantidad de agua. \\
-\textbf{5. Superplastificante} & \texttt{Superplasticizer} & Entrada (Indep.) & \(\text{kg/m}^3\) & Aditivo químico que reduce necesidad de agua. \\
-\textbf{6. Agregado Grueso} & \texttt{Coarse\_Aggregate} & Entrada (Indep.) & \(\text{kg/m}^3\) & Grava / Piedra chancada. \\
-\textbf{7. Agregado Fino} & \texttt{Fine\_Aggregate} & Entrada (Indep.) & \(\text{kg/m}^3\) & Arena. \\
-\textbf{8. Edad} & \texttt{Age} & Entrada (Indep.) & Días (\(1 \text{ a } 365\)) & Tiempo de maduración/curado del concreto. \\
-\textbf{9. Resistencia} & \texttt{Concrete\_Compressive\_Strength} & \textbf{Salida (Dependiente)} & \(\text{MPa}\) & Resistencia final a la compresión. \\
-\end{longtable}
-}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{diccionario\_variables }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{variable =} \FunctionTok{c}\NormalTok{(}
+    \StringTok{"Cemento"}\NormalTok{, }\StringTok{"Escoria de alto horno"}\NormalTok{, }\StringTok{"Ceniza volante"}\NormalTok{, }\StringTok{"Agua"}\NormalTok{,}
+    \StringTok{"Superplastificante"}\NormalTok{, }\StringTok{"Agregado Grueso"}\NormalTok{, }\StringTok{"Agregado Fino"}\NormalTok{, }\StringTok{"Edad"}\NormalTok{, }\StringTok{"Resistencia"}
+\NormalTok{  ),}
+  \AttributeTok{nombre\_dataset =} \FunctionTok{c}\NormalTok{(}
+    \StringTok{"Cement"}\NormalTok{, }\StringTok{"Blast\_Furnace\_Slag"}\NormalTok{, }\StringTok{"Fly\_Ash"}\NormalTok{, }\StringTok{"Water"}\NormalTok{, }\StringTok{"Superplasticizer"}\NormalTok{,}
+    \StringTok{"Coarse\_Aggregate"}\NormalTok{, }\StringTok{"Fine\_Aggregate"}\NormalTok{, }\StringTok{"Age"}\NormalTok{, }\StringTok{"Concrete\_Compressive\_Strength"}
+\NormalTok{  ),}
+  \AttributeTok{tipo =} \FunctionTok{c}\NormalTok{(}
+    \FunctionTok{rep}\NormalTok{(}\StringTok{"Entrada (Indep.)"}\NormalTok{, }\DecValTok{8}\NormalTok{), }\StringTok{"Salida (Dependiente)"}
+\NormalTok{  ),}
+  \AttributeTok{unidad =} \FunctionTok{c}\NormalTok{(}
+    \FunctionTok{rep}\NormalTok{(}\StringTok{"kg/m\^{}3"}\NormalTok{, }\DecValTok{7}\NormalTok{), }\StringTok{"Dias (1 a 365)"}\NormalTok{, }\StringTok{"MPa"}
+\NormalTok{  ),}
+  \AttributeTok{descripcion =} \FunctionTok{c}\NormalTok{(}
+    \StringTok{"Componente aglutinante principal."}\NormalTok{,}
+    \StringTok{"Subproducto siderurgico que mejora durabilidad."}\NormalTok{,}
+    \StringTok{"Subproducto de centrales termicas."}\NormalTok{,}
+    \StringTok{"Cantidad de agua."}\NormalTok{,}
+    \StringTok{"Aditivo quimico que reduce necesidad de agua."}\NormalTok{,}
+    \StringTok{"Grava / Piedra chancada."}\NormalTok{,}
+    \StringTok{"Arena."}\NormalTok{,}
+    \StringTok{"Tiempo de maduracion/curado del concreto."}\NormalTok{,}
+    \StringTok{"Resistencia final a la compresion."}
+\NormalTok{  )}
+\NormalTok{)}
+
+\NormalTok{diccionario\_variables }\SpecialCharTok{|\textgreater{}}
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(}
+    \AttributeTok{caption =} \StringTok{"Diccionario de variables del conjunto de datos"}\NormalTok{,}
+    \AttributeTok{format =} \FunctionTok{ifelse}\NormalTok{(knitr}\SpecialCharTok{::}\FunctionTok{is\_latex\_output}\NormalTok{(), }\StringTok{"latex"}\NormalTok{, }\StringTok{"html"}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{|\textgreater{}}
+\NormalTok{  kableExtra}\SpecialCharTok{::}\FunctionTok{kable\_styling}\NormalTok{(}
+    \AttributeTok{bootstrap\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"hover"}\NormalTok{, }\StringTok{"condensed"}\NormalTok{),}
+    \AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"hold\_position"}\NormalTok{, }\StringTok{"scale\_down"}\NormalTok{),}
+    \AttributeTok{full\_width =} \ConstantTok{FALSE}\NormalTok{,}
+    \AttributeTok{position =} \StringTok{"center"}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[!h]
+\centering
+\caption{\label{tab:tabla-diccionario}Diccionario de variables del conjunto de datos}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{tabular}[t]{l|l|l|l|l}
+\hline
+variable & nombre\_dataset & tipo & unidad & descripcion\\
+\hline
+\cellcolor{gray!10}{Cemento} & \cellcolor{gray!10}{Cement} & \cellcolor{gray!10}{Entrada (Indep.)} & \cellcolor{gray!10}{kg/m\textasciicircum{}3} & \cellcolor{gray!10}{Componente aglutinante principal.}\\
+\hline
+Escoria de alto horno & Blast\_Furnace\_Slag & Entrada (Indep.) & kg/m\textasciicircum{}3 & Subproducto siderurgico que mejora durabilidad.\\
+\hline
+\cellcolor{gray!10}{Ceniza volante} & \cellcolor{gray!10}{Fly\_Ash} & \cellcolor{gray!10}{Entrada (Indep.)} & \cellcolor{gray!10}{kg/m\textasciicircum{}3} & \cellcolor{gray!10}{Subproducto de centrales termicas.}\\
+\hline
+Agua & Water & Entrada (Indep.) & kg/m\textasciicircum{}3 & Cantidad de agua.\\
+\hline
+\cellcolor{gray!10}{Superplastificante} & \cellcolor{gray!10}{Superplasticizer} & \cellcolor{gray!10}{Entrada (Indep.)} & \cellcolor{gray!10}{kg/m\textasciicircum{}3} & \cellcolor{gray!10}{Aditivo quimico que reduce necesidad de agua.}\\
+\hline
+Agregado Grueso & Coarse\_Aggregate & Entrada (Indep.) & kg/m\textasciicircum{}3 & Grava / Piedra chancada.\\
+\hline
+\cellcolor{gray!10}{Agregado Fino} & \cellcolor{gray!10}{Fine\_Aggregate} & \cellcolor{gray!10}{Entrada (Indep.)} & \cellcolor{gray!10}{kg/m\textasciicircum{}3} & \cellcolor{gray!10}{Arena.}\\
+\hline
+Edad & Age & Entrada (Indep.) & Dias (1 a 365) & Tiempo de maduracion/curado del concreto.\\
+\hline
+\cellcolor{gray!10}{Resistencia} & \cellcolor{gray!10}{Concrete\_Compressive\_Strength} & \cellcolor{gray!10}{Salida (Dependiente)} & \cellcolor{gray!10}{MPa} & \cellcolor{gray!10}{Resistencia final a la compresion.}\\
+\hline
+\end{tabular}}
+\end{table}
 
 \section{Exploración del data set.}\label{exploraciuxf3n-del-data-set.}
 
@@ -296,11 +352,172 @@ Resumimos los nombres de las variables
 \end{Highlighting}
 \end{Shaded}
 
+\section{Calidad y estructura de los datos}\label{calidad-y-estructura-de-los-datos}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{calidad\_datos }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{variable =} \FunctionTok{names}\NormalTok{(df\_clean),}
+  \AttributeTok{clase =} \FunctionTok{map\_chr}\NormalTok{(df\_clean, }\SpecialCharTok{\textasciitilde{}} \FunctionTok{class}\NormalTok{(.x)[}\DecValTok{1}\NormalTok{]),}
+  \AttributeTok{tipo =} \FunctionTok{map\_chr}\NormalTok{(df\_clean, typeof),}
+  \AttributeTok{faltantes =} \FunctionTok{map\_int}\NormalTok{(df\_clean, }\SpecialCharTok{\textasciitilde{}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(.x))),}
+  \AttributeTok{valores\_unicos =} \FunctionTok{map\_int}\NormalTok{(df\_clean, n\_distinct)}
+\NormalTok{)}
+
+\NormalTok{calidad\_datos }\SpecialCharTok{|\textgreater{}}
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(}
+    \AttributeTok{caption =} \StringTok{"Calidad y estructura de los datos"}\NormalTok{,}
+    \AttributeTok{digits =} \DecValTok{0}\NormalTok{,}
+    \AttributeTok{format =} \FunctionTok{ifelse}\NormalTok{(knitr}\SpecialCharTok{::}\FunctionTok{is\_latex\_output}\NormalTok{(), }\StringTok{"latex"}\NormalTok{, }\StringTok{"html"}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{|\textgreater{}}
+\NormalTok{  kableExtra}\SpecialCharTok{::}\FunctionTok{kable\_styling}\NormalTok{(}
+    \AttributeTok{bootstrap\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"hover"}\NormalTok{, }\StringTok{"condensed"}\NormalTok{),}
+    \AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"hold\_position"}\NormalTok{),}
+    \AttributeTok{full\_width =} \ConstantTok{FALSE}\NormalTok{,}
+    \AttributeTok{position =} \StringTok{"center"}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[!h]
+\centering
+\caption{\label{tab:calidad-datos}Calidad y estructura de los datos}
+\centering
+\begin{tabular}[t]{l|l|l|r|r}
+\hline
+variable & clase & tipo & faltantes & valores\_unicos\\
+\hline
+\cellcolor{gray!10}{cemento} & \cellcolor{gray!10}{numeric} & \cellcolor{gray!10}{double} & \cellcolor{gray!10}{0} & \cellcolor{gray!10}{280}\\
+\hline
+escoria & numeric & double & 0 & 187\\
+\hline
+\cellcolor{gray!10}{ceniza} & \cellcolor{gray!10}{numeric} & \cellcolor{gray!10}{double} & \cellcolor{gray!10}{0} & \cellcolor{gray!10}{163}\\
+\hline
+agua & numeric & double & 0 & 205\\
+\hline
+\cellcolor{gray!10}{superplast} & \cellcolor{gray!10}{numeric} & \cellcolor{gray!10}{double} & \cellcolor{gray!10}{0} & \cellcolor{gray!10}{155}\\
+\hline
+agregado\_grueso & numeric & double & 0 & 284\\
+\hline
+\cellcolor{gray!10}{agregado\_fino} & \cellcolor{gray!10}{numeric} & \cellcolor{gray!10}{double} & \cellcolor{gray!10}{0} & \cellcolor{gray!10}{304}\\
+\hline
+edad & numeric & double & 0 & 14\\
+\hline
+\cellcolor{gray!10}{resistencia} & \cellcolor{gray!10}{numeric} & \cellcolor{gray!10}{double} & \cellcolor{gray!10}{0} & \cellcolor{gray!10}{938}\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{duplicados }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{indicador =} \StringTok{"Filas duplicadas"}\NormalTok{,}
+  \AttributeTok{cantidad =} \FunctionTok{sum}\NormalTok{(}\FunctionTok{duplicated}\NormalTok{(df\_clean))}
+\NormalTok{)}
+
+\NormalTok{duplicados }\SpecialCharTok{|\textgreater{}}
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(}
+    \AttributeTok{caption =} \StringTok{"Filas duplicadas del conjunto de datos"}\NormalTok{,}
+    \AttributeTok{format =} \FunctionTok{ifelse}\NormalTok{(knitr}\SpecialCharTok{::}\FunctionTok{is\_latex\_output}\NormalTok{(), }\StringTok{"latex"}\NormalTok{, }\StringTok{"html"}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{|\textgreater{}}
+\NormalTok{  kableExtra}\SpecialCharTok{::}\FunctionTok{kable\_styling}\NormalTok{(}
+    \AttributeTok{bootstrap\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"hover"}\NormalTok{, }\StringTok{"condensed"}\NormalTok{),}
+    \AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"hold\_position"}\NormalTok{),}
+    \AttributeTok{full\_width =} \ConstantTok{FALSE}\NormalTok{,}
+    \AttributeTok{position =} \StringTok{"center"}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[!h]
+\centering
+\caption{\label{tab:calidad-datos}Filas duplicadas del conjunto de datos}
+\centering
+\begin{tabular}[t]{l|r}
+\hline
+indicador & cantidad\\
+\hline
+\cellcolor{gray!10}{Filas duplicadas} & \cellcolor{gray!10}{25}\\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Tabla descriptiva de las variables}\label{tabla-descriptiva-de-las-variables}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tabla\_descriptiva }\OtherTok{\textless{}{-}}\NormalTok{ df\_clean }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{pivot\_longer}\NormalTok{(}
+    \AttributeTok{cols =} \FunctionTok{everything}\NormalTok{(),}
+    \AttributeTok{names\_to =} \StringTok{"variable"}\NormalTok{,}
+    \AttributeTok{values\_to =} \StringTok{"valor"}
+\NormalTok{  ) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{group\_by}\NormalTok{(variable) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{n =} \FunctionTok{sum}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(valor)),}
+    \AttributeTok{media =} \FunctionTok{mean}\NormalTok{(valor, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{sd =} \FunctionTok{sd}\NormalTok{(valor, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{mediana =} \FunctionTok{median}\NormalTok{(valor, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{RIC =} \FunctionTok{IQR}\NormalTok{(valor, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{Q1 =} \FunctionTok{quantile}\NormalTok{(valor, }\FloatTok{0.25}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{Q3 =} \FunctionTok{quantile}\NormalTok{(valor, }\FloatTok{0.75}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{minimo =} \FunctionTok{min}\NormalTok{(valor, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{maximo =} \FunctionTok{max}\NormalTok{(valor, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{asim =} \FunctionTok{skewness}\NormalTok{(valor, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{curtosis =} \FunctionTok{kurtosis}\NormalTok{(valor, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{.groups =} \StringTok{"drop"}
+\NormalTok{  )}
+
+\NormalTok{tabla\_descriptiva }\SpecialCharTok{|\textgreater{}}
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(}
+    \AttributeTok{caption =} \StringTok{"Estadisticas descriptivas de las nueve variables"}\NormalTok{,}
+    \AttributeTok{digits =} \DecValTok{3}\NormalTok{,}
+    \AttributeTok{format =} \FunctionTok{ifelse}\NormalTok{(knitr}\SpecialCharTok{::}\FunctionTok{is\_latex\_output}\NormalTok{(), }\StringTok{"latex"}\NormalTok{, }\StringTok{"html"}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{|\textgreater{}}
+\NormalTok{  kableExtra}\SpecialCharTok{::}\FunctionTok{kable\_styling}\NormalTok{(}
+    \AttributeTok{bootstrap\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"hover"}\NormalTok{, }\StringTok{"condensed"}\NormalTok{),}
+    \AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"hold\_position"}\NormalTok{, }\StringTok{"scale\_down"}\NormalTok{),}
+    \AttributeTok{full\_width =} \ConstantTok{FALSE}\NormalTok{,}
+    \AttributeTok{position =} \StringTok{"center"}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[!h]
+\centering
+\caption{\label{tab:tabla-descriptiva}Estadisticas descriptivas de las nueve variables}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{tabular}[t]{l|r|r|r|r|r|r|r|r|r|r|r}
+\hline
+variable & n & media & sd & mediana & RIC & Q1 & Q3 & minimo & maximo & asim & curtosis\\
+\hline
+\cellcolor{gray!10}{agregado\_fino} & \cellcolor{gray!10}{1030} & \cellcolor{gray!10}{773.579} & \cellcolor{gray!10}{80.175} & \cellcolor{gray!10}{779.510} & \cellcolor{gray!10}{93.050} & \cellcolor{gray!10}{730.950} & \cellcolor{gray!10}{824.000} & \cellcolor{gray!10}{594.000} & \cellcolor{gray!10}{992.600} & \cellcolor{gray!10}{-0.253} & \cellcolor{gray!10}{2.893}\\
+\hline
+agregado\_grueso & 1030 & 972.919 & 77.754 & 968.000 & 97.400 & 932.000 & 1029.400 & 801.000 & 1145.000 & -0.040 & 2.398\\
+\hline
+\cellcolor{gray!10}{agua} & \cellcolor{gray!10}{1030} & \cellcolor{gray!10}{181.566} & \cellcolor{gray!10}{21.356} & \cellcolor{gray!10}{185.000} & \cellcolor{gray!10}{27.100} & \cellcolor{gray!10}{164.900} & \cellcolor{gray!10}{192.000} & \cellcolor{gray!10}{121.750} & \cellcolor{gray!10}{247.000} & \cellcolor{gray!10}{0.074} & \cellcolor{gray!10}{3.116}\\
+\hline
+cemento & 1030 & 281.166 & 104.507 & 272.900 & 157.625 & 192.375 & 350.000 & 102.000 & 540.000 & 0.509 & 2.476\\
+\hline
+\cellcolor{gray!10}{ceniza} & \cellcolor{gray!10}{1030} & \cellcolor{gray!10}{54.187} & \cellcolor{gray!10}{63.996} & \cellcolor{gray!10}{0.000} & \cellcolor{gray!10}{118.270} & \cellcolor{gray!10}{0.000} & \cellcolor{gray!10}{118.270} & \cellcolor{gray!10}{0.000} & \cellcolor{gray!10}{200.100} & \cellcolor{gray!10}{0.537} & \cellcolor{gray!10}{1.672}\\
+\hline
+edad & 1030 & 45.662 & 63.170 & 28.000 & 49.000 & 7.000 & 56.000 & 1.000 & 365.000 & 3.264 & 15.104\\
+\hline
+\cellcolor{gray!10}{escoria} & \cellcolor{gray!10}{1030} & \cellcolor{gray!10}{73.895} & \cellcolor{gray!10}{86.279} & \cellcolor{gray!10}{22.000} & \cellcolor{gray!10}{142.950} & \cellcolor{gray!10}{0.000} & \cellcolor{gray!10}{142.950} & \cellcolor{gray!10}{0.000} & \cellcolor{gray!10}{359.400} & \cellcolor{gray!10}{0.800} & \cellcolor{gray!10}{2.489}\\
+\hline
+resistencia & 1030 & 35.818 & 16.706 & 34.443 & 22.429 & 23.707 & 46.136 & 2.332 & 82.599 & 0.416 & 2.682\\
+\hline
+\cellcolor{gray!10}{superplast} & \cellcolor{gray!10}{1030} & \cellcolor{gray!10}{6.203} & \cellcolor{gray!10}{5.973} & \cellcolor{gray!10}{6.350} & \cellcolor{gray!10}{10.160} & \cellcolor{gray!10}{0.000} & \cellcolor{gray!10}{10.160} & \cellcolor{gray!10}{0.000} & \cellcolor{gray!10}{32.200} & \cellcolor{gray!10}{0.907} & \cellcolor{gray!10}{4.401}\\
+\hline
+\end{tabular}}
+\end{table}
+
 \subsection{Exploración de la variable de respuesta}\label{exploraciuxf3n-de-la-variable-de-respuesta}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{df\_clean }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{summarise}\NormalTok{(}\AttributeTok{n =} \FunctionTok{length}\NormalTok{(resistencia),}
+\NormalTok{tabla\_resistencia }\OtherTok{\textless{}{-}}\NormalTok{ df\_clean }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{summarise}\NormalTok{(}\AttributeTok{n =} \FunctionTok{length}\NormalTok{(resistencia),}
                  \AttributeTok{media =} \FunctionTok{mean}\NormalTok{(resistencia),}
                  \AttributeTok{sd =} \FunctionTok{sd}\NormalTok{(resistencia),}
                  \AttributeTok{mediana =} \FunctionTok{median}\NormalTok{(resistencia),}
@@ -311,15 +528,35 @@ Resumimos los nombres de las variables
                  \AttributeTok{maximo =} \FunctionTok{max}\NormalTok{(resistencia),}
                  \AttributeTok{asim =} \FunctionTok{skewness}\NormalTok{(resistencia),}
                  \AttributeTok{curtosis =} \FunctionTok{kurtosis}\NormalTok{(resistencia))}
+
+\NormalTok{tabla\_resistencia }\SpecialCharTok{|\textgreater{}}
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(}
+    \AttributeTok{caption =} \StringTok{"Estadisticas descriptivas de la resistencia a la compresion"}\NormalTok{,}
+    \AttributeTok{digits =} \DecValTok{3}\NormalTok{,}
+    \AttributeTok{format =} \FunctionTok{ifelse}\NormalTok{(knitr}\SpecialCharTok{::}\FunctionTok{is\_latex\_output}\NormalTok{(), }\StringTok{"latex"}\NormalTok{, }\StringTok{"html"}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{|\textgreater{}}
+\NormalTok{  kableExtra}\SpecialCharTok{::}\FunctionTok{kable\_styling}\NormalTok{(}
+    \AttributeTok{bootstrap\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"hover"}\NormalTok{, }\StringTok{"condensed"}\NormalTok{),}
+    \AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"hold\_position"}\NormalTok{, }\StringTok{"scale\_down"}\NormalTok{),}
+    \AttributeTok{full\_width =} \ConstantTok{FALSE}\NormalTok{,}
+    \AttributeTok{position =} \StringTok{"center"}
+\NormalTok{  )}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-## # A tibble: 1 x 11
-##       n media    sd mediana   RIC    Q1    Q3 minimo maximo  asim curtosis
-##   <int> <dbl> <dbl>   <dbl> <dbl> <dbl> <dbl>  <dbl>  <dbl> <dbl>    <dbl>
-## 1  1030  35.8  16.7    34.4  22.4  23.7  46.1   2.33   82.6 0.416     2.68
-\end{verbatim}
+\begin{table}[!h]
+\centering
+\caption{(\#tab:Concrete Compressive strenght)Estadisticas descriptivas de la resistencia a la compresion}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{tabular}[t]{r|r|r|r|r|r|r|r|r|r|r}
+\hline
+n & media & sd & mediana & RIC & Q1 & Q3 & minimo & maximo & asim & curtosis\\
+\hline
+\cellcolor{gray!10}{1030} & \cellcolor{gray!10}{35.818} & \cellcolor{gray!10}{16.706} & \cellcolor{gray!10}{34.443} & \cellcolor{gray!10}{22.429} & \cellcolor{gray!10}{23.707} & \cellcolor{gray!10}{46.136} & \cellcolor{gray!10}{2.332} & \cellcolor{gray!10}{82.599} & \cellcolor{gray!10}{0.416} & \cellcolor{gray!10}{2.682}\\
+\hline
+\end{tabular}}
+\end{table}
 
 Vemos que las 1030 observaciones de mezclas de concreto, tienen una resistencia de comprension de 35.817 MPa, con una desviación estándar de 16.70 MPa. Además, el 50\% de las mezclas tienen una resistencia igual o menor a 34.442 MPa. Además, se observa una mezcla de concreto experimental con resistencia de 85.59 MPa siendo esta la observación con mayor Resistencia final a la compresión y otras con la minima resistencia entre las observaciones con 2.33 MPa.
 
@@ -374,18 +611,36 @@ Creamos la siguiente tabla para observar de forma descriptiva las variables inde
     \AttributeTok{asim    =} \FunctionTok{round}\NormalTok{(}\FunctionTok{skewness}\NormalTok{(valor), }\DecValTok{3}\NormalTok{),}
     \AttributeTok{curtosis =} \FunctionTok{round}\NormalTok{(}\FunctionTok{kurtosis}\NormalTok{(valor), }\DecValTok{3}\NormalTok{))}
 
-\NormalTok{tabla\_independientes}
+\NormalTok{tabla\_independientes }\SpecialCharTok{|\textgreater{}}
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(}
+    \AttributeTok{caption =} \StringTok{"Estadisticas descriptivas de ceniza volante y edad"}\NormalTok{,}
+    \AttributeTok{digits =} \DecValTok{3}\NormalTok{,}
+    \AttributeTok{format =} \FunctionTok{ifelse}\NormalTok{(knitr}\SpecialCharTok{::}\FunctionTok{is\_latex\_output}\NormalTok{(), }\StringTok{"latex"}\NormalTok{, }\StringTok{"html"}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{|\textgreater{}}
+\NormalTok{  kableExtra}\SpecialCharTok{::}\FunctionTok{kable\_styling}\NormalTok{(}
+    \AttributeTok{bootstrap\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"hover"}\NormalTok{, }\StringTok{"condensed"}\NormalTok{),}
+    \AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"hold\_position"}\NormalTok{, }\StringTok{"scale\_down"}\NormalTok{),}
+    \AttributeTok{full\_width =} \ConstantTok{FALSE}\NormalTok{,}
+    \AttributeTok{position =} \StringTok{"center"}
+\NormalTok{  )}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-## # A tibble: 2 x 12
-##   variables     n media    sd mediana   RIC    Q1    Q3 minimo maximo  asim
-##   <chr>     <int> <dbl> <dbl>   <dbl> <dbl> <dbl> <dbl>  <dbl>  <dbl> <dbl>
-## 1 ceniza     1030  54.2  64.0       0  118.     0  118.      0   200. 0.537
-## 2 edad       1030  45.7  63.2      28   49      7   56       1   365  3.26 
-## # i 1 more variable: curtosis <dbl>
-\end{verbatim}
+\begin{table}[!h]
+\centering
+\caption{\label{tab:unnamed-chunk-4}Estadisticas descriptivas de ceniza volante y edad}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{tabular}[t]{l|r|r|r|r|r|r|r|r|r|r|r}
+\hline
+variables & n & media & sd & mediana & RIC & Q1 & Q3 & minimo & maximo & asim & curtosis\\
+\hline
+\cellcolor{gray!10}{ceniza} & \cellcolor{gray!10}{1030} & \cellcolor{gray!10}{54.187} & \cellcolor{gray!10}{63.996} & \cellcolor{gray!10}{0} & \cellcolor{gray!10}{118.27} & \cellcolor{gray!10}{0} & \cellcolor{gray!10}{118.27} & \cellcolor{gray!10}{0} & \cellcolor{gray!10}{200.1} & \cellcolor{gray!10}{0.537} & \cellcolor{gray!10}{1.672}\\
+\hline
+edad & 1030 & 45.662 & 63.170 & 28 & 49.00 & 7 & 56.00 & 1 & 365.0 & 3.264 & 15.104\\
+\hline
+\end{tabular}}
+\end{table}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -523,16 +778,155 @@ Para la variable objetivo ``resistencia'', se observa un comportamiento mucho m�
 
 El 50\% de los datos tienen una resistencia menor o igual a \(34.5\text{ MPa}\), mostrando una \textbf{notable cercanía con el promedio de resistencia de las mezclas de concreto (\(35.8\text{ MPa}\))}. En cuanto al rango intercuartílico, el \(25\%\) de las mezclas con menor resistencia registran valores iguales o inferiores a \(23.7\text{ MPa}\), mientras que el \(75\%\) de las muestras se sitúan por debajo de los \(46.1\text{ MPa}\). Los bigotes abarcan un rango que va desde un mínimo de \(2.3\text{ MPa}\) (concreto de muy baja resistencia) hasta aproximadamente los \(80.0\text{ MPa}\). Se aprecian únicamente unos pocos \textbf{valores atípicos superiores} que alcanzan un máximo de \(82.6\text{ MPa}\).
 
-\#Analisis Bivariado
+\section{Analisis Bivariado}\label{analisis-bivariado}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{df\_clean }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(ceniza, edad, resistencia) }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{df\_clean }\SpecialCharTok{|\textgreater{}} 
   \FunctionTok{ggpairs}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{center}\includegraphics{Proyecto_Final_Metodos_Estadisticos_files/figure-latex/unnamed-chunk-10-1} \end{center}
+
+\subsection{Creacion de nuevas variables}\label{creacion-de-nuevas-variables}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df\_fe }\OtherTok{\textless{}{-}}\NormalTok{ df\_clean }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{mutate}\NormalTok{(}
+    \CommentTok{\# 1. Razón Agua / Cementante (Agua / [Cemento + Ceniza])}
+    \AttributeTok{razon\_agua\_cementante =}\NormalTok{ agua }\SpecialCharTok{/}\NormalTok{ (cemento }\SpecialCharTok{+}\NormalTok{ ceniza),}
+    
+    \CommentTok{\# 2. Porcentaje de Cemento sustituido por Ceniza (0\% a \textasciitilde{}50\%)}
+    \AttributeTok{pct\_ceniza =}\NormalTok{ (ceniza }\SpecialCharTok{/}\NormalTok{ (cemento }\SpecialCharTok{+}\NormalTok{ ceniza)) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{,}
+    
+    \CommentTok{\# 3. Clasificación del reemplazo en niveles (para futuros ANOVAs)}
+    \AttributeTok{nivel\_ceniza =} \FunctionTok{factor}\NormalTok{(}\FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{      pct\_ceniza }\SpecialCharTok{==} \DecValTok{0} \SpecialCharTok{\textasciitilde{}} \StringTok{"0\% (Control)"}\NormalTok{,}
+\NormalTok{      pct\_ceniza }\SpecialCharTok{\textgreater{}} \DecValTok{0} \SpecialCharTok{\&}\NormalTok{ pct\_ceniza }\SpecialCharTok{\textless{}=} \DecValTok{20} \SpecialCharTok{\textasciitilde{}} \StringTok{"Bajo (\textless{}= 20\%)"}\NormalTok{,}
+\NormalTok{      pct\_ceniza }\SpecialCharTok{\textgreater{}} \DecValTok{20} \SpecialCharTok{\textasciitilde{}} \StringTok{"Alto (\textgreater{} 20\%)"}
+\NormalTok{    ), }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"0\% (Control)"}\NormalTok{, }\StringTok{"Bajo (\textless{}= 20\%)"}\NormalTok{, }\StringTok{"Alto (\textgreater{} 20\%)"}\NormalTok{)),}
+    
+    \CommentTok{\# 4. Transformación Logarítmica de la Edad (Linealiza la ganancia de resistencia)}
+    \AttributeTok{log\_edad =} \FunctionTok{log}\NormalTok{(edad),}
+    
+    \CommentTok{\# 5. Etapas estándar de curado}
+    \AttributeTok{etapa\_curado =} \FunctionTok{factor}\NormalTok{(}\FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{      edad }\SpecialCharTok{\textless{}=} \DecValTok{7} \SpecialCharTok{\textasciitilde{}} \StringTok{"Temprano (\textless{}= 7d)"}\NormalTok{,}
+\NormalTok{      edad }\SpecialCharTok{\textgreater{}} \DecValTok{7} \SpecialCharTok{\&}\NormalTok{ edad }\SpecialCharTok{\textless{}=} \DecValTok{28} \SpecialCharTok{\textasciitilde{}} \StringTok{"Estándar (14{-}28d)"}\NormalTok{,}
+\NormalTok{      edad }\SpecialCharTok{\textgreater{}} \DecValTok{28} \SpecialCharTok{\textasciitilde{}} \StringTok{"Tardío (\textgreater{} 28d)"}
+\NormalTok{    ), }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Temprano (\textless{}= 7d)"}\NormalTok{, }\StringTok{"Estándar (14{-}28d)"}\NormalTok{, }\StringTok{"Tardío (\textgreater{} 28d)"}\NormalTok{))}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Tabla descriptiva de las nuevas variables}\label{tabla-descriptiva-de-las-nuevas-variables}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tabla\_nuevas\_numericas }\OtherTok{\textless{}{-}}\NormalTok{ df\_fe }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{select}\NormalTok{(razon\_agua\_cementante, pct\_ceniza, log\_edad) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{pivot\_longer}\NormalTok{(}
+    \AttributeTok{cols =} \FunctionTok{everything}\NormalTok{(),}
+    \AttributeTok{names\_to =} \StringTok{"variable"}\NormalTok{,}
+    \AttributeTok{values\_to =} \StringTok{"valor"}
+\NormalTok{  ) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{group\_by}\NormalTok{(variable) }\SpecialCharTok{|\textgreater{}}
+  \FunctionTok{summarise}\NormalTok{(}
+    \AttributeTok{n =} \FunctionTok{sum}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(valor)),}
+    \AttributeTok{media =} \FunctionTok{mean}\NormalTok{(valor, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{sd =} \FunctionTok{sd}\NormalTok{(valor, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{mediana =} \FunctionTok{median}\NormalTok{(valor, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{minimo =} \FunctionTok{min}\NormalTok{(valor, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{maximo =} \FunctionTok{max}\NormalTok{(valor, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{asim =} \FunctionTok{skewness}\NormalTok{(valor, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{curtosis =} \FunctionTok{kurtosis}\NormalTok{(valor, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \AttributeTok{.groups =} \StringTok{"drop"}
+\NormalTok{  )}
+
+\NormalTok{tabla\_nuevas\_numericas }\SpecialCharTok{|\textgreater{}}
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(}
+    \AttributeTok{caption =} \StringTok{"Estadisticas descriptivas de las nuevas variables numericas"}\NormalTok{,}
+    \AttributeTok{digits =} \DecValTok{3}\NormalTok{,}
+    \AttributeTok{format =} \FunctionTok{ifelse}\NormalTok{(knitr}\SpecialCharTok{::}\FunctionTok{is\_latex\_output}\NormalTok{(), }\StringTok{"latex"}\NormalTok{, }\StringTok{"html"}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{|\textgreater{}}
+\NormalTok{  kableExtra}\SpecialCharTok{::}\FunctionTok{kable\_styling}\NormalTok{(}
+    \AttributeTok{bootstrap\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"hover"}\NormalTok{, }\StringTok{"condensed"}\NormalTok{),}
+    \AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"hold\_position"}\NormalTok{, }\StringTok{"scale\_down"}\NormalTok{),}
+    \AttributeTok{full\_width =} \ConstantTok{FALSE}\NormalTok{,}
+    \AttributeTok{position =} \StringTok{"center"}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[!h]
+\centering
+\caption{\label{tab:tabla-nuevas-variables-numericas}Estadisticas descriptivas de las nuevas variables numericas}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{tabular}[t]{l|r|r|r|r|r|r|r|r}
+\hline
+variable & n & media & sd & mediana & minimo & maximo & asim & curtosis\\
+\hline
+\cellcolor{gray!10}{log\_edad} & \cellcolor{gray!10}{1030} & \cellcolor{gray!10}{3.165} & \cellcolor{gray!10}{1.191} & \cellcolor{gray!10}{3.332} & \cellcolor{gray!10}{0.000} & \cellcolor{gray!10}{5.900} & \cellcolor{gray!10}{-0.151} & \cellcolor{gray!10}{2.642}\\
+\hline
+pct\_ceniza & 1030 & 15.526 & 18.788 & 0.000 & 0.000 & 58.841 & 0.649 & 1.859\\
+\hline
+\cellcolor{gray!10}{razon\_agua\_cementante} & \cellcolor{gray!10}{1030} & \cellcolor{gray!10}{0.612} & \cellcolor{gray!10}{0.278} & \cellcolor{gray!10}{0.548} & \cellcolor{gray!10}{0.266} & \cellcolor{gray!10}{1.882} & \cellcolor{gray!10}{1.965} & \cellcolor{gray!10}{7.529}\\
+\hline
+\end{tabular}}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tabla\_nuevas\_categoricas }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(}
+\NormalTok{  df\_fe }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{count}\NormalTok{(nivel\_ceniza, }\AttributeTok{name =} \StringTok{"frecuencia"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{variable =} \StringTok{"nivel\_ceniza"}\NormalTok{, }\AttributeTok{categoria =} \FunctionTok{as.character}\NormalTok{(nivel\_ceniza), frecuencia),}
+\NormalTok{  df\_fe }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{count}\NormalTok{(etapa\_curado, }\AttributeTok{name =} \StringTok{"frecuencia"}\NormalTok{) }\SpecialCharTok{|\textgreater{}}
+    \FunctionTok{transmute}\NormalTok{(}\AttributeTok{variable =} \StringTok{"etapa\_curado"}\NormalTok{, }\AttributeTok{categoria =} \FunctionTok{as.character}\NormalTok{(etapa\_curado), frecuencia)}
+\NormalTok{)}
+
+\NormalTok{tabla\_nuevas\_categoricas }\SpecialCharTok{|\textgreater{}}
+\NormalTok{  knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(}
+    \AttributeTok{caption =} \StringTok{"Frecuencias de las nuevas variables categoricas"}\NormalTok{,}
+    \AttributeTok{format =} \FunctionTok{ifelse}\NormalTok{(knitr}\SpecialCharTok{::}\FunctionTok{is\_latex\_output}\NormalTok{(), }\StringTok{"latex"}\NormalTok{, }\StringTok{"html"}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{|\textgreater{}}
+\NormalTok{  kableExtra}\SpecialCharTok{::}\FunctionTok{kable\_styling}\NormalTok{(}
+    \AttributeTok{bootstrap\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"hover"}\NormalTok{, }\StringTok{"condensed"}\NormalTok{),}
+    \AttributeTok{latex\_options =} \FunctionTok{c}\NormalTok{(}\StringTok{"striped"}\NormalTok{, }\StringTok{"hold\_position"}\NormalTok{),}
+    \AttributeTok{full\_width =} \ConstantTok{FALSE}\NormalTok{,}
+    \AttributeTok{position =} \StringTok{"center"}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[!h]
+\centering
+\caption{\label{tab:tabla-nuevas-variables-categoricas}Frecuencias de las nuevas variables categoricas}
+\centering
+\begin{tabular}[t]{l|l|r}
+\hline
+variable & categoria & frecuencia\\
+\hline
+\cellcolor{gray!10}{nivel\_ceniza} & \cellcolor{gray!10}{0\% (Control)} & \cellcolor{gray!10}{566}\\
+\hline
+nivel\_ceniza & Bajo (<= 20\%) & 43\\
+\hline
+\cellcolor{gray!10}{nivel\_ceniza} & \cellcolor{gray!10}{Alto (> 20\%)} & \cellcolor{gray!10}{421}\\
+\hline
+etapa\_curado & Temprano (<= 7d) & 262\\
+\hline
+\cellcolor{gray!10}{etapa\_curado} & \cellcolor{gray!10}{Estándar (14-28d)} & \cellcolor{gray!10}{487}\\
+\hline
+etapa\_curado & Tardío (> 28d) & 281\\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Pruebas de normalidad}\label{pruebas-de-normalidad}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -582,7 +976,48 @@ El 50\% de los datos tienen una resistencia menor o igual a \(34.5\text{ MPa}\),
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# Tip: Si deseas aplicar la prueba a TODAS las columnas al mismo tiempo}
+\FunctionTok{shapiro.test}\NormalTok{(df\_clean}\SpecialCharTok{$}\NormalTok{cemento)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  df_clean$cemento
+## W = 0.95896, p-value < 0.00000000000000022
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(df\_clean}\SpecialCharTok{$}\NormalTok{agua)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  df_clean$agua
+## W = 0.9804, p-value = 0.0000000001473
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{shapiro.test}\NormalTok{(df\_clean}\SpecialCharTok{$}\NormalTok{agregado\_grueso)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Shapiro-Wilk normality test
+## 
+## data:  df_clean$agregado_grueso
+## W = 0.98245, p-value = 0.0000000008346
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \FunctionTok{lapply}\NormalTok{(df\_clean, shapiro.test)}
 \end{Highlighting}
 \end{Shaded}
@@ -660,10 +1095,10 @@ El 50\% de los datos tienen una resistencia menor o igual a \(34.5\text{ MPa}\),
 ## W = 0.97979, p-value = 0.00000000009023
 \end{verbatim}
 
+\subsection{2. VALIDACIÓN VISUAL (Q-Q PLOTS)}\label{validaciuxf3n-visual-q-q-plots}
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# {-}{-}{-} 2. VALIDACIÓN VISUAL (Q{-}Q PLOTS) {-}{-}{-}}
-
 \CommentTok{\# Gráfico para la Resistencia}
 \FunctionTok{qqnorm}\NormalTok{(df\_clean}\SpecialCharTok{$}\NormalTok{resistencia, }\AttributeTok{pch =} \DecValTok{1}\NormalTok{, }\AttributeTok{frame =} \ConstantTok{FALSE}\NormalTok{, }
        \AttributeTok{main =} \StringTok{"Gráfico Q{-}Q: Resistencia a la Compresión"}\NormalTok{)}
@@ -671,7 +1106,7 @@ El 50\% de los datos tienen una resistencia menor o igual a \(34.5\text{ MPa}\),
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{Proyecto_Final_Metodos_Estadisticos_files/figure-latex/unnamed-chunk-11-1} \end{center}
+\begin{center}\includegraphics{Proyecto_Final_Metodos_Estadisticos_files/figure-latex/unnamed-chunk-13-1} \end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -682,7 +1117,7 @@ El 50\% de los datos tienen una resistencia menor o igual a \(34.5\text{ MPa}\),
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{Proyecto_Final_Metodos_Estadisticos_files/figure-latex/unnamed-chunk-11-2} \end{center}
+\begin{center}\includegraphics{Proyecto_Final_Metodos_Estadisticos_files/figure-latex/unnamed-chunk-13-2} \end{center}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -841,7 +1276,7 @@ Impacto metodológico para el modelo: Dado que las variables no son normales por
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{Proyecto_Final_Metodos_Estadisticos_files/figure-latex/unnamed-chunk-13-1} \end{center}
+\begin{center}\includegraphics{Proyecto_Final_Metodos_Estadisticos_files/figure-latex/unnamed-chunk-15-1} \end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -850,7 +1285,7 @@ Impacto metodológico para el modelo: Dado que las variables no son normales por
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{Proyecto_Final_Metodos_Estadisticos_files/figure-latex/unnamed-chunk-13-2} \end{center}
+\begin{center}\includegraphics{Proyecto_Final_Metodos_Estadisticos_files/figure-latex/unnamed-chunk-15-2} \end{center}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}

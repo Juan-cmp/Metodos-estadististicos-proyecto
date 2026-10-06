@@ -1,5 +1,5 @@
 ---
-title: "Proyecto final: Métodos Estadísticos"
+title: "Análisis estadístico del efecto de la ceniza volante sobre la resistencia del concreto"
 author: "Camilo Padilla & Juan Campo"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
@@ -7,14 +7,14 @@ documentclass: book
 bibliography: [book.bib]
 biblio-style: apalike
 link-citations: yes
-description: "Informe y Análisis Estadístico Final del Curso de Métodos Estadísticos."
+description: "Análisis estadístico del efecto de la ceniza volante y el tiempo de curado sobre la resistencia a la compresión del concreto."
 ---
 
 # Presentación
 
-Este documento contiene el proyecto final del curso de **Métodos Estadísticos**. 
+Este proyecto presenta un análisis estadístico de la resistencia a la compresión del concreto a partir del conjunto de datos **Concrete Compressive Strength**, compuesto por 1.030 mezclas experimentales.
 
-En este trabajo se presenta el Análisis Exploratorio de Datos (EDA), pruebas de hipótesis, modelación y conclusiones referentes al conjunto de datos Concrete Compressive Strength (Resistencia del Concreto).
+El estudio examina la relación entre la incorporación de ceniza volante, el tiempo de curado y la resistencia alcanzada por el concreto. Para ello, se aplican técnicas de análisis exploratorio, pruebas de hipótesis, comparación de grupos, análisis de correlación y modelación estadística, con el propósito de evaluar el comportamiento del material y la viabilidad del uso de la ceniza volante como sustituto parcial del cemento.
 
 ## Estructura del Documento
 

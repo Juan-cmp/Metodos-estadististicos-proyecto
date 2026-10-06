@@ -1,3 +1,9 @@
+tab:tabla-diccionario
+tab:calidad-datos
+tab:tabla-descriptiva
+tab:unnamed-chunk-4
+tab:tabla-nuevas-variables-numericas
+tab:tabla-nuevas-variables-categoricas
 presentación
 estructura-del-documento
 intro
@@ -13,8 +19,13 @@ importamos-librerias
 carga-de-datos
 diccionario-de-variables
 exploración-del-data-set.
+calidad-y-estructura-de-los-datos
+tabla-descriptiva-de-las-variables
 exploración-de-la-variable-de-respuesta
-exploracion-de-las-varibles-independientes
 anlisis-univariado-de-las-variables
-analisis-boxplot-fly-ash
 analisis-boxplot-tiempo-de-curado
+analisis-bivariado
+creacion-de-nuevas-variables
+tabla-descriptiva-de-las-nuevas-variables
+pruebas-de-normalidad
+validación-visual-q-q-plots

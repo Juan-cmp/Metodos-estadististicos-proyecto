@@ -4,26 +4,26 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Capítulo 2 Introducción y Objetivos | Proyecto final: Métodos Estadísticos</title>
-  <meta name="description" content="Informe y Análisis Estadístico Final del Curso de Métodos Estadísticos." />
+  <title>Capítulo 2 Introducción y Objetivos | Análisis estadístico del efecto de la ceniza volante sobre la resistencia del concreto</title>
+  <meta name="description" content="Análisis estadístico del efecto de la ceniza volante y el tiempo de curado sobre la resistencia a la compresión del concreto." />
   <meta name="generator" content="bookdown 0.47 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Capítulo 2 Introducción y Objetivos | Proyecto final: Métodos Estadísticos" />
+  <meta property="og:title" content="Capítulo 2 Introducción y Objetivos | Análisis estadístico del efecto de la ceniza volante sobre la resistencia del concreto" />
   <meta property="og:type" content="book" />
   
-  <meta property="og:description" content="Informe y Análisis Estadístico Final del Curso de Métodos Estadísticos." />
+  <meta property="og:description" content="Análisis estadístico del efecto de la ceniza volante y el tiempo de curado sobre la resistencia a la compresión del concreto." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Capítulo 2 Introducción y Objetivos | Proyecto final: Métodos Estadísticos" />
+  <meta name="twitter:title" content="Capítulo 2 Introducción y Objetivos | Análisis estadístico del efecto de la ceniza volante sobre la resistencia del concreto" />
   
-  <meta name="twitter:description" content="Informe y Análisis Estadístico Final del Curso de Métodos Estadísticos." />
+  <meta name="twitter:description" content="Análisis estadístico del efecto de la ceniza volante y el tiempo de curado sobre la resistencia a la compresión del concreto." />
   
 
 <meta name="author" content="Camilo Padilla &amp; Juan Campo" />
 
 
-<meta name="date" content="2026-10-01" />
+<meta name="date" content="2026-10-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,6 +52,8 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -162,16 +164,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.2" data-path="eda.html"><a href="eda.html#importamos-librerias"><i class="fa fa-check"></i><b>3.2</b> Importamos librerias</a></li>
 <li class="chapter" data-level="3.3" data-path="eda.html"><a href="eda.html#carga-de-datos"><i class="fa fa-check"></i><b>3.3</b> Carga de Datos</a></li>
 <li class="chapter" data-level="3.4" data-path="eda.html"><a href="eda.html#diccionario-de-variables"><i class="fa fa-check"></i><b>3.4</b> Diccionario de Variables</a></li>
-<li class="chapter" data-level="3.5" data-path="eda.html"><a href="eda.html#exploraci%C3%B3n-del-data-set."><i class="fa fa-check"></i><b>3.5</b> Exploración del data set.</a>
+<li class="chapter" data-level="3.5" data-path="eda.html"><a href="eda.html#exploraci%C3%B3n-del-data-set."><i class="fa fa-check"></i><b>3.5</b> Exploración del data set.</a></li>
+<li class="chapter" data-level="3.6" data-path="eda.html"><a href="eda.html#calidad-y-estructura-de-los-datos"><i class="fa fa-check"></i><b>3.6</b> Calidad y estructura de los datos</a></li>
+<li class="chapter" data-level="3.7" data-path="eda.html"><a href="eda.html#tabla-descriptiva-de-las-variables"><i class="fa fa-check"></i><b>3.7</b> Tabla descriptiva de las variables</a>
 <ul>
-<li class="chapter" data-level="3.5.1" data-path="eda.html"><a href="eda.html#exploraci%C3%B3n-de-la-variable-de-respuesta"><i class="fa fa-check"></i><b>3.5.1</b> Exploración de la variable de respuesta</a></li>
+<li class="chapter" data-level="3.7.1" data-path="eda.html"><a href="eda.html#exploraci%C3%B3n-de-la-variable-de-respuesta"><i class="fa fa-check"></i><b>3.7.1</b> Exploración de la variable de respuesta</a></li>
 </ul></li>
-<li class="chapter" data-level="3.6" data-path="eda.html"><a href="eda.html#anlisis-univariado-de-las-variables"><i class="fa fa-check"></i><b>3.6</b> Anlisis Univariado de las variables</a>
+<li class="chapter" data-level="3.8" data-path="eda.html"><a href="eda.html#anlisis-univariado-de-las-variables"><i class="fa fa-check"></i><b>3.8</b> Anlisis Univariado de las variables</a>
 <ul>
-<li class="chapter" data-level="3.6.1" data-path="eda.html"><a href="eda.html#analisis-boxplot-tiempo-de-curado"><i class="fa fa-check"></i><b>3.6.1</b> Analisis boxplot tiempo de curado</a></li>
+<li class="chapter" data-level="3.8.1" data-path="eda.html"><a href="eda.html#analisis-boxplot-tiempo-de-curado"><i class="fa fa-check"></i><b>3.8.1</b> Analisis boxplot tiempo de curado</a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="eda.html"><a href="eda.html#analisis-bivariado"><i class="fa fa-check"></i><b>3.9</b> Analisis Bivariado</a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="eda.html"><a href="eda.html#creacion-de-nuevas-variables"><i class="fa fa-check"></i><b>3.9.1</b> Creacion de nuevas variables</a></li>
+<li class="chapter" data-level="3.9.2" data-path="eda.html"><a href="eda.html#tabla-descriptiva-de-las-nuevas-variables"><i class="fa fa-check"></i><b>3.9.2</b> Tabla descriptiva de las nuevas variables</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="eda.html"><a href="eda.html#pruebas-de-normalidad"><i class="fa fa-check"></i><b>3.10</b> Pruebas de normalidad</a>
+<ul>
+<li class="chapter" data-level="3.10.1" data-path="eda.html"><a href="eda.html#validaci%C3%B3n-visual-q-q-plots"><i class="fa fa-check"></i><b>3.10.1</b> 2. VALIDACIÓN VISUAL (Q-Q PLOTS)</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
+<li><a href="https://github.com/Juan-cmp/Metodos-estadististicos-proyecto" target="blank">Repositorio en GitHub</a></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con Bookdown</a></li>
 
 </ul>
@@ -183,7 +197,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Proyecto final: Métodos Estadísticos</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Análisis estadístico del efecto de la ceniza volante sobre la resistencia del concreto</a>
           </h1>
         </div>
 
