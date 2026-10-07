@@ -277,6 +277,126 @@ tabla_independientes |>
   
 ```
 
+```{r densidad-cemento}
+df_clean |> 
+  ggplot(aes(x = cemento)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    binwidth = 20,
+    fill = "#1b9e77",
+    color = "white",
+    alpha = 0.6
+  ) +
+  geom_density(color = "#1b9e77", linewidth = 1.2) +
+  labs(
+    title = "Distribución de la dosificación de cemento",
+    x = "Cemento (kg/m³)",
+    y = "Densidad"
+  ) +
+  theme_bw()
+```
+La distribución del **cemento** presenta una forma unimodal con un sesgo positivo moderado. La mayor concentración de observaciones se encuentra aproximadamente entre los $200$ y $350\text{ kg/m}^3$, mientras que algunos valores cercanos a $540\text{ kg/m}^3$ prolongan la cola superior. Esta asimetría y la extensión de la cola derecha evidencian una distribución **no normal**, aunque relativamente cercana a una forma acampanada.
+
+```{r densidad-escoria}
+df_clean |> 
+  ggplot(aes(x = escoria)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    binwidth = 20,
+    fill = "#66a61e",
+    color = "white",
+    alpha = 0.6
+  ) +
+  geom_density(color = "#66a61e", linewidth = 1.2) +
+  labs(
+    title = "Distribución de la dosificación de escoria",
+    x = "Escoria de alto horno (kg/m³)",
+    y = "Densidad"
+  ) +
+  theme_bw()
+```
+La distribución de **escoria** se concentra en valores bajos y presenta un marcado sesgo positivo. La mediana es de aproximadamente $22\text{ kg/m}^3$, mientras que una proporción importante de mezclas no contiene escoria y la cola se extiende hasta cerca de $360\text{ kg/m}^3$. La concentración en cero y la cola derecha prolongada muestran que la variable tiene una distribución **no normal**.
+
+```{r densidad-agua}
+df_clean |> 
+  ggplot(aes(x = agua)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    binwidth = 5,
+    fill = "#e6ab02",
+    color = "white",
+    alpha = 0.6
+  ) +
+  geom_density(color = "#e6ab02", linewidth = 1.2) +
+  labs(
+    title = "Distribución de la cantidad de agua",
+    x = "Agua (kg/m³)",
+    y = "Densidad"
+  ) +
+  theme_bw()
+```
+La distribución del **agua** es unimodal y relativamente simétrica, con una concentración principal alrededor de $180\text{ kg/m}^3$. Sin embargo, se observan pequeñas desviaciones en los extremos, con valores que van aproximadamente de $122$ a $247\text{ kg/m}^3$. Por ello, aunque su forma es cercana a una campana, las discrepancias en las colas evidencian una distribución **no normal** en sentido estricto.
+
+```{r densidad-superplast}
+df_clean |> 
+  ggplot(aes(x = superplast)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    binwidth = 2,
+    fill = "#d95f02",
+    color = "white",
+    alpha = 0.6
+  ) +
+  geom_density(color = "#d95f02", linewidth = 1.2) +
+  labs(
+    title = "Distribución de la dosificación de superplastificante",
+    x = "Superplastificante (kg/m³)",
+    y = "Densidad"
+  ) +
+  theme_bw()
+```
+La distribución del **superplastificante** presenta un marcado sesgo positivo. Se observa una concentración importante en valores iguales o cercanos a $0\text{ kg/m}^3$, seguida de una cola que se extiende hasta aproximadamente $32\text{ kg/m}^3$. Este comportamiento refleja el uso diferenciado del aditivo entre las mezclas y confirma una distribución **no normal**.
+
+```{r densidad-agregado-grueso}
+df_clean |> 
+  ggplot(aes(x = agregado_grueso)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    binwidth = 15,
+    fill = "#7570b3",
+    color = "white",
+    alpha = 0.6
+  ) +
+  geom_density(color = "#7570b3", linewidth = 1.2) +
+  labs(
+    title = "Distribución del agregado grueso",
+    x = "Agregado grueso (kg/m³)",
+    y = "Densidad"
+  ) +
+  theme_bw()
+```
+La distribución del **agregado grueso** es aproximadamente unimodal y simétrica, con la mayor parte de los valores entre $900$ y $1050\text{ kg/m}^3$. Se aprecia una ligera variación hacia los extremos, con un rango aproximado entre $801$ y $1145\text{ kg/m}^3$. En conjunto, la forma es cercana a la normal, aunque las pequeñas desviaciones observadas indican una distribución **no normal**.
+
+```{r densidad-agregado-fino}
+df_clean |> 
+  ggplot(aes(x = agregado_fino)) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    binwidth = 15,
+    fill = "#a6761d",
+    color = "white",
+    alpha = 0.6
+  ) +
+  geom_density(color = "#a6761d", linewidth = 1.2) +
+  labs(
+    title = "Distribución del agregado fino",
+    x = "Agregado fino (kg/m³)",
+    y = "Densidad"
+  ) +
+  theme_bw()
+```
+La distribución del **agregado fino** es unimodal y relativamente equilibrada, con una concentración principal alrededor de $780\text{ kg/m}^3$. Presenta una ligera asimetría hacia la izquierda y valores comprendidos aproximadamente entre $594$ y $993\text{ kg/m}^3$. Aunque visualmente se aproxima a una distribución acampanada, las discrepancias en las colas evidencian una distribución **no normal**.
+
 ```{r}
 df_clean |> 
   ggplot(aes(x = ceniza)) +
