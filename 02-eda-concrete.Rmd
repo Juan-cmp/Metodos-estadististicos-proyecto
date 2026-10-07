@@ -400,26 +400,26 @@ df_clean |>
 
 
 ### Creacion de nuevas variables
+
+Para acercarnos a los objetivos propuestos crearemos nuevas variables las cuales son producto de la transformación y combinación de las variables originales:
 ```{r}
 df_fe <- df_clean |> 
   mutate(
-    # 1. Razón Agua / Cementante (Agua / [Cemento + Ceniza])
+    # Razón Agua / Cementante (Agua / [Cemento + Ceniza])
     razon_agua_cementante = agua / (cemento + ceniza),
     
-    # 2. Porcentaje de Cemento sustituido por Ceniza (0% a ~50%)
+    #Porcentaje de Cemento sustituido por Ceniza (0% a ~50%)
     pct_ceniza = (ceniza / (cemento + ceniza)) * 100,
     
-    # 3. Clasificación del reemplazo en niveles (para futuros ANOVAs)
+    #  Clasificación del reemplazo en niveles (para futuros ANOVAs)
     nivel_ceniza = factor(case_when(
       pct_ceniza == 0 ~ "0% (Control)",
       pct_ceniza > 0 & pct_ceniza <= 20 ~ "Bajo (<= 20%)",
       pct_ceniza > 20 ~ "Alto (> 20%)"
     ), levels = c("0% (Control)", "Bajo (<= 20%)", "Alto (> 20%)")),
     
-    # 4. Transformación Logarítmica de la Edad (Linealiza la ganancia de resistencia)
-    log_edad = log(edad),
-    
-    # 5. Etapas estándar de curado
+
+    # Etapas estándar de curado
     etapa_curado = factor(case_when(
       edad <= 7 ~ "Temprano (<= 7d)",
       edad > 7 & edad <= 28 ~ "Estándar (14-28d)",
@@ -428,11 +428,22 @@ df_fe <- df_clean |>
   )
 ```
 
+¿Por que decidimos crear esta nuevas variables?
+1. **Creación de Grupos para Pruebas de Hipótesis (Discretización):**  
+
+   * **`etapa_curado`:** Agrupa los días en 3 periodos (*Temprano $\le 7$ días*, *Estándar $14-28$ días* y *Tardío $> 28$ días*) para evaluar cómo madura el material en el tiempo.
+   * **`nivel_ceniza`:** Agrupa las mezclas en 3 categorías (*Sin Ceniza*, *Uso Bajo $\le 20\%$* y *Uso Alto $> 20\%$*) para comparar el impacto del aditivo frente al grupo de control.
+
+2. **Creación de Métricas Relativas (Proporciones):**  
+   En lugar de analizar los kilos sueltos de cada material, se crearon dos indicadores más representativos:
+   * **`pct_ceniza`:** Indica qué porcentaje del cemento total fue reemplazado por ceniza volante.
+   * **`razon_agua_cementante`:** Mide cuánta agua se usó en relación con el total de polvos aglutinantes ($\text{agua} / [\text{cemento} + \text{ceniza}]$), resumiendo tres columnas en una sola métrica de consistencia de la mezcla.
+
 ### Tabla descriptiva de las nuevas variables
 
 ```{r tabla-nuevas-variables-numericas}
 tabla_nuevas_numericas <- df_fe |>
-  select(razon_agua_cementante, pct_ceniza, log_edad) |>
+  select(razon_agua_cementante, pct_ceniza) |>
   pivot_longer(
     cols = everything(),
     names_to = "variable",
@@ -499,7 +510,9 @@ resultado_cemento <- nortest::lillie.test(df_clean$cemento)
 resultado_cemento
 ```
 
-El p-valor de la prueba de Lilliefors permite decidir si la variable **cemento** puede considerarse normal. La conclusión debe acompañarse del gráfico Q-Q, prestando atención a la alineación de los puntos en el centro y en las colas.
+Al aplicar la prueba de normalidad de Lilliefors a la variable **cemento**, se obtuvo un p-valor $< 2.2 \times 10^{-16}$. Al ser significativamente menor que el nivel de significancia $\alpha = 0.05$, se rechaza la hipótesis nula de normalidad; por tanto, la dosificación de cemento no sigue una distribución normal.
+
+Esta conclusión se corrobora visualmente mediante el **gráfico Q-Q**. Aunque los cuantiles centrales se aproximan a la recta teórica, se observan desviaciones en ambas colas, especialmente en la cola inferior y en los valores altos. En consecuencia, la variable **cemento** presenta una distribución aproximadamente acampanada, pero no normal.
 
 ```{r qq-cemento}
 qqnorm(df_clean$cemento, pch = 1, frame = FALSE,
@@ -514,7 +527,9 @@ resultado_escoria <- nortest::lillie.test(df_clean$escoria)
 resultado_escoria
 ```
 
-El p-valor de la prueba de Lilliefors permite decidir si la variable **escoria** sigue una distribución normal. El gráfico Q-Q permite identificar desviaciones asociadas con asimetría, colas o concentración de valores.
+Al aplicar la prueba de normalidad de Lilliefors a la variable **escoria**, se obtuvo un p-valor $< 2.2 \times 10^{-16}$. Como este valor es significativamente menor que $\alpha = 0.05$, se rechaza la hipótesis de normalidad y se concluye que la escoria no sigue una distribución normal.
+
+El **gráfico Q-Q** muestra desviaciones pronunciadas respecto de la recta teórica, asociadas con la concentración de observaciones en valores bajos y con una cola superior extendida. La forma observada es consistente con una distribución asimétrica y con la presencia de mezclas que no incorporan escoria.
 
 ```{r qq-escoria}
 qqnorm(df_clean$escoria, pch = 1, frame = FALSE,
@@ -529,7 +544,9 @@ resultado_ceniza <- nortest::lillie.test(df_clean$ceniza)
 resultado_ceniza
 ```
 
-El p-valor de la prueba de Lilliefors permite decidir si la variable **ceniza volante** sigue una distribución normal. La concentración de observaciones en cero puede reflejarse como una desviación visible respecto de la línea del gráfico Q-Q.
+Al aplicar la prueba de normalidad de Lilliefors a la variable **ceniza volante**, se obtuvo un p-valor $< 2.2 \times 10^{-16}$. Dado que es significativamente menor que $\alpha = 0.05$, se rechaza la hipótesis nula y se concluye que la ceniza volante no sigue una distribución normal.
+
+Esta conclusión se corrobora mediante el **gráfico Q-Q**, donde la concentración de observaciones en $0\text{ kg/m}^3$ genera una desviación fuerte respecto de la recta, especialmente en la parte inferior, seguida de discrepancias en la cola superior. Por tanto, la inflación de ceros y la asimetría impiden considerar normal la dosificación de ceniza volante.
 
 ```{r qq-ceniza}
 qqnorm(df_clean$ceniza, pch = 1, frame = FALSE,
@@ -544,7 +561,9 @@ resultado_agua <- nortest::lillie.test(df_clean$agua)
 resultado_agua
 ```
 
-El p-valor de la prueba de Lilliefors permite decidir si la variable **agua** puede considerarse normal. La validación visual debe comprobar si los puntos siguen aproximadamente la línea de referencia.
+Al aplicar la prueba de normalidad de Lilliefors a la variable **agua**, se obtuvo un p-valor $< 2.2 \times 10^{-16}$. Al ser significativamente menor que $\alpha = 0.05$, se rechaza la hipótesis de normalidad; en consecuencia, la cantidad de agua no sigue estrictamente una distribución normal.
+
+En el **gráfico Q-Q**, los cuantiles centrales siguen de manera aproximada la recta teórica, pero se observan discrepancias sistemáticas en las colas. Esto indica una distribución relativamente cercana a la forma normal en el centro, aunque las desviaciones globales son suficientes para rechazar la normalidad.
 
 ```{r qq-agua}
 qqnorm(df_clean$agua, pch = 1, frame = FALSE,
@@ -559,7 +578,9 @@ resultado_superplast <- nortest::lillie.test(df_clean$superplast)
 resultado_superplast
 ```
 
-El p-valor de la prueba de Lilliefors permite decidir si la variable **superplastificante** sigue una distribución normal. El gráfico Q-Q ayuda a identificar el efecto de posibles valores cero y de las desviaciones en las colas.
+Al aplicar la prueba de normalidad de Lilliefors a la variable **superplastificante**, se obtuvo un p-valor $< 2.2 \times 10^{-16}$. Puesto que es significativamente menor que $\alpha = 0.05$, se rechaza la hipótesis nula y se concluye que la dosificación de superplastificante no sigue una distribución normal.
+
+El **gráfico Q-Q** evidencia una desviación marcada en la parte inferior debido a la concentración de valores iguales o cercanos a cero, además de discrepancias en la cola superior. Este patrón confirma una distribución asimétrica y la presencia de mezclas sin este aditivo.
 
 ```{r qq-superplast}
 qqnorm(df_clean$superplast, pch = 1, frame = FALSE,
@@ -574,7 +595,9 @@ resultado_agregado_grueso <- nortest::lillie.test(df_clean$agregado_grueso)
 resultado_agregado_grueso
 ```
 
-El p-valor de la prueba de Lilliefors permite decidir si la variable **agregado grueso** puede considerarse normal. La alineación de los puntos con la recta roja proporciona la comprobación visual correspondiente.
+Al aplicar la prueba de normalidad de Lilliefors a la variable **agregado grueso**, se obtuvo un p-valor $< 2.2 \times 10^{-16}$. Como el p-valor es significativamente menor que $\alpha = 0.05$, se rechaza la hipótesis de normalidad y se concluye que la cantidad de agregado grueso no sigue una distribución normal.
+
+En el **gráfico Q-Q**, los puntos centrales presentan una alineación razonable con la recta teórica, pero las colas se separan de ella, sobre todo en los valores extremos. Por ello, aunque la distribución parece relativamente simétrica, las desviaciones detectadas impiden asumir normalidad.
 
 ```{r qq-agregado-grueso}
 qqnorm(df_clean$agregado_grueso, pch = 1, frame = FALSE,
@@ -589,7 +612,9 @@ resultado_agregado_fino <- nortest::lillie.test(df_clean$agregado_fino)
 resultado_agregado_fino
 ```
 
-El p-valor de la prueba de Lilliefors permite decidir si la variable **agregado fino** sigue una distribución normal. El gráfico Q-Q permite observar si existen desviaciones sistemáticas en el centro o en los extremos.
+Al aplicar la prueba de normalidad de Lilliefors a la variable **agregado fino**, se obtuvo un p-valor $< 2.2 \times 10^{-16}$. Debido a que este valor es significativamente menor que $\alpha = 0.05$, se rechaza la hipótesis nula y se concluye que la cantidad de agregado fino no sigue una distribución normal.
+
+El **gráfico Q-Q** muestra una aproximación aceptable a la recta en los cuantiles centrales, pero desviaciones visibles en las colas. En consecuencia, la variable puede parecer cercana a la normalidad desde el punto de vista descriptivo, aunque la prueba y los extremos indican que no cumple estrictamente dicho supuesto.
 
 ```{r qq-agregado-fino}
 qqnorm(df_clean$agregado_fino, pch = 1, frame = FALSE,
@@ -604,7 +629,9 @@ resultado_edad <- nortest::lillie.test(df_clean$edad)
 resultado_edad
 ```
 
-El p-valor de la prueba de Lilliefors permite decidir si la variable **edad** sigue una distribución normal. Debido a la concentración en edades de ensayo específicas y a la cola hacia edades largas, el gráfico Q-Q debe revisarse especialmente en forma de escalera y en sus extremos.
+Al aplicar la prueba de normalidad de Lilliefors a la variable **edad**, se obtuvo un p-valor $< 2.2 \times 10^{-16}$. Al ser significativamente menor que $\alpha = 0.05$, se rechaza la hipótesis de normalidad y se concluye que la edad de curado no sigue una distribución normal.
+
+Esta conclusión se corrobora en el **gráfico Q-Q**, que presenta una forma escalonada por la concentración de ensayos en edades específicas, especialmente $7$, $14$ y $28$ días, junto con una desviación notable en la cola superior debido a los ensayos de hasta $365$ días. La variable presenta, por tanto, asimetría y concentración discreta incompatibles con una distribución normal.
 
 ```{r qq-edad}
 qqnorm(df_clean$edad, pch = 1, frame = FALSE,
@@ -619,7 +646,9 @@ resultado_resistencia <- nortest::lillie.test(df_clean$resistencia)
 resultado_resistencia
 ```
 
-El p-valor de la prueba de Lilliefors permite decidir si la variable **resistencia** puede considerarse normal. El gráfico Q-Q permite evaluar si la aproximación visual a la normalidad se mantiene en el centro y en las colas.
+Al aplicar la prueba de normalidad de Lilliefors a la variable **resistencia**, se obtuvo un p-valor $< 2.2 \times 10^{-16}$. Como es significativamente menor que $\alpha = 0.05$, se rechaza la hipótesis nula y se concluye que la resistencia a la compresión no sigue una distribución normal.
+
+En el **gráfico Q-Q**, los cuantiles centrales se aproximan a la recta teórica, pero se observan discrepancias en las colas, particularmente en los valores de resistencia más bajos y más altos. Así, aunque la distribución es relativamente equilibrada y cercana a la normal en el centro, no cumple estrictamente el supuesto de normalidad.
 
 ```{r qq-resistencia}
 qqnorm(df_clean$resistencia, pch = 1, frame = FALSE,
@@ -680,7 +709,5 @@ tabla_normalidad |>
     position = "center"
   )
 ```
-
-En conjunto, la prueba de Lilliefors y los gráficos Q-Q deben interpretarse de manera complementaria. Con $n = 1030$, pequeñas desviaciones pueden producir p-valores significativos; por ello, la decisión estadística debe acompañarse de la forma observada en los gráficos y del contexto de cada variable. Para asociaciones entre variables que no cumplan normalidad, se recomienda considerar la correlación de Spearman. En modelos de regresión, la normalidad debe evaluarse principalmente sobre los residuos y no sobre cada variable predictora de manera aislada.
 
 
