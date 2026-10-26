@@ -4,6 +4,7 @@ tab:tabla-descriptiva
 tab:unnamed-chunk-4
 tab:tabla-nuevas-variables-numericas
 tab:tabla-nuevas-variables-categoricas
+tab:tabla-pruebas-normalidad
 presentación
 estructura-del-documento
 intro
@@ -28,4 +29,13 @@ analisis-bivariado
 creacion-de-nuevas-variables
 tabla-descriptiva-de-las-nuevas-variables
 pruebas-de-normalidad
-validación-visual-q-q-plots
+cemento
+escoria
+ceniza-volante
+agua
+superplastificante
+agregado-grueso
+agregado-fino
+edad
+resistencia
+resumen-de-las-pruebas-de-normalidad
