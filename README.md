@@ -2,64 +2,51 @@
 
 Analisis estadistico del efecto de la ceniza volante y del tiempo de curado sobre la resistencia a la compresion del concreto.
 
-El proyecto utiliza el conjunto de datos **Concrete Compressive Strength** y presenta analisis exploratorio, pruebas de hipotesis, comparacion de grupos, correlacion y modelacion estadistica.
+El proyecto utiliza el conjunto de datos **Concrete Compressive Strength** y presenta analisis exploratorio, intervalos de confianza, pruebas de hipotesis, comparacion de grupos, correlacion y un modelo de regresion lineal multiple.
 
 ## Contenido
 
-- `index.Rmd`: portada, presentacion y configuracion general.
+- `index.Rmd`: portada, presentacion, configuracion general y funciones compartidas (tablas, tema y colores de los graficos).
 - `01-introduccion.Rmd`: contexto, problematica, objetivos y justificacion.
-- `02-eda-concrete.Rmd`: analisis exploratorio del conjunto de datos.
+- `02-eda-concrete.Rmd`: analisis exploratorio del conjunto de datos y pruebas de normalidad.
+- `03-intervalos-confianza.Rmd`: intervalos de confianza (objetivo 1).
+- `04-comparacion-ceniza.Rmd`: comparacion de mezclas con y sin ceniza (objetivo 2).
+- `05-anova-curado.Rmd`: resistencia segun las etapas de curado (objetivo 3).
+- `06-correlacion-ceniza.Rmd`: correlacion entre ceniza y resistencia (objetivo 4).
+- `07-regresion-multiple.Rmd`: modelo de regresion lineal multiple (objetivo 5).
+- `08-conclusiones.Rmd`: conclusiones.
 - `concrete+compressive+strength/`: datos y documentacion de la fuente.
 - `_bookdown.yml`: orden de los capitulos y nombre del libro.
-- `_output.yml`: formatos de salida y configuracion de LaTeX.
+- `_output.yml`: configuracion de la salida HTML.
 - `docs/`: sitio HTML generado.
 
 ## Requisitos
 
 - R 4.6 o posterior.
-- RStudio recomendado.
-- Paquetes de R: `bookdown`, `rmarkdown`, `knitr` y los paquetes utilizados en los chunks del libro.
-- TinyTeX para generar PDF. El proyecto usa `xelatex` como motor LaTeX.
+- RStudio recomendado (incluye Pandoc).
+- Paquetes de R: `bookdown`, `rmarkdown`, `knitr`, `kableExtra`, `tidyverse`, `readxl`, `moments`, `patchwork`, `GGally`, `effsize`, `rstatix`, `lmtest`, `car`, `janitor` y `nortest`.
 
 ## Instalacion
 
-En RStudio, instala los paquetes principales:
+En RStudio, instala los paquetes:
 
 ```r
-install.packages(c("bookdown", "rmarkdown", "knitr", "tinytex"))
+install.packages(c(
+  "bookdown", "rmarkdown", "knitr", "kableExtra", "tidyverse", "readxl",
+  "moments", "patchwork", "GGally", "effsize", "rstatix", "lmtest",
+  "car", "janitor", "nortest"
+))
 ```
-
-Para habilitar la salida PDF, instala TinyTeX una sola vez:
-
-```r
-tinytex::install_tinytex()
-```
-
-Si RStudio no encuentra `xelatex` despues de la instalacion, reinicia la sesion con `Ctrl + Shift + F10` y verifica:
-
-```r
-tinytex::tlmgr_path("add")
-Sys.which("xelatex")
-```
-
-El segundo comando debe devolver la ruta a `xelatex.exe`.
 
 ## Construccion del libro
 
-Desde la raiz del proyecto, ejecuta en RStudio:
+El libro se genera solo en formato HTML. Desde la raiz del proyecto, ejecuta en RStudio:
 
 ```r
 bookdown::render_book("index.Rmd")
 ```
 
-El sitio HTML se genera en `docs/`. Tambien puedes construir un formato especifico:
-
-```r
-bookdown::render_book("index.Rmd", "bookdown::gitbook")
-bookdown::render_book("index.Rmd", "bookdown::pdf_book")
-```
-
-El formato PDF requiere que `Sys.which("xelatex")` devuelva una ruta valida.
+El sitio HTML se genera en `docs/`. Los capitulos comparten los mismos objetos, por lo que hay que construir el libro completo y no cada capitulo por separado.
 
 ## Publicacion
 

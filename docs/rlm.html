@@ -1,0 +1,4128 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 8 Modelo de regresión lineal múltiple | Análisis estadístico del efecto de la ceniza volante sobre la resistencia del concreto</title>
+  <meta name="description" content="Análisis estadístico del efecto de la ceniza volante y el tiempo de curado sobre la resistencia a la compresión del concreto." />
+  <meta name="generator" content="bookdown 0.47 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 8 Modelo de regresión lineal múltiple | Análisis estadístico del efecto de la ceniza volante sobre la resistencia del concreto" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Análisis estadístico del efecto de la ceniza volante y el tiempo de curado sobre la resistencia a la compresión del concreto." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 8 Modelo de regresión lineal múltiple | Análisis estadístico del efecto de la ceniza volante sobre la resistencia del concreto" />
+  
+  <meta name="twitter:description" content="Análisis estadístico del efecto de la ceniza volante y el tiempo de curado sobre la resistencia a la compresión del concreto." />
+  
+
+<meta name="author" content="Camilo Padilla &amp; Juan Campo" />
+
+
+<meta name="date" content="2026-11-21" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="correlacion.html"/>
+<link rel="next" href="conclusiones.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Proyecto Final - Métodos Estadísticos</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Presentación</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#estructura-del-documento"><i class="fa fa-check"></i><b>1.1</b> Estructura del Documento</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introducción y Objetivos</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#contexto"><i class="fa fa-check"></i><b>2.1</b> Contexto</a></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#problem%C3%A1tica"><i class="fa fa-check"></i><b>2.2</b> Problemática</a></li>
+<li class="chapter" data-level="2.3" data-path="intro.html"><a href="intro.html#objetivos-del-proyecto"><i class="fa fa-check"></i><b>2.3</b> Objetivos del Proyecto</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="intro.html"><a href="intro.html#objetivo-general"><i class="fa fa-check"></i><b>2.3.1</b> Objetivo general</a></li>
+<li class="chapter" data-level="2.3.2" data-path="intro.html"><a href="intro.html#objetivos-espec%C3%ADficos"><i class="fa fa-check"></i><b>2.3.2</b> Objetivos específicos</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="intro.html"><a href="intro.html#justificaci%C3%B3n"><i class="fa fa-check"></i><b>2.4</b> Justificación</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="eda.html"><a href="eda.html"><i class="fa fa-check"></i><b>3</b> Análisis Exploratorio de Datos (EDA)</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="eda.html"><a href="eda.html#dataset-y-ficha-tecnica"><i class="fa fa-check"></i><b>3.1</b> Dataset y ficha tecnica</a></li>
+<li class="chapter" data-level="3.2" data-path="eda.html"><a href="eda.html#importamos-librerias"><i class="fa fa-check"></i><b>3.2</b> Importamos librerias</a></li>
+<li class="chapter" data-level="3.3" data-path="eda.html"><a href="eda.html#carga-de-datos"><i class="fa fa-check"></i><b>3.3</b> Carga de Datos</a></li>
+<li class="chapter" data-level="3.4" data-path="eda.html"><a href="eda.html#diccionario-de-variables"><i class="fa fa-check"></i><b>3.4</b> Diccionario de Variables</a></li>
+<li class="chapter" data-level="3.5" data-path="eda.html"><a href="eda.html#exploraci%C3%B3n-del-data-set."><i class="fa fa-check"></i><b>3.5</b> Exploración del data set.</a></li>
+<li class="chapter" data-level="3.6" data-path="eda.html"><a href="eda.html#calidad-y-estructura-de-los-datos"><i class="fa fa-check"></i><b>3.6</b> Calidad y estructura de los datos</a></li>
+<li class="chapter" data-level="3.7" data-path="eda.html"><a href="eda.html#tabla-descriptiva-de-las-variables"><i class="fa fa-check"></i><b>3.7</b> Tabla descriptiva de las variables</a>
+<ul>
+<li class="chapter" data-level="3.7.1" data-path="eda.html"><a href="eda.html#exploraci%C3%B3n-de-la-variable-de-respuesta"><i class="fa fa-check"></i><b>3.7.1</b> Exploración de la variable de respuesta</a></li>
+</ul></li>
+<li class="chapter" data-level="3.8" data-path="eda.html"><a href="eda.html#anlisis-univariado-de-las-variables"><i class="fa fa-check"></i><b>3.8</b> Anlisis Univariado de las variables</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="eda.html"><a href="eda.html#analisis-boxplot-tiempo-de-curado"><i class="fa fa-check"></i><b>3.8.1</b> Analisis boxplot tiempo de curado</a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="eda.html"><a href="eda.html#analisis-bivariado"><i class="fa fa-check"></i><b>3.9</b> Analisis Bivariado</a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="eda.html"><a href="eda.html#creacion-de-nuevas-variables"><i class="fa fa-check"></i><b>3.9.1</b> Creacion de nuevas variables</a></li>
+<li class="chapter" data-level="3.9.2" data-path="eda.html"><a href="eda.html#tabla-descriptiva-de-las-nuevas-variables"><i class="fa fa-check"></i><b>3.9.2</b> Tabla descriptiva de las nuevas variables</a></li>
+<li class="chapter" data-level="3.9.3" data-path="eda.html"><a href="eda.html#estructura-mezclas"><i class="fa fa-check"></i><b>3.9.3</b> Estructura de los datos: mezclas medidas a varias edades</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="eda.html"><a href="eda.html#pruebas-de-normalidad"><i class="fa fa-check"></i><b>3.10</b> Pruebas de normalidad</a>
+<ul>
+<li class="chapter" data-level="3.10.1" data-path="eda.html"><a href="eda.html#cemento"><i class="fa fa-check"></i><b>3.10.1</b> Cemento</a></li>
+<li class="chapter" data-level="3.10.2" data-path="eda.html"><a href="eda.html#escoria"><i class="fa fa-check"></i><b>3.10.2</b> Escoria</a></li>
+<li class="chapter" data-level="3.10.3" data-path="eda.html"><a href="eda.html#ceniza-volante"><i class="fa fa-check"></i><b>3.10.3</b> Ceniza volante</a></li>
+<li class="chapter" data-level="3.10.4" data-path="eda.html"><a href="eda.html#agua"><i class="fa fa-check"></i><b>3.10.4</b> Agua</a></li>
+<li class="chapter" data-level="3.10.5" data-path="eda.html"><a href="eda.html#superplastificante"><i class="fa fa-check"></i><b>3.10.5</b> Superplastificante</a></li>
+<li class="chapter" data-level="3.10.6" data-path="eda.html"><a href="eda.html#agregado-grueso"><i class="fa fa-check"></i><b>3.10.6</b> Agregado grueso</a></li>
+<li class="chapter" data-level="3.10.7" data-path="eda.html"><a href="eda.html#agregado-fino"><i class="fa fa-check"></i><b>3.10.7</b> Agregado fino</a></li>
+<li class="chapter" data-level="3.10.8" data-path="eda.html"><a href="eda.html#edad"><i class="fa fa-check"></i><b>3.10.8</b> Edad</a></li>
+<li class="chapter" data-level="3.10.9" data-path="eda.html"><a href="eda.html#resistencia"><i class="fa fa-check"></i><b>3.10.9</b> Resistencia</a></li>
+<li class="chapter" data-level="3.10.10" data-path="eda.html"><a href="eda.html#resumen-de-las-pruebas-de-normalidad"><i class="fa fa-check"></i><b>3.10.10</b> Resumen de las pruebas de normalidad</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="ic.html"><a href="ic.html"><i class="fa fa-check"></i><b>4</b> Intervalos de confianza</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="ic.html"><a href="ic.html#verificaci%C3%B3n-de-supuestos"><i class="fa fa-check"></i><b>4.1</b> Verificación de supuestos</a></li>
+<li class="chapter" data-level="4.2" data-path="ic.html"><a href="ic.html#resistencia-a-la-compresi%C3%B3n"><i class="fa fa-check"></i><b>4.2</b> Resistencia a la compresión</a></li>
+<li class="chapter" data-level="4.3" data-path="ic.html"><a href="ic.html#ceniza-volante-1"><i class="fa fa-check"></i><b>4.3</b> Ceniza volante</a></li>
+<li class="chapter" data-level="4.4" data-path="ic.html"><a href="ic.html#resistencia-por-grupo"><i class="fa fa-check"></i><b>4.4</b> Resistencia por grupo</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="comparacion.html"><a href="comparacion.html"><i class="fa fa-check"></i><b>5</b> Comparación de mezclas con y sin ceniza volante</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="comparacion.html"><a href="comparacion.html#hip%C3%B3tesis"><i class="fa fa-check"></i><b>5.1</b> Hipótesis</a></li>
+<li class="chapter" data-level="5.2" data-path="comparacion.html"><a href="comparacion.html#descripci%C3%B3n-por-grupo"><i class="fa fa-check"></i><b>5.2</b> Descripción por grupo</a></li>
+<li class="chapter" data-level="5.3" data-path="comparacion.html"><a href="comparacion.html#supuestos-de-la-prueba"><i class="fa fa-check"></i><b>5.3</b> Supuestos de la prueba</a></li>
+<li class="chapter" data-level="5.4" data-path="comparacion.html"><a href="comparacion.html#prueba-de-hip%C3%B3tesis"><i class="fa fa-check"></i><b>5.4</b> Prueba de hipótesis</a></li>
+<li class="chapter" data-level="5.5" data-path="comparacion.html"><a href="comparacion.html#tama%C3%B1o-del-efecto"><i class="fa fa-check"></i><b>5.5</b> Tamaño del efecto</a></li>
+<li class="chapter" data-level="5.6" data-path="comparacion.html"><a href="comparacion.html#correcci%C3%B3n-por-mezclas-repetidas"><i class="fa fa-check"></i><b>5.6</b> Corrección por mezclas repetidas</a></li>
+<li class="chapter" data-level="5.7" data-path="comparacion.html"><a href="comparacion.html#es-una-comparaci%C3%B3n-justa-balance-de-las-mezclas"><i class="fa fa-check"></i><b>5.7</b> ¿Es una comparación justa? Balance de las mezclas</a></li>
+<li class="chapter" data-level="5.8" data-path="comparacion.html"><a href="comparacion.html#comparaci%C3%B3n-ajustada-por-covariables"><i class="fa fa-check"></i><b>5.8</b> Comparación ajustada por covariables</a></li>
+<li class="chapter" data-level="5.9" data-path="comparacion.html"><a href="comparacion.html#conclusi%C3%B3n-parcial-del-objetivo-2"><i class="fa fa-check"></i><b>5.9</b> Conclusión parcial del objetivo 2</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="anova.html"><a href="anova.html"><i class="fa fa-check"></i><b>6</b> Resistencia según las etapas de curado</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="anova.html"><a href="anova.html#hip%C3%B3tesis-1"><i class="fa fa-check"></i><b>6.1</b> Hipótesis</a></li>
+<li class="chapter" data-level="6.2" data-path="anova.html"><a href="anova.html#descripci%C3%B3n-por-etapa"><i class="fa fa-check"></i><b>6.2</b> Descripción por etapa</a></li>
+<li class="chapter" data-level="6.3" data-path="anova.html"><a href="anova.html#supuestos-del-anova"><i class="fa fa-check"></i><b>6.3</b> Supuestos del ANOVA</a></li>
+<li class="chapter" data-level="6.4" data-path="anova.html"><a href="anova.html#anova-1"><i class="fa fa-check"></i><b>6.4</b> ANOVA</a></li>
+<li class="chapter" data-level="6.5" data-path="anova.html"><a href="anova.html#pruebas-post-hoc"><i class="fa fa-check"></i><b>6.5</b> Pruebas post-hoc</a></li>
+<li class="chapter" data-level="6.6" data-path="anova.html"><a href="anova.html#correcci%C3%B3n-por-mezclas-repetidas-1"><i class="fa fa-check"></i><b>6.6</b> Corrección por mezclas repetidas</a></li>
+<li class="chapter" data-level="6.7" data-path="anova.html"><a href="anova.html#depende-el-efecto-de-la-ceniza-de-la-etapa-de-curado"><i class="fa fa-check"></i><b>6.7</b> ¿Depende el efecto de la ceniza de la etapa de curado?</a></li>
+<li class="chapter" data-level="6.8" data-path="anova.html"><a href="anova.html#interacci%C3%B3n-ajustada-por-covariables"><i class="fa fa-check"></i><b>6.8</b> Interacción ajustada por covariables</a></li>
+<li class="chapter" data-level="6.9" data-path="anova.html"><a href="anova.html#conclusi%C3%B3n-parcial-del-objetivo-3"><i class="fa fa-check"></i><b>6.9</b> Conclusión parcial del objetivo 3</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="correlacion.html"><a href="correlacion.html"><i class="fa fa-check"></i><b>7</b> Correlación entre ceniza volante y resistencia</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="correlacion.html"><a href="correlacion.html#hip%C3%B3tesis-2"><i class="fa fa-check"></i><b>7.1</b> Hipótesis</a></li>
+<li class="chapter" data-level="7.2" data-path="correlacion.html"><a href="correlacion.html#verificaci%C3%B3n-de-supuestos-1"><i class="fa fa-check"></i><b>7.2</b> Verificación de supuestos</a></li>
+<li class="chapter" data-level="7.3" data-path="correlacion.html"><a href="correlacion.html#visualizaci%C3%B3n"><i class="fa fa-check"></i><b>7.3</b> Visualización</a></li>
+<li class="chapter" data-level="7.4" data-path="correlacion.html"><a href="correlacion.html#correlaci%C3%B3n-global"><i class="fa fa-check"></i><b>7.4</b> Correlación global</a></li>
+<li class="chapter" data-level="7.5" data-path="correlacion.html"><a href="correlacion.html#correlaci%C3%B3n-solo-en-mezclas-con-ceniza"><i class="fa fa-check"></i><b>7.5</b> Correlación solo en mezclas con ceniza</a></li>
+<li class="chapter" data-level="7.6" data-path="correlacion.html"><a href="correlacion.html#correlaci%C3%B3n-a-nivel-de-mezcla"><i class="fa fa-check"></i><b>7.6</b> Correlación a nivel de mezcla</a></li>
+<li class="chapter" data-level="7.7" data-path="correlacion.html"><a href="correlacion.html#correlaci%C3%B3n-por-etapa-de-curado"><i class="fa fa-check"></i><b>7.7</b> Correlación por etapa de curado</a></li>
+<li class="chapter" data-level="7.8" data-path="correlacion.html"><a href="correlacion.html#correlaci%C3%B3n-parcial"><i class="fa fa-check"></i><b>7.8</b> Correlación parcial</a></li>
+<li class="chapter" data-level="7.9" data-path="correlacion.html"><a href="correlacion.html#matriz-de-correlaciones-con-las-variables-clave"><i class="fa fa-check"></i><b>7.9</b> Matriz de correlaciones con las variables clave</a></li>
+<li class="chapter" data-level="7.10" data-path="correlacion.html"><a href="correlacion.html#conclusi%C3%B3n-parcial-del-objetivo-4"><i class="fa fa-check"></i><b>7.10</b> Conclusión parcial del objetivo 4</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="rlm.html"><a href="rlm.html"><i class="fa fa-check"></i><b>8</b> Modelo de regresión lineal múltiple</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="rlm.html"><a href="rlm.html#datos-variable-respuesta-y-variable-cualitativa"><i class="fa fa-check"></i><b>8.1</b> Datos, variable respuesta y variable cualitativa</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="rlm.html"><a href="rlm.html#variables-dummy"><i class="fa fa-check"></i><b>8.1.1</b> Variables dummy</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="rlm.html"><a href="rlm.html#an%C3%A1lisis-de-multicolinealidad"><i class="fa fa-check"></i><b>8.2</b> Análisis de multicolinealidad</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="rlm.html"><a href="rlm.html#correlaci%C3%B3n-entre-los-predictores"><i class="fa fa-check"></i><b>8.2.1</b> Correlación entre los predictores</a></li>
+<li class="chapter" data-level="8.2.2" data-path="rlm.html"><a href="rlm.html#modelo-inicial-con-todas-las-variables-posibles"><i class="fa fa-check"></i><b>8.2.2</b> Modelo inicial con todas las variables posibles</a></li>
+<li class="chapter" data-level="8.2.3" data-path="rlm.html"><a href="rlm.html#modelo-con-las-variables-depuradas"><i class="fa fa-check"></i><b>8.2.3</b> Modelo con las variables depuradas</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="rlm.html"><a href="rlm.html#modelo-completo-y-supuestos-de-los-errores"><i class="fa fa-check"></i><b>8.3</b> Modelo completo y supuestos de los errores</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="rlm.html"><a href="rlm.html#ajuste-en-la-escala-original"><i class="fa fa-check"></i><b>8.3.1</b> Ajuste en la escala original</a></li>
+<li class="chapter" data-level="8.3.2" data-path="rlm.html"><a href="rlm.html#supuestos-de-los-errores"><i class="fa fa-check"></i><b>8.3.2</b> Supuestos de los errores</a></li>
+<li class="chapter" data-level="8.3.3" data-path="rlm.html"><a href="rlm.html#elecci%C3%B3n-de-la-transformaci%C3%B3n"><i class="fa fa-check"></i><b>8.3.3</b> Elección de la transformación</a></li>
+<li class="chapter" data-level="8.3.4" data-path="rlm.html"><a href="rlm.html#modelo-completo-en-la-escala-de-la-ra%C3%ADz-cuadrada"><i class="fa fa-check"></i><b>8.3.4</b> Modelo completo en la escala de la raíz cuadrada</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="rlm.html"><a href="rlm.html#selecci%C3%B3n-de-variables-todas-las-regresiones-posibles-con-aic"><i class="fa fa-check"></i><b>8.4</b> Selección de variables: todas las regresiones posibles con AIC</a></li>
+<li class="chapter" data-level="8.5" data-path="rlm.html"><a href="rlm.html#depende-el-efecto-de-la-ceniza-de-la-etapa-de-curado-1"><i class="fa fa-check"></i><b>8.5</b> ¿Depende el efecto de la ceniza de la etapa de curado?</a>
+<ul>
+<li class="chapter" data-level="8.5.1" data-path="rlm.html"><a href="rlm.html#coeficientes-e-inferencia"><i class="fa fa-check"></i><b>8.5.1</b> Coeficientes e inferencia</a></li>
+<li class="chapter" data-level="8.5.2" data-path="rlm.html"><a href="rlm.html#pendiente-de-la-ceniza-en-cada-etapa"><i class="fa fa-check"></i><b>8.5.2</b> Pendiente de la ceniza en cada etapa</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="rlm.html"><a href="rlm.html#supuestos-de-los-errores-del-modelo-final"><i class="fa fa-check"></i><b>8.6</b> Supuestos de los errores del modelo final</a>
+<ul>
+<li class="chapter" data-level="8.6.1" data-path="rlm.html"><a href="rlm.html#falta-de-linealidad-reset"><i class="fa fa-check"></i><b>8.6.1</b> Falta de linealidad (RESET)</a></li>
+<li class="chapter" data-level="8.6.2" data-path="rlm.html"><a href="rlm.html#inferencia-robusta-hc3-y-errores-agrupados-por-mezcla"><i class="fa fa-check"></i><b>8.6.2</b> Inferencia robusta: HC3 y errores agrupados por mezcla</a></li>
+<li class="chapter" data-level="8.6.3" data-path="rlm.html"><a href="rlm.html#observaciones-influyentes"><i class="fa fa-check"></i><b>8.6.3</b> Observaciones influyentes</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="rlm.html"><a href="rlm.html#interpretaci%C3%B3n-del-modelo-final"><i class="fa fa-check"></i><b>8.7</b> Interpretación del modelo final</a>
+<ul>
+<li class="chapter" data-level="8.7.1" data-path="rlm.html"><a href="rlm.html#interpretaci%C3%B3n-de-los-coeficientes"><i class="fa fa-check"></i><b>8.7.1</b> Interpretación de los coeficientes</a></li>
+<li class="chapter" data-level="8.7.2" data-path="rlm.html"><a href="rlm.html#retrotransformaci%C3%B3n-y-escenarios-en-mpa"><i class="fa fa-check"></i><b>8.7.2</b> Retrotransformación y escenarios en MPa</a></li>
+</ul></li>
+<li class="chapter" data-level="8.8" data-path="rlm.html"><a href="rlm.html#conclusi%C3%B3n-parcial-del-objetivo-5"><i class="fa fa-check"></i><b>8.8</b> Conclusión parcial del objetivo 5</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="conclusiones.html"><a href="conclusiones.html"><i class="fa fa-check"></i><b>9</b> Conclusiones</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="conclusiones.html"><a href="conclusiones.html#hallazgos-por-objetivo"><i class="fa fa-check"></i><b>9.1</b> Hallazgos por objetivo</a></li>
+<li class="chapter" data-level="9.2" data-path="conclusiones.html"><a href="conclusiones.html#respuesta-a-la-pregunta-de-investigaci%C3%B3n"><i class="fa fa-check"></i><b>9.2</b> Respuesta a la pregunta de investigación</a></li>
+<li class="chapter" data-level="9.3" data-path="conclusiones.html"><a href="conclusiones.html#limitaciones"><i class="fa fa-check"></i><b>9.3</b> Limitaciones</a></li>
+<li class="chapter" data-level="9.4" data-path="conclusiones.html"><a href="conclusiones.html#recomendaciones-y-trabajo-futuro"><i class="fa fa-check"></i><b>9.4</b> Recomendaciones y trabajo futuro</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/Juan-cmp/Metodos-estadististicos-proyecto" target="blank">Repositorio en GitHub</a></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con Bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Análisis estadístico del efecto de la ceniza volante sobre la resistencia del concreto</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="rlm" class="section level1 hasAnchor" number="8">
+<h1><span class="header-section-number">Capítulo 8</span> Modelo de regresión lineal múltiple<a href="rlm.html#rlm" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Este capítulo desarrolla el <strong>objetivo específico 5</strong>: construir un modelo de regresión lineal múltiple para explicar la resistencia del concreto, que incluya la etapa de curado como variable cualitativa (variables <em>dummy</em>), verificando la multicolinealidad, seleccionando variables con el método de <strong>todas las regresiones posibles</strong> según el <strong>AIC</strong> y validando los supuestos de los errores.</p>
+<p>El modelo es</p>
+<p><span class="math display">\[\mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}, \qquad \varepsilon_i \overset{iid}{\sim} N(0, \sigma^2), \qquad \hat{\boldsymbol{\beta}} = (\mathbf{X}&#39;\mathbf{X})^{-1}\mathbf{X}&#39;\mathbf{y},\]</span></p>
+<p>con <span class="math inline">\(k\)</span> predictores, <span class="math inline">\(p = k + 1\)</span> coeficientes (incluido el intercepto) y <span class="math inline">\(n - p\)</span> grados de libertad del error. Cada coeficiente <span class="math inline">\(\beta_j\)</span> se interpreta como el cambio esperado en <span class="math inline">\(y\)</span> por cada unidad de <span class="math inline">\(x_j\)</span> <strong>manteniendo constantes las demás variables</strong>; por eso no coincide, en general, con la pendiente de una regresión simple.</p>
+<blockquote>
+<p><strong>Criterio de trabajo.</strong> Siguiendo la regla de la guía de transformaciones, solo se transforma la respuesta para corregir el incumplimiento de un supuesto (no para subir el <span class="math inline">\(R^2\)</span>), y se compara siempre volviendo a mirar los residuos.</p>
+</blockquote>
+<div id="datos-variable-respuesta-y-variable-cualitativa" class="section level2 hasAnchor" number="8.1">
+<h2><span class="header-section-number">8.1</span> Datos, variable respuesta y variable cualitativa<a href="rlm.html#datos-variable-respuesta-y-variable-cualitativa" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="rlm.html#cb118-1" tabindex="-1"></a>df_rlm <span class="ot">&lt;-</span> df_fe <span class="sc">|&gt;</span></span>
+<span id="cb118-2"><a href="rlm.html#cb118-2" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb118-3"><a href="rlm.html#cb118-3" tabindex="-1"></a>    <span class="at">etapa =</span> <span class="fu">factor</span>(</span>
+<span id="cb118-4"><a href="rlm.html#cb118-4" tabindex="-1"></a>      <span class="fu">case_when</span>(</span>
+<span id="cb118-5"><a href="rlm.html#cb118-5" tabindex="-1"></a>        edad <span class="sc">&lt;=</span> <span class="dv">7</span> <span class="sc">~</span> <span class="st">&quot;Temprano&quot;</span>,</span>
+<span id="cb118-6"><a href="rlm.html#cb118-6" tabindex="-1"></a>        edad <span class="sc">&lt;=</span> <span class="dv">28</span> <span class="sc">~</span> <span class="st">&quot;Estandar&quot;</span>,</span>
+<span id="cb118-7"><a href="rlm.html#cb118-7" tabindex="-1"></a>        <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">&quot;Tardio&quot;</span></span>
+<span id="cb118-8"><a href="rlm.html#cb118-8" tabindex="-1"></a>      ),</span>
+<span id="cb118-9"><a href="rlm.html#cb118-9" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Temprano&quot;</span>, <span class="st">&quot;Estandar&quot;</span>, <span class="st">&quot;Tardio&quot;</span>)</span>
+<span id="cb118-10"><a href="rlm.html#cb118-10" tabindex="-1"></a>    ),</span>
+<span id="cb118-11"><a href="rlm.html#cb118-11" tabindex="-1"></a>    <span class="at">raiz_resistencia =</span> <span class="fu">sqrt</span>(resistencia)</span>
+<span id="cb118-12"><a href="rlm.html#cb118-12" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb118-13"><a href="rlm.html#cb118-13" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb118-14"><a href="rlm.html#cb118-14" tabindex="-1"></a></span>
+<span id="cb118-15"><a href="rlm.html#cb118-15" tabindex="-1"></a><span class="co"># Funciones auxiliares de este capítulo ---------------------------------------</span></span>
+<span id="cb118-16"><a href="rlm.html#cb118-16" tabindex="-1"></a></span>
+<span id="cb118-17"><a href="rlm.html#cb118-17" tabindex="-1"></a><span class="co"># VIF (o GVIF para factores). VIF_equiv = GVIF^(1/gl) es comparable con el umbral 5.</span></span>
+<span id="cb118-18"><a href="rlm.html#cb118-18" tabindex="-1"></a>vif_tabla <span class="ot">&lt;-</span> <span class="cf">function</span>(m) {</span>
+<span id="cb118-19"><a href="rlm.html#cb118-19" tabindex="-1"></a>  v <span class="ot">&lt;-</span> car<span class="sc">::</span><span class="fu">vif</span>(m)</span>
+<span id="cb118-20"><a href="rlm.html#cb118-20" tabindex="-1"></a>  tab <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">is.matrix</span>(v)) {</span>
+<span id="cb118-21"><a href="rlm.html#cb118-21" tabindex="-1"></a>    <span class="fu">tibble</span>(<span class="at">termino =</span> <span class="fu">rownames</span>(v), <span class="at">GVIF =</span> v[, <span class="st">&quot;GVIF&quot;</span>], <span class="at">gl =</span> v[, <span class="st">&quot;Df&quot;</span>])</span>
+<span id="cb118-22"><a href="rlm.html#cb118-22" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb118-23"><a href="rlm.html#cb118-23" tabindex="-1"></a>    <span class="fu">tibble</span>(<span class="at">termino =</span> <span class="fu">names</span>(v), <span class="at">GVIF =</span> <span class="fu">unname</span>(v), <span class="at">gl =</span> <span class="dv">1</span>)</span>
+<span id="cb118-24"><a href="rlm.html#cb118-24" tabindex="-1"></a>  }</span>
+<span id="cb118-25"><a href="rlm.html#cb118-25" tabindex="-1"></a>  tab <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">VIF_equiv =</span> GVIF<span class="sc">^</span>(<span class="dv">1</span> <span class="sc">/</span> gl), <span class="at">problema =</span> VIF_equiv <span class="sc">&gt;</span> <span class="dv">5</span>)</span>
+<span id="cb118-26"><a href="rlm.html#cb118-26" tabindex="-1"></a>}</span>
+<span id="cb118-27"><a href="rlm.html#cb118-27" tabindex="-1"></a></span>
+<span id="cb118-28"><a href="rlm.html#cb118-28" tabindex="-1"></a><span class="co"># Número de condición de X&#39;X: ICN = sqrt(lambda_max / lambda_min)</span></span>
+<span id="cb118-29"><a href="rlm.html#cb118-29" tabindex="-1"></a>icn <span class="ot">&lt;-</span> <span class="cf">function</span>(m, <span class="at">estandarizar =</span> <span class="cn">FALSE</span>) {</span>
+<span id="cb118-30"><a href="rlm.html#cb118-30" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
+<span id="cb118-31"><a href="rlm.html#cb118-31" tabindex="-1"></a>  <span class="cf">if</span> (estandarizar) X <span class="ot">&lt;-</span> <span class="fu">scale</span>(X[, <span class="sc">-</span><span class="dv">1</span>, <span class="at">drop =</span> <span class="cn">FALSE</span>])</span>
+<span id="cb118-32"><a href="rlm.html#cb118-32" tabindex="-1"></a>  ev <span class="ot">&lt;-</span> <span class="fu">eigen</span>(<span class="fu">crossprod</span>(X), <span class="at">symmetric =</span> <span class="cn">TRUE</span>, <span class="at">only.values =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>values</span>
+<span id="cb118-33"><a href="rlm.html#cb118-33" tabindex="-1"></a>  <span class="fu">sqrt</span>(<span class="fu">max</span>(ev) <span class="sc">/</span> <span class="fu">min</span>(ev))</span>
+<span id="cb118-34"><a href="rlm.html#cb118-34" tabindex="-1"></a>}</span>
+<span id="cb118-35"><a href="rlm.html#cb118-35" tabindex="-1"></a></span>
+<span id="cb118-36"><a href="rlm.html#cb118-36" tabindex="-1"></a><span class="co"># Pruebas formales de los supuestos de los errores</span></span>
+<span id="cb118-37"><a href="rlm.html#cb118-37" tabindex="-1"></a>supuestos_errores <span class="ot">&lt;-</span> <span class="cf">function</span>(m) {</span>
+<span id="cb118-38"><a href="rlm.html#cb118-38" tabindex="-1"></a>  e <span class="ot">&lt;-</span> <span class="fu">resid</span>(m)</span>
+<span id="cb118-39"><a href="rlm.html#cb118-39" tabindex="-1"></a>  <span class="fu">bind_rows</span>(</span>
+<span id="cb118-40"><a href="rlm.html#cb118-40" tabindex="-1"></a>    <span class="fu">fila_sup</span>(<span class="st">&quot;Linealidad (forma funcional)&quot;</span>, <span class="st">&quot;RESET de Ramsey&quot;</span>,</span>
+<span id="cb118-41"><a href="rlm.html#cb118-41" tabindex="-1"></a>             <span class="st">&quot;El modelo esta bien especificado (relacion lineal)&quot;</span>,</span>
+<span id="cb118-42"><a href="rlm.html#cb118-42" tabindex="-1"></a>             lmtest<span class="sc">::</span><span class="fu">resettest</span>(m, <span class="at">power =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">type =</span> <span class="st">&quot;fitted&quot;</span>)<span class="sc">$</span>p.value),</span>
+<span id="cb118-43"><a href="rlm.html#cb118-43" tabindex="-1"></a>    <span class="fu">fila_sup</span>(<span class="st">&quot;Normalidad de los errores&quot;</span>, <span class="st">&quot;Shapiro-Wilk&quot;</span>,</span>
+<span id="cb118-44"><a href="rlm.html#cb118-44" tabindex="-1"></a>             <span class="st">&quot;Los errores son normales&quot;</span>, <span class="fu">shapiro.test</span>(e)<span class="sc">$</span>p.value),</span>
+<span id="cb118-45"><a href="rlm.html#cb118-45" tabindex="-1"></a>    <span class="fu">fila_sup</span>(<span class="st">&quot;Normalidad de los errores&quot;</span>, <span class="st">&quot;Lilliefors&quot;</span>,</span>
+<span id="cb118-46"><a href="rlm.html#cb118-46" tabindex="-1"></a>             <span class="st">&quot;Los errores son normales&quot;</span>, nortest<span class="sc">::</span><span class="fu">lillie.test</span>(e)<span class="sc">$</span>p.value),</span>
+<span id="cb118-47"><a href="rlm.html#cb118-47" tabindex="-1"></a>    <span class="fu">fila_sup</span>(<span class="st">&quot;Varianza constante&quot;</span>, <span class="st">&quot;Breusch-Pagan (studentizada)&quot;</span>,</span>
+<span id="cb118-48"><a href="rlm.html#cb118-48" tabindex="-1"></a>             <span class="st">&quot;Var(error) es constante (homocedasticidad)&quot;</span>, lmtest<span class="sc">::</span><span class="fu">bptest</span>(m)<span class="sc">$</span>p.value),</span>
+<span id="cb118-49"><a href="rlm.html#cb118-49" tabindex="-1"></a>    <span class="fu">fila_sup</span>(<span class="st">&quot;Independencia&quot;</span>, <span class="st">&quot;Durbin-Watson&quot;</span>,</span>
+<span id="cb118-50"><a href="rlm.html#cb118-50" tabindex="-1"></a>             <span class="st">&quot;No hay autocorrelacion de orden 1&quot;</span>, lmtest<span class="sc">::</span><span class="fu">dwtest</span>(m)<span class="sc">$</span>p.value)</span>
+<span id="cb118-51"><a href="rlm.html#cb118-51" tabindex="-1"></a>  )</span>
+<span id="cb118-52"><a href="rlm.html#cb118-52" tabindex="-1"></a>}</span>
+<span id="cb118-53"><a href="rlm.html#cb118-53" tabindex="-1"></a></span>
+<span id="cb118-54"><a href="rlm.html#cb118-54" tabindex="-1"></a><span class="co"># Desviación estándar de los residuos por tercil del valor ajustado</span></span>
+<span id="cb118-55"><a href="rlm.html#cb118-55" tabindex="-1"></a>sd_terciles <span class="ot">&lt;-</span> <span class="cf">function</span>(m) {</span>
+<span id="cb118-56"><a href="rlm.html#cb118-56" tabindex="-1"></a>  f <span class="ot">&lt;-</span> <span class="fu">fitted</span>(m)</span>
+<span id="cb118-57"><a href="rlm.html#cb118-57" tabindex="-1"></a>  g <span class="ot">&lt;-</span> <span class="fu">cut</span>(f, <span class="fu">quantile</span>(f, <span class="dv">0</span><span class="sc">:</span><span class="dv">3</span> <span class="sc">/</span> <span class="dv">3</span>), <span class="at">include.lowest =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb118-58"><a href="rlm.html#cb118-58" tabindex="-1"></a>  <span class="fu">as.numeric</span>(<span class="fu">tapply</span>(<span class="fu">resid</span>(m), g, sd))</span>
+<span id="cb118-59"><a href="rlm.html#cb118-59" tabindex="-1"></a>}</span>
+<span id="cb118-60"><a href="rlm.html#cb118-60" tabindex="-1"></a></span>
+<span id="cb118-61"><a href="rlm.html#cb118-61" tabindex="-1"></a><span class="co"># Resumen de un modelo para comparar</span></span>
+<span id="cb118-62"><a href="rlm.html#cb118-62" tabindex="-1"></a>resumen_modelo <span class="ot">&lt;-</span> <span class="cf">function</span>(m, nombre) {</span>
+<span id="cb118-63"><a href="rlm.html#cb118-63" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="fu">summary</span>(m)</span>
+<span id="cb118-64"><a href="rlm.html#cb118-64" tabindex="-1"></a>  h <span class="ot">&lt;-</span> <span class="fu">hatvalues</span>(m)</span>
+<span id="cb118-65"><a href="rlm.html#cb118-65" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb118-66"><a href="rlm.html#cb118-66" tabindex="-1"></a>    <span class="at">modelo =</span> nombre,</span>
+<span id="cb118-67"><a href="rlm.html#cb118-67" tabindex="-1"></a>    <span class="at">p =</span> <span class="fu">length</span>(<span class="fu">coef</span>(m)),</span>
+<span id="cb118-68"><a href="rlm.html#cb118-68" tabindex="-1"></a>    <span class="at">R2 =</span> s<span class="sc">$</span>r.squared,</span>
+<span id="cb118-69"><a href="rlm.html#cb118-69" tabindex="-1"></a>    <span class="at">R2_ajustado =</span> s<span class="sc">$</span>adj.r.squared,</span>
+<span id="cb118-70"><a href="rlm.html#cb118-70" tabindex="-1"></a>    <span class="at">RMSE =</span> s<span class="sc">$</span>sigma,</span>
+<span id="cb118-71"><a href="rlm.html#cb118-71" tabindex="-1"></a>    <span class="at">AIC =</span> <span class="fu">AIC</span>(m),</span>
+<span id="cb118-72"><a href="rlm.html#cb118-72" tabindex="-1"></a>    <span class="at">BIC =</span> <span class="fu">BIC</span>(m),</span>
+<span id="cb118-73"><a href="rlm.html#cb118-73" tabindex="-1"></a>    <span class="at">PRESS =</span> <span class="fu">sum</span>((<span class="fu">resid</span>(m) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> h))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb118-74"><a href="rlm.html#cb118-74" tabindex="-1"></a>  )</span>
+<span id="cb118-75"><a href="rlm.html#cb118-75" tabindex="-1"></a>}</span>
+<span id="cb118-76"><a href="rlm.html#cb118-76" tabindex="-1"></a></span>
+<span id="cb118-77"><a href="rlm.html#cb118-77" tabindex="-1"></a><span class="co"># Matriz de varianzas robusta HC3 (sandwich), calculada a mano</span></span>
+<span id="cb118-78"><a href="rlm.html#cb118-78" tabindex="-1"></a>vcov_hc3 <span class="ot">&lt;-</span> <span class="cf">function</span>(m) {</span>
+<span id="cb118-79"><a href="rlm.html#cb118-79" tabindex="-1"></a>  X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(m)</span>
+<span id="cb118-80"><a href="rlm.html#cb118-80" tabindex="-1"></a>  w <span class="ot">&lt;-</span> <span class="fu">resid</span>(m) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">hatvalues</span>(m))</span>
+<span id="cb118-81"><a href="rlm.html#cb118-81" tabindex="-1"></a>  XtX_inv <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">crossprod</span>(X))</span>
+<span id="cb118-82"><a href="rlm.html#cb118-82" tabindex="-1"></a>  XtX_inv <span class="sc">%*%</span> <span class="fu">crossprod</span>(X <span class="sc">*</span> w) <span class="sc">%*%</span> XtX_inv</span>
+<span id="cb118-83"><a href="rlm.html#cb118-83" tabindex="-1"></a>}</span></code></pre></div>
+<p>La respuesta es <code>resistencia</code> (MPa). Las variables candidatas son los siete ingredientes de la mezcla (cemento, escoria, ceniza volante, agua, superplastificante, agregado grueso y agregado fino) y la <strong>etapa de curado</strong>, que es cualitativa de tres niveles.</p>
+<div id="variables-dummy" class="section level3 hasAnchor" number="8.1.1">
+<h3><span class="header-section-number">8.1.1</span> Variables dummy<a href="rlm.html#variables-dummy" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Una variable cualitativa con <span class="math inline">\(c\)</span> niveles se representa con <span class="math inline">\(c - 1\)</span> variables <em>dummy</em>; el nivel omitido es la <strong>categoría de referencia</strong>. Aquí la referencia es la etapa <em>Temprano</em> (<span class="math inline">\(\le 7\)</span> días):</p>
+<p><span class="math display">\[D_{\text{Estándar}} = \begin{cases} 1 &amp; \text{si la edad es 14 o 28 días} \\ 0 &amp; \text{en otro caso} \end{cases} \qquad D_{\text{Tardío}} = \begin{cases} 1 &amp; \text{si la edad es} &gt; 28 \text{ días} \\ 0 &amp; \text{en otro caso} \end{cases}\]</span></p>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="rlm.html#cb119-1" tabindex="-1"></a>ejemplo_dummies <span class="ot">&lt;-</span> df_rlm <span class="sc">|&gt;</span></span>
+<span id="cb119-2"><a href="rlm.html#cb119-2" tabindex="-1"></a>  <span class="fu">distinct</span>(etapa, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb119-3"><a href="rlm.html#cb119-3" tabindex="-1"></a>  <span class="fu">arrange</span>(etapa)</span>
+<span id="cb119-4"><a href="rlm.html#cb119-4" tabindex="-1"></a>X_ejemplo <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> etapa, <span class="at">data =</span> ejemplo_dummies)</span>
+<span id="cb119-5"><a href="rlm.html#cb119-5" tabindex="-1"></a></span>
+<span id="cb119-6"><a href="rlm.html#cb119-6" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb119-7"><a href="rlm.html#cb119-7" tabindex="-1"></a>  <span class="at">edad_ejemplo =</span> ejemplo_dummies<span class="sc">$</span>edad,</span>
+<span id="cb119-8"><a href="rlm.html#cb119-8" tabindex="-1"></a>  <span class="at">etapa =</span> <span class="fu">as.character</span>(ejemplo_dummies<span class="sc">$</span>etapa),</span>
+<span id="cb119-9"><a href="rlm.html#cb119-9" tabindex="-1"></a>  <span class="at">D_Estandar =</span> X_ejemplo[, <span class="st">&quot;etapaEstandar&quot;</span>],</span>
+<span id="cb119-10"><a href="rlm.html#cb119-10" tabindex="-1"></a>  <span class="at">D_Tardio =</span> X_ejemplo[, <span class="st">&quot;etapaTardio&quot;</span>]</span>
+<span id="cb119-11"><a href="rlm.html#cb119-11" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb119-12"><a href="rlm.html#cb119-12" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Codificación dummy de la etapa de curado (referencia: Temprano)&quot;</span>, <span class="at">digits =</span> <span class="dv">0</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-dummies">Table 8.1: </span>Codificación dummy de la etapa de curado (referencia: Temprano)
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+edad_ejemplo
+</th>
+<th style="text-align:left;">
+etapa
+</th>
+<th style="text-align:right;">
+D_Estandar
+</th>
+<th style="text-align:right;">
+D_Tardio
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+Temprano
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:left;">
+Estandar
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+270
+</td>
+<td style="text-align:left;">
+Tardio
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+<p>Los coeficientes de las dummies miden la diferencia de resistencia de cada etapa frente a la etapa temprana, con el resto de variables constantes.</p>
+<p>¿Por qué <code>etapa</code> y no la edad continua? Porque el modelo debe usar una variable cualitativa mediante dummies. La sección siguiente muestra que <strong>no pueden usarse a la vez</strong> la edad (o su logaritmo) y la etapa, porque son redundantes.</p>
+</div>
+</div>
+<div id="análisis-de-multicolinealidad" class="section level2 hasAnchor" number="8.2">
+<h2><span class="header-section-number">8.2</span> Análisis de multicolinealidad<a href="rlm.html#an%C3%A1lisis-de-multicolinealidad" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>La multicolinealidad se analiza <strong>antes</strong> de ajustar y seleccionar el modelo, porque determina qué variables pueden convivir. Se sospecha su existencia si hay (1) alta correlación entre predictores, (2) significancia global pero no marginal, o (3) cambios fuertes en <span class="math inline">\(\hat{\beta}\)</span> al agregar o quitar variables. Se confirma con el <strong>número de condición</strong> (<span class="math inline">\(ICN &gt; 30\)</span>) y con el <strong>VIF</strong> (<span class="math inline">\(VIF_j &gt; 5\)</span> señala la variable responsable).</p>
+<div id="correlación-entre-los-predictores" class="section level3 hasAnchor" number="8.2.1">
+<h3><span class="header-section-number">8.2.1</span> Correlación entre los predictores<a href="rlm.html#correlaci%C3%B3n-entre-los-predictores" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="rlm.html#cb120-1" tabindex="-1"></a>cor_pred <span class="ot">&lt;-</span> df_rlm <span class="sc">|&gt;</span></span>
+<span id="cb120-2"><a href="rlm.html#cb120-2" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(cemento, escoria, ceniza, agua, superplast,</span>
+<span id="cb120-3"><a href="rlm.html#cb120-3" tabindex="-1"></a>                agregado_grueso, agregado_fino, log_edad) <span class="sc">|&gt;</span></span>
+<span id="cb120-4"><a href="rlm.html#cb120-4" tabindex="-1"></a>  <span class="fu">cor</span>()</span>
+<span id="cb120-5"><a href="rlm.html#cb120-5" tabindex="-1"></a></span>
+<span id="cb120-6"><a href="rlm.html#cb120-6" tabindex="-1"></a>cor_pred <span class="sc">|&gt;</span></span>
+<span id="cb120-7"><a href="rlm.html#cb120-7" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span></span>
+<span id="cb120-8"><a href="rlm.html#cb120-8" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">&quot;v1&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb120-9"><a href="rlm.html#cb120-9" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>v1, <span class="at">names_to =</span> <span class="st">&quot;v2&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;r&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb120-10"><a href="rlm.html#cb120-10" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> v1, <span class="at">y =</span> v2, <span class="at">fill =</span> r)) <span class="sc">+</span></span>
+<span id="cb120-11"><a href="rlm.html#cb120-11" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">color =</span> <span class="st">&quot;white&quot;</span>) <span class="sc">+</span></span>
+<span id="cb120-12"><a href="rlm.html#cb120-12" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(r, <span class="dv">2</span>), <span class="at">color =</span> <span class="fu">abs</span>(r) <span class="sc">&gt;</span> <span class="fl">0.8</span>), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb120-13"><a href="rlm.html#cb120-13" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;TRUE&quot;</span> <span class="ot">=</span> <span class="st">&quot;white&quot;</span>, <span class="st">&quot;FALSE&quot;</span> <span class="ot">=</span> <span class="st">&quot;#0b0b0b&quot;</span>), <span class="at">guide =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb120-14"><a href="rlm.html#cb120-14" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">&quot;#2a78d6&quot;</span>, <span class="at">mid =</span> <span class="st">&quot;#f0efec&quot;</span>, <span class="at">high =</span> <span class="st">&quot;#e34948&quot;</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb120-15"><a href="rlm.html#cb120-15" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Correlación de Pearson entre predictores&quot;</span>, <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>, <span class="at">fill =</span> <span class="st">&quot;r&quot;</span>) <span class="sc">+</span></span>
+<span id="cb120-16"><a href="rlm.html#cb120-16" tabindex="-1"></a>  <span class="fu">tema_libro</span>() <span class="sc">+</span></span>
+<span id="cb120-17"><a href="rlm.html#cb120-17" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>), <span class="at">legend.position =</span> <span class="st">&quot;right&quot;</span>)</span></code></pre></div>
+<p><img src="Proyecto_Final_Metodos_Estadisticos_files/figure-html/rlm-cor-predictores-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<p>Las correlaciones entre ingredientes son moderadas (ninguna cercana a 1), pero el gráfico no basta: las variables derivadas (<code>log_edad</code>, <code>usa_ceniza</code>) están construidas a partir de otras. Se confirma con el VIF.</p>
+</div>
+<div id="modelo-inicial-con-todas-las-variables-posibles" class="section level3 hasAnchor" number="8.2.2">
+<h3><span class="header-section-number">8.2.2</span> Modelo inicial con todas las variables posibles<a href="rlm.html#modelo-inicial-con-todas-las-variables-posibles" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Se ajusta un modelo con <strong>todas</strong> las variables disponibles, incluidas las redundantes, para ver qué variables son responsables:</p>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="rlm.html#cb121-1" tabindex="-1"></a>m_redundante <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb121-2"><a href="rlm.html#cb121-2" tabindex="-1"></a>  raiz_resistencia <span class="sc">~</span> cemento <span class="sc">+</span> escoria <span class="sc">+</span> ceniza <span class="sc">+</span> agua <span class="sc">+</span> superplast <span class="sc">+</span></span>
+<span id="cb121-3"><a href="rlm.html#cb121-3" tabindex="-1"></a>    agregado_grueso <span class="sc">+</span> agregado_fino <span class="sc">+</span> log_edad <span class="sc">+</span> etapa <span class="sc">+</span> usa_ceniza,</span>
+<span id="cb121-4"><a href="rlm.html#cb121-4" tabindex="-1"></a>  <span class="at">data =</span> df_rlm</span>
+<span id="cb121-5"><a href="rlm.html#cb121-5" tabindex="-1"></a>)</span>
+<span id="cb121-6"><a href="rlm.html#cb121-6" tabindex="-1"></a></span>
+<span id="cb121-7"><a href="rlm.html#cb121-7" tabindex="-1"></a><span class="fu">vif_tabla</span>(m_redundante) <span class="sc">|&gt;</span></span>
+<span id="cb121-8"><a href="rlm.html#cb121-8" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;VIF del modelo con todas las variables (incluye redundantes)&quot;</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-vif-redundante">Table 8.2: </span>VIF del modelo con todas las variables (incluye redundantes)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+termino
+</th>
+<th style="text-align:right;">
+GVIF
+</th>
+<th style="text-align:right;">
+gl
+</th>
+<th style="text-align:right;">
+VIF_equiv
+</th>
+<th style="text-align:left;">
+problema
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+cemento
+</td>
+<td style="text-align:right;">
+8.32
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.32
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+escoria
+</td>
+<td style="text-align:right;">
+7.77
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7.77
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ceniza
+</td>
+<td style="text-align:right;">
+15.84
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+15.84
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+agua
+</td>
+<td style="text-align:right;">
+7.49
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7.49
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+superplast
+</td>
+<td style="text-align:right;">
+3.12
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.12
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+agregado_grueso
+</td>
+<td style="text-align:right;">
+5.68
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5.68
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+agregado_fino
+</td>
+<td style="text-align:right;">
+7.96
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7.96
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+log_edad
+</td>
+<td style="text-align:right;">
+11.40
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+11.40
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+etapa
+</td>
+<td style="text-align:right;">
+12.49
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3.53
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+usa_ceniza
+</td>
+<td style="text-align:right;">
+8.92
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+8.92
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="rlm.html#cb122-1" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb122-2"><a href="rlm.html#cb122-2" tabindex="-1"></a>  <span class="at">indicador =</span> <span class="fu">c</span>(<span class="st">&quot;kappa(modelo)&quot;</span>, <span class="st">&quot;ICN exacto sqrt(lambda_max/lambda_min)&quot;</span>),</span>
+<span id="cb122-3"><a href="rlm.html#cb122-3" tabindex="-1"></a>  <span class="at">valor =</span> <span class="fu">c</span>(<span class="fu">kappa</span>(m_redundante), <span class="fu">icn</span>(m_redundante))</span>
+<span id="cb122-4"><a href="rlm.html#cb122-4" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb122-5"><a href="rlm.html#cb122-5" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Número de condición del modelo con todas las variables&quot;</span>, <span class="at">digits =</span> <span class="dv">1</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-icn-redundante">Table 8.3: </span>Número de condición del modelo con todas las variables
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+indicador
+</th>
+<th style="text-align:right;">
+valor
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+kappa(modelo)
+</td>
+<td style="text-align:right;">
+47715.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ICN exacto sqrt(lambda_max/lambda_min)
+</td>
+<td style="text-align:right;">
+113485.7
+</td>
+</tr>
+</tbody>
+</table>
+<p>El <span class="math inline">\(ICN\)</span> supera con creces 30 y varios VIF superan 5. Las variables responsables son:</p>
+<ul>
+<li><strong><code>ceniza</code> junto con <code>usa_ceniza</code>:</strong> <code>usa_ceniza</code> solo indica si <code>ceniza &gt; 0</code>, así que ambas miden lo mismo.</li>
+<li><strong><code>log_edad</code> junto con <code>etapa</code>:</strong> la etapa es una categorización de la misma edad.</li>
+</ul>
+<p>Como el objetivo exige una variable cualitativa con dummies, se conserva <code>etapa</code> y se eliminan <code>log_edad</code> y <code>usa_ceniza</code>. Esta decisión se toma por multicolinealidad, no por ajuste.</p>
+</div>
+<div id="modelo-con-las-variables-depuradas" class="section level3 hasAnchor" number="8.2.3">
+<h3><span class="header-section-number">8.2.3</span> Modelo con las variables depuradas<a href="rlm.html#modelo-con-las-variables-depuradas" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="rlm.html#cb123-1" tabindex="-1"></a>m_completo <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb123-2"><a href="rlm.html#cb123-2" tabindex="-1"></a>  raiz_resistencia <span class="sc">~</span> cemento <span class="sc">+</span> escoria <span class="sc">+</span> ceniza <span class="sc">+</span> agua <span class="sc">+</span> superplast <span class="sc">+</span></span>
+<span id="cb123-3"><a href="rlm.html#cb123-3" tabindex="-1"></a>    agregado_grueso <span class="sc">+</span> agregado_fino <span class="sc">+</span> etapa,</span>
+<span id="cb123-4"><a href="rlm.html#cb123-4" tabindex="-1"></a>  <span class="at">data =</span> df_rlm</span>
+<span id="cb123-5"><a href="rlm.html#cb123-5" tabindex="-1"></a>)</span>
+<span id="cb123-6"><a href="rlm.html#cb123-6" tabindex="-1"></a></span>
+<span id="cb123-7"><a href="rlm.html#cb123-7" tabindex="-1"></a><span class="fu">vif_tabla</span>(m_completo) <span class="sc">|&gt;</span></span>
+<span id="cb123-8"><a href="rlm.html#cb123-8" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;VIF del modelo depurado (ocho predictores)&quot;</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-vif-depurado">Table 8.4: </span>VIF del modelo depurado (ocho predictores)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+termino
+</th>
+<th style="text-align:right;">
+GVIF
+</th>
+<th style="text-align:right;">
+gl
+</th>
+<th style="text-align:right;">
+VIF_equiv
+</th>
+<th style="text-align:left;">
+problema
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+cemento
+</td>
+<td style="text-align:right;">
+7.83
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7.83
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+escoria
+</td>
+<td style="text-align:right;">
+7.40
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7.40
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ceniza
+</td>
+<td style="text-align:right;">
+6.15
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6.15
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+agua
+</td>
+<td style="text-align:right;">
+7.09
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7.09
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+superplast
+</td>
+<td style="text-align:right;">
+3.00
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3.00
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+agregado_grueso
+</td>
+<td style="text-align:right;">
+5.24
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5.24
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+agregado_fino
+</td>
+<td style="text-align:right;">
+7.24
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7.24
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+etapa
+</td>
+<td style="text-align:right;">
+1.15
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1.07
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="rlm.html#cb124-1" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb124-2"><a href="rlm.html#cb124-2" tabindex="-1"></a>  <span class="at">indicador =</span> <span class="fu">c</span>(<span class="st">&quot;kappa(modelo)&quot;</span>, <span class="st">&quot;ICN exacto&quot;</span>, <span class="st">&quot;ICN con predictores estandarizados&quot;</span>),</span>
+<span id="cb124-3"><a href="rlm.html#cb124-3" tabindex="-1"></a>  <span class="at">valor =</span> <span class="fu">c</span>(<span class="fu">kappa</span>(m_completo), <span class="fu">icn</span>(m_completo), <span class="fu">icn</span>(m_completo, <span class="at">estandarizar =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb124-4"><a href="rlm.html#cb124-4" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb124-5"><a href="rlm.html#cb124-5" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Número de condición del modelo depurado&quot;</span>, <span class="at">digits =</span> <span class="dv">1</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-vif-depurado">Table 8.4: </span>Número de condición del modelo depurado
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+indicador
+</th>
+<th style="text-align:right;">
+valor
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+kappa(modelo)
+</td>
+<td style="text-align:right;">
+53612.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ICN exacto
+</td>
+<td style="text-align:right;">
+107926.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ICN con predictores estandarizados
+</td>
+<td style="text-align:right;">
+8.7
+</td>
+</tr>
+</tbody>
+</table>
+<p>Al eliminar la redundancia, la etapa deja de ser colineal (VIF cercano a 1). Quedan VIF entre 5 y 8 en los ingredientes de la mezcla (cemento, escoria, agua, ceniza y los dos agregados). Esto es estructural: en un metro cúbico los ingredientes se compensan entre sí, de modo que al subir uno otros bajan.</p>
+<p>El <span class="math inline">\(ICN\)</span> calculado sobre las variables originales es enorme porque depende de las escalas (los agregados rondan los 1000 kg/m³ y el superplastificante está entre 0 y 32), mientras que con los predictores estandarizados es pequeño. Por eso el diagnóstico decisivo es el VIF. La multicolinealidad residual se controla en la selección de variables, imponiendo <span class="math inline">\(VIF \le 5\)</span>.</p>
+</div>
+</div>
+<div id="modelo-completo-y-supuestos-de-los-errores" class="section level2 hasAnchor" number="8.3">
+<h2><span class="header-section-number">8.3</span> Modelo completo y supuestos de los errores<a href="rlm.html#modelo-completo-y-supuestos-de-los-errores" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="ajuste-en-la-escala-original" class="section level3 hasAnchor" number="8.3.1">
+<h3><span class="header-section-number">8.3.1</span> Ajuste en la escala original<a href="rlm.html#ajuste-en-la-escala-original" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="rlm.html#cb125-1" tabindex="-1"></a>m_orig <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb125-2"><a href="rlm.html#cb125-2" tabindex="-1"></a>  resistencia <span class="sc">~</span> cemento <span class="sc">+</span> escoria <span class="sc">+</span> ceniza <span class="sc">+</span> agua <span class="sc">+</span> superplast <span class="sc">+</span></span>
+<span id="cb125-3"><a href="rlm.html#cb125-3" tabindex="-1"></a>    agregado_grueso <span class="sc">+</span> agregado_fino <span class="sc">+</span> etapa,</span>
+<span id="cb125-4"><a href="rlm.html#cb125-4" tabindex="-1"></a>  <span class="at">data =</span> df_rlm</span>
+<span id="cb125-5"><a href="rlm.html#cb125-5" tabindex="-1"></a>)</span>
+<span id="cb125-6"><a href="rlm.html#cb125-6" tabindex="-1"></a><span class="fu">summary</span>(m_orig)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = resistencia ~ cemento + escoria + ceniza + agua + 
+##     superplast + agregado_grueso + agregado_fino + etapa, data = df_rlm)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -19.8524  -4.9912  -0.5507   4.2191  30.5699 
+## 
+## Coefficients:
+##                   Estimate Std. Error t value             Pr(&gt;|t|)    
+## (Intercept)     -21.838857  18.727307  -1.166               0.2438    
+## cemento           0.122243   0.006004  20.359 &lt; 0.0000000000000002 ***
+## escoria           0.100451   0.007074  14.200 &lt; 0.0000000000000002 ***
+## ceniza            0.063400   0.008693   7.293    0.000000000000607 ***
+## agua             -0.153853   0.027967  -5.501    0.000000047671882 ***
+## superplast        0.054474   0.065063   0.837               0.4027    
+## agregado_grueso   0.013022   0.006605   1.971               0.0489 *  
+## agregado_fino     0.015219   0.007528   2.021               0.0435 *  
+## etapaEstandar    16.686677   0.582915  28.626 &lt; 0.0000000000000002 ***
+## etapaTardio      28.198332   0.626006  45.045 &lt; 0.0000000000000002 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 7.195 on 1020 degrees of freedom
+## Multiple R-squared:  0.8161, Adjusted R-squared:  0.8145 
+## F-statistic:   503 on 9 and 1020 DF,  p-value: &lt; 0.00000000000000022</code></pre>
+<p><strong>Significancia global.</strong> <span class="math inline">\(H_0: \beta_1 = \cdots = \beta_k = 0\)</span> frente a <span class="math inline">\(H_1\)</span>: al menos un <span class="math inline">\(\beta_j \neq 0\)</span>, con <span class="math inline">\(F_0 = \dfrac{SSR/k}{SSE/(n-p)} \sim F_{k,\,n-p}\)</span>.</p>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="rlm.html#cb127-1" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb127-2"><a href="rlm.html#cb127-2" tabindex="-1"></a>  <span class="at">indicador =</span> <span class="fu">c</span>(<span class="st">&quot;R2&quot;</span>, <span class="st">&quot;R2 ajustado&quot;</span>, <span class="st">&quot;sigma (RMSE, MPa)&quot;</span>, <span class="st">&quot;F global&quot;</span>, <span class="st">&quot;p-valor de F&quot;</span>),</span>
+<span id="cb127-3"><a href="rlm.html#cb127-3" tabindex="-1"></a>  <span class="at">valor =</span> <span class="fu">c</span>(</span>
+<span id="cb127-4"><a href="rlm.html#cb127-4" tabindex="-1"></a>    <span class="fu">summary</span>(m_orig)<span class="sc">$</span>r.squared,</span>
+<span id="cb127-5"><a href="rlm.html#cb127-5" tabindex="-1"></a>    <span class="fu">summary</span>(m_orig)<span class="sc">$</span>adj.r.squared,</span>
+<span id="cb127-6"><a href="rlm.html#cb127-6" tabindex="-1"></a>    <span class="fu">summary</span>(m_orig)<span class="sc">$</span>sigma,</span>
+<span id="cb127-7"><a href="rlm.html#cb127-7" tabindex="-1"></a>    <span class="fu">unname</span>(<span class="fu">summary</span>(m_orig)<span class="sc">$</span>fstatistic[<span class="st">&quot;value&quot;</span>]),</span>
+<span id="cb127-8"><a href="rlm.html#cb127-8" tabindex="-1"></a>    <span class="fu">pf</span>(<span class="fu">summary</span>(m_orig)<span class="sc">$</span>fstatistic[<span class="dv">1</span>], <span class="fu">summary</span>(m_orig)<span class="sc">$</span>fstatistic[<span class="dv">2</span>],</span>
+<span id="cb127-9"><a href="rlm.html#cb127-9" tabindex="-1"></a>       <span class="fu">summary</span>(m_orig)<span class="sc">$</span>fstatistic[<span class="dv">3</span>], <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb127-10"><a href="rlm.html#cb127-10" tabindex="-1"></a>  )</span>
+<span id="cb127-11"><a href="rlm.html#cb127-11" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb127-12"><a href="rlm.html#cb127-12" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Ajuste del modelo completo (escala original)&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-r2-original">Table 8.5: </span>Ajuste del modelo completo (escala original)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+indicador
+</th>
+<th style="text-align:right;">
+valor
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+R2
+</td>
+<td style="text-align:right;">
+0.8161
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+R2 ajustado
+</td>
+<td style="text-align:right;">
+0.8145
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sigma (RMSE, MPa)
+</td>
+<td style="text-align:right;">
+7.1953
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+F global
+</td>
+<td style="text-align:right;">
+502.9853
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+p-valor de F
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+</tr>
+</tbody>
+</table>
+<p>El modelo explica <span class="math inline">\(R^2 = 0.816\)</span> de la variabilidad y <span class="math inline">\(R^2_{aj} = 0.814\)</span>, y la prueba <span class="math inline">\(F\)</span> rechaza <span class="math inline">\(H_0\)</span> (<span class="math inline">\(p &lt; 0.001\)</span>). El <span class="math inline">\(R^2\)</span> no dice que el modelo sea correcto; hay que revisar los errores.</p>
+</div>
+<div id="supuestos-de-los-errores" class="section level3 hasAnchor" number="8.3.2">
+<h3><span class="header-section-number">8.3.2</span> Supuestos de los errores<a href="rlm.html#supuestos-de-los-errores" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Los supuestos del modelo son: (S1) linealidad, (S2) varianza constante, (S3) normalidad e (S4) independencia de los errores. Cada uno se contrasta formalmente:</p>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="rlm.html#cb128-1" tabindex="-1"></a><span class="fu">supuestos_errores</span>(m_orig) <span class="sc">|&gt;</span></span>
+<span id="cb128-2"><a href="rlm.html#cb128-2" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Pruebas de supuestos de los errores: modelo completo en escala original&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-supuestos-original">Table 8.6: </span>Pruebas de supuestos de los errores: modelo completo en escala original
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+supuesto
+</th>
+<th style="text-align:left;">
+prueba
+</th>
+<th style="text-align:left;">
+H0
+</th>
+<th style="text-align:right;">
+p_valor
+</th>
+<th style="text-align:left;">
+decision
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Linealidad (forma funcional)
+</td>
+<td style="text-align:left;">
+RESET de Ramsey
+</td>
+<td style="text-align:left;">
+El modelo esta bien especificado (relacion lineal)
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Se rechaza H0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Normalidad de los errores
+</td>
+<td style="text-align:left;">
+Shapiro-Wilk
+</td>
+<td style="text-align:left;">
+Los errores son normales
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Se rechaza H0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Normalidad de los errores
+</td>
+<td style="text-align:left;">
+Lilliefors
+</td>
+<td style="text-align:left;">
+Los errores son normales
+</td>
+<td style="text-align:right;">
+0.0002
+</td>
+<td style="text-align:left;">
+Se rechaza H0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Varianza constante
+</td>
+<td style="text-align:left;">
+Breusch-Pagan (studentizada)
+</td>
+<td style="text-align:left;">
+Var(error) es constante (homocedasticidad)
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Se rechaza H0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Independencia
+</td>
+<td style="text-align:left;">
+Durbin-Watson
+</td>
+<td style="text-align:left;">
+No hay autocorrelacion de orden 1
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Se rechaza H0
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="rlm.html#cb129-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb129-2"><a href="rlm.html#cb129-2" tabindex="-1"></a><span class="fu">plot</span>(m_orig, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span></code></pre></div>
+<p><img src="Proyecto_Final_Metodos_Estadisticos_files/figure-html/rlm-graficos-original-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="rlm.html#cb130-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div>
+<p>Con un nivel de significancia de <span class="math inline">\(0.05\)</span>, Breusch-Pagan y los contrastes de normalidad rechazan sus hipótesis nulas. Además, la desviación estándar de los residuos crece con el valor ajustado (efecto abanico): señal de varianza creciente. <strong>Se justifica corregir con una transformación de la respuesta.</strong></p>
+<p>El RESET y Durbin-Watson también rechazan; ambos se discuten más abajo, porque una transformación de la respuesta no los corrige.</p>
+<blockquote>
+<p><strong>Sobre la independencia.</strong> Durbin-Watson rechaza la independencia en todos los modelos (estadístico cercano a 1.4, autocorrelación positiva). No es un efecto temporal: las filas no tienen un orden temporal conocido. La causa es la estructura de los datos descrita en la sección <a href="eda.html#estructura-mezclas">3.9.3</a>: las 1,030 filas corresponden a 428 mezclas, y una misma mezcla se ensaya a varias edades, con filas consecutivas de la misma mezcla. Sus residuos están correlacionados. Esto no sesga los coeficientes, pero <strong>subestima los errores estándar</strong>, por lo que la inferencia del modelo final se corrige agrupando por mezcla.</p>
+</blockquote>
+</div>
+<div id="elección-de-la-transformación" class="section level3 hasAnchor" number="8.3.3">
+<h3><span class="header-section-number">8.3.3</span> Elección de la transformación<a href="rlm.html#elecci%C3%B3n-de-la-transformaci%C3%B3n" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>La resistencia es siempre positiva (mínimo 2.33 MPa), por lo que puede transformarse. Se estima <span class="math inline">\(\lambda\)</span> de Box-Cox y se comparan las candidatas volviendo a mirar los residuos:</p>
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="rlm.html#cb131-1" tabindex="-1"></a>bc <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">boxcox</span>(</span>
+<span id="cb131-2"><a href="rlm.html#cb131-2" tabindex="-1"></a>  resistencia <span class="sc">~</span> cemento <span class="sc">+</span> escoria <span class="sc">+</span> ceniza <span class="sc">+</span> agua <span class="sc">+</span> superplast <span class="sc">+</span></span>
+<span id="cb131-3"><a href="rlm.html#cb131-3" tabindex="-1"></a>    agregado_grueso <span class="sc">+</span> agregado_fino <span class="sc">+</span> etapa,</span>
+<span id="cb131-4"><a href="rlm.html#cb131-4" tabindex="-1"></a>  <span class="at">data =</span> df_rlm, <span class="at">lambda =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">1.5</span>, <span class="fl">0.01</span>), <span class="at">plotit =</span> <span class="cn">TRUE</span></span>
+<span id="cb131-5"><a href="rlm.html#cb131-5" tabindex="-1"></a>)</span></code></pre></div>
+<p><img src="Proyecto_Final_Metodos_Estadisticos_files/figure-html/rlm-boxcox-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="rlm.html#cb132-1" tabindex="-1"></a>lambda_hat <span class="ot">&lt;-</span> bc<span class="sc">$</span>x[<span class="fu">which.max</span>(bc<span class="sc">$</span>y)]</span>
+<span id="cb132-2"><a href="rlm.html#cb132-2" tabindex="-1"></a>ic_lambda <span class="ot">&lt;-</span> <span class="fu">range</span>(bc<span class="sc">$</span>x[bc<span class="sc">$</span>y <span class="sc">&gt;</span> <span class="fu">max</span>(bc<span class="sc">$</span>y) <span class="sc">-</span> <span class="fu">qchisq</span>(<span class="fl">0.95</span>, <span class="dv">1</span>) <span class="sc">/</span> <span class="dv">2</span>])</span></code></pre></div>
+<p>El máximo está en <span class="math inline">\(\hat{\lambda} = 0.61\)</span> con un intervalo de confianza aproximado del 95% de <span class="math inline">\([0.55,\ 0.68]\)</span>. Ese intervalo <strong>excluye</strong> <span class="math inline">\(\lambda = 1\)</span> (no transformar) y <span class="math inline">\(\lambda = 0\)</span> (logaritmo). El valor interpretable más cercano es <span class="math inline">\(\lambda = 0.5\)</span> (raíz cuadrada), que queda justo por debajo del intervalo; se adopta por interpretabilidad y porque, como muestra la tabla siguiente, los residuos mejoran claramente.</p>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="rlm.html#cb133-1" tabindex="-1"></a>f_comp <span class="ot">&lt;-</span> resistencia <span class="sc">~</span> cemento <span class="sc">+</span> escoria <span class="sc">+</span> ceniza <span class="sc">+</span> agua <span class="sc">+</span> superplast <span class="sc">+</span></span>
+<span id="cb133-2"><a href="rlm.html#cb133-2" tabindex="-1"></a>  agregado_grueso <span class="sc">+</span> agregado_fino <span class="sc">+</span> etapa</span>
+<span id="cb133-3"><a href="rlm.html#cb133-3" tabindex="-1"></a></span>
+<span id="cb133-4"><a href="rlm.html#cb133-4" tabindex="-1"></a>m_t_orig <span class="ot">&lt;-</span> <span class="fu">lm</span>(f_comp, <span class="at">data =</span> df_rlm)</span>
+<span id="cb133-5"><a href="rlm.html#cb133-5" tabindex="-1"></a>m_t_log  <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">update</span>(f_comp, <span class="fu">log</span>(resistencia) <span class="sc">~</span> .), <span class="at">data =</span> df_rlm)</span>
+<span id="cb133-6"><a href="rlm.html#cb133-6" tabindex="-1"></a>m_t_raiz <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">update</span>(f_comp, <span class="fu">sqrt</span>(resistencia) <span class="sc">~</span> .), <span class="at">data =</span> df_rlm)</span>
+<span id="cb133-7"><a href="rlm.html#cb133-7" tabindex="-1"></a></span>
+<span id="cb133-8"><a href="rlm.html#cb133-8" tabindex="-1"></a>comparar_t <span class="ot">&lt;-</span> <span class="cf">function</span>(m, nombre) {</span>
+<span id="cb133-9"><a href="rlm.html#cb133-9" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="fu">sd_terciles</span>(m)</span>
+<span id="cb133-10"><a href="rlm.html#cb133-10" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb133-11"><a href="rlm.html#cb133-11" tabindex="-1"></a>    <span class="at">escala =</span> nombre,</span>
+<span id="cb133-12"><a href="rlm.html#cb133-12" tabindex="-1"></a>    <span class="at">p_BreuschPagan =</span> lmtest<span class="sc">::</span><span class="fu">bptest</span>(m)<span class="sc">$</span>p.value,</span>
+<span id="cb133-13"><a href="rlm.html#cb133-13" tabindex="-1"></a>    <span class="at">p_ShapiroWilk =</span> <span class="fu">shapiro.test</span>(<span class="fu">resid</span>(m))<span class="sc">$</span>p.value,</span>
+<span id="cb133-14"><a href="rlm.html#cb133-14" tabindex="-1"></a>    <span class="at">sd_resid_T1 =</span> s[<span class="dv">1</span>], <span class="at">sd_resid_T2 =</span> s[<span class="dv">2</span>], <span class="at">sd_resid_T3 =</span> s[<span class="dv">3</span>],</span>
+<span id="cb133-15"><a href="rlm.html#cb133-15" tabindex="-1"></a>    <span class="at">razon_sd_max_min =</span> <span class="fu">max</span>(s) <span class="sc">/</span> <span class="fu">min</span>(s)</span>
+<span id="cb133-16"><a href="rlm.html#cb133-16" tabindex="-1"></a>  )</span>
+<span id="cb133-17"><a href="rlm.html#cb133-17" tabindex="-1"></a>}</span>
+<span id="cb133-18"><a href="rlm.html#cb133-18" tabindex="-1"></a></span>
+<span id="cb133-19"><a href="rlm.html#cb133-19" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>
+<span id="cb133-20"><a href="rlm.html#cb133-20" tabindex="-1"></a>  <span class="fu">comparar_t</span>(m_t_orig, <span class="st">&quot;y (original)&quot;</span>),</span>
+<span id="cb133-21"><a href="rlm.html#cb133-21" tabindex="-1"></a>  <span class="fu">comparar_t</span>(m_t_log, <span class="st">&quot;log(y)&quot;</span>),</span>
+<span id="cb133-22"><a href="rlm.html#cb133-22" tabindex="-1"></a>  <span class="fu">comparar_t</span>(m_t_raiz, <span class="st">&quot;raiz(y)&quot;</span>)</span>
+<span id="cb133-23"><a href="rlm.html#cb133-23" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb133-24"><a href="rlm.html#cb133-24" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Comparación de transformaciones de la respuesta (T1-T3: terciles del valor ajustado)&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-comparar-transformaciones">Table 8.7: </span>Comparación de transformaciones de la respuesta (T1-T3: terciles del valor ajustado)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+escala
+</th>
+<th style="text-align:right;">
+p_BreuschPagan
+</th>
+<th style="text-align:right;">
+p_ShapiroWilk
+</th>
+<th style="text-align:right;">
+sd_resid_T1
+</th>
+<th style="text-align:right;">
+sd_resid_T2
+</th>
+<th style="text-align:right;">
+sd_resid_T3
+</th>
+<th style="text-align:right;">
+razon_sd_max_min
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+y (original)
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+5.6773
+</td>
+<td style="text-align:right;">
+7.1106
+</td>
+<td style="text-align:right;">
+8.4163
+</td>
+<td style="text-align:right;">
+1.4825
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+log(y)
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+0.3087
+</td>
+<td style="text-align:right;">
+0.1990
+</td>
+<td style="text-align:right;">
+0.2146
+</td>
+<td style="text-align:right;">
+1.5513
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+raiz(y)
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.2551
+</td>
+<td style="text-align:right;">
+0.6036
+</td>
+<td style="text-align:right;">
+0.5847
+</td>
+<td style="text-align:right;">
+0.6237
+</td>
+<td style="text-align:right;">
+1.0666
+</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Escala original:</strong> la dispersión crece con el nivel (razón de desviaciones de 1.48) y falla la normalidad.</li>
+<li><strong>Logaritmo:</strong> <em>no corrige</em>: invierte el patrón (la dispersión pasa a ser mayor en los valores bajos) y empeora la normalidad. Es consistente con que <span class="math inline">\(\hat{\lambda}\)</span> excluye el cero.</li>
+<li><strong>Raíz cuadrada:</strong> la dispersión queda casi constante (razón 1.07) y la normalidad de los residuos no se rechaza.</li>
+</ul>
+<p>Se adopta <code>raiz_resistencia = sqrt(resistencia)</code> como respuesta. Los <span class="math inline">\(R^2\)</span> de modelos con distinta respuesta <strong>no son comparables</strong>; la decisión se fundamenta en los residuos y en <span class="math inline">\(\hat{\lambda}\)</span>.</p>
+</div>
+<div id="modelo-completo-en-la-escala-de-la-raíz-cuadrada" class="section level3 hasAnchor" number="8.3.4">
+<h3><span class="header-section-number">8.3.4</span> Modelo completo en la escala de la raíz cuadrada<a href="rlm.html#modelo-completo-en-la-escala-de-la-ra%C3%ADz-cuadrada" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="rlm.html#cb134-1" tabindex="-1"></a><span class="fu">summary</span>(m_completo)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = raiz_resistencia ~ cemento + escoria + ceniza + 
+##     agua + superplast + agregado_grueso + agregado_fino + etapa, 
+##     data = df_rlm)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.93051 -0.39100 -0.00648  0.37688  2.03398 
+## 
+## Coefficients:
+##                   Estimate Std. Error t value             Pr(&gt;|t|)    
+## (Intercept)      0.3271478  1.5938076   0.205               0.8374    
+## cemento          0.0106982  0.0005110  20.936 &lt; 0.0000000000000002 ***
+## escoria          0.0085918  0.0006020  14.271 &lt; 0.0000000000000002 ***
+## ceniza           0.0060327  0.0007398   8.154  0.00000000000000102 ***
+## agua            -0.0117297  0.0023801  -4.928  0.00000096826326561 ***
+## superplast       0.0035443  0.0055373   0.640               0.5223    
+## agregado_grueso  0.0012162  0.0005622   2.163               0.0307 *  
+## agregado_fino    0.0012839  0.0006407   2.004               0.0454 *  
+## etapaEstandar    1.5929962  0.0496096  32.111 &lt; 0.0000000000000002 ***
+## etapaTardio      2.5227179  0.0532769  47.351 &lt; 0.0000000000000002 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.6124 on 1020 degrees of freedom
+## Multiple R-squared:  0.8229, Adjusted R-squared:  0.8213 
+## F-statistic: 526.5 on 9 and 1020 DF,  p-value: &lt; 0.00000000000000022</code></pre>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="rlm.html#cb136-1" tabindex="-1"></a><span class="fu">supuestos_errores</span>(m_completo) <span class="sc">|&gt;</span></span>
+<span id="cb136-2"><a href="rlm.html#cb136-2" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Supuestos de los errores: modelo completo con raiz(resistencia)&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-completo-raiz">Table 8.8: </span>Supuestos de los errores: modelo completo con raiz(resistencia)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+supuesto
+</th>
+<th style="text-align:left;">
+prueba
+</th>
+<th style="text-align:left;">
+H0
+</th>
+<th style="text-align:right;">
+p_valor
+</th>
+<th style="text-align:left;">
+decision
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Linealidad (forma funcional)
+</td>
+<td style="text-align:left;">
+RESET de Ramsey
+</td>
+<td style="text-align:left;">
+El modelo esta bien especificado (relacion lineal)
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Se rechaza H0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Normalidad de los errores
+</td>
+<td style="text-align:left;">
+Shapiro-Wilk
+</td>
+<td style="text-align:left;">
+Los errores son normales
+</td>
+<td style="text-align:right;">
+0.2551
+</td>
+<td style="text-align:left;">
+No se rechaza H0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Normalidad de los errores
+</td>
+<td style="text-align:left;">
+Lilliefors
+</td>
+<td style="text-align:left;">
+Los errores son normales
+</td>
+<td style="text-align:right;">
+0.0707
+</td>
+<td style="text-align:left;">
+No se rechaza H0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Varianza constante
+</td>
+<td style="text-align:left;">
+Breusch-Pagan (studentizada)
+</td>
+<td style="text-align:left;">
+Var(error) es constante (homocedasticidad)
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Se rechaza H0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Independencia
+</td>
+<td style="text-align:left;">
+Durbin-Watson
+</td>
+<td style="text-align:left;">
+No hay autocorrelacion de orden 1
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Se rechaza H0
+</td>
+</tr>
+</tbody>
+</table>
+<p>Con la raíz cuadrada la normalidad de los errores ya no se rechaza, pero persiste una heterocedasticidad leve detectada por Breusch-Pagan (con <span class="math inline">\(n = 1030\)</span> la prueba detecta desviaciones pequeñas), la autocorrelación por mezclas repetidas y una falta de linealidad según el RESET. Para no depender de esos supuestos, la inferencia del modelo final se contrastará con errores estándar robustos (HC3) y agrupados por mezcla.</p>
+</div>
+</div>
+<div id="selección-de-variables-todas-las-regresiones-posibles-con-aic" class="section level2 hasAnchor" number="8.4">
+<h2><span class="header-section-number">8.4</span> Selección de variables: todas las regresiones posibles con AIC<a href="rlm.html#selecci%C3%B3n-de-variables-todas-las-regresiones-posibles-con-aic" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>El método de <strong>todas las regresiones posibles</strong> ajusta todos los modelos que pueden formarse con los predictores y los compara con un criterio estadístico. Con <span class="math inline">\(k\)</span> predictores serían <span class="math inline">\(2^k - 1\)</span> modelos.</p>
+<p>Para llegar a una conclusión sobre el objetivo del estudio, <strong>se fuerzan en todos los modelos la ceniza volante y la etapa de curado</strong> (las dos dummies entran siempre juntas). Quedan seis predictores opcionales (cemento, escoria, agua, superplastificante, agregado grueso y agregado fino), es decir, <span class="math inline">\(2^6 = 64\)</span> modelos. El criterio de selección es el <strong>criterio de información de Akaike</strong>:</p>
+<p><span class="math display">\[AIC = n \ln\!\left(\frac{SSE}{n}\right) + 2p \qquad (\text{menor es mejor}).\]</span></p>
+<p>Para cada modelo también se reportan <span class="math inline">\(R^2\)</span>, <span class="math inline">\(R^2_{aj}\)</span>, <span class="math inline">\(\sqrt{MSE}\)</span>, <span class="math inline">\(BIC\)</span>, <span class="math inline">\(C_p\)</span> de Mallows y <span class="math inline">\(PRESS\)</span>:</p>
+<p><span class="math display">\[R^2_{aj} = 1 - \frac{SSE/(n-p)}{SST/(n-1)}, \qquad C_p = \frac{SSE_p}{MSE_{\text{completo}}} - (n - 2p), \qquad PRESS = \sum_{i}\left(\frac{e_i}{1-h_{ii}}\right)^2.\]</span></p>
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="rlm.html#cb137-1" tabindex="-1"></a>todas_regresiones <span class="ot">&lt;-</span> <span class="cf">function</span>(respuesta, forzadas, opcionales, data) {</span>
+<span id="cb137-2"><a href="rlm.html#cb137-2" tabindex="-1"></a>  k <span class="ot">&lt;-</span> <span class="fu">length</span>(opcionales)</span>
+<span id="cb137-3"><a href="rlm.html#cb137-3" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(data)</span>
+<span id="cb137-4"><a href="rlm.html#cb137-4" tabindex="-1"></a>  m_comp <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">reformulate</span>(<span class="fu">c</span>(forzadas, opcionales), respuesta), <span class="at">data =</span> data)</span>
+<span id="cb137-5"><a href="rlm.html#cb137-5" tabindex="-1"></a>  mse_comp <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m_comp)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> m_comp<span class="sc">$</span>df.residual</span>
+<span id="cb137-6"><a href="rlm.html#cb137-6" tabindex="-1"></a></span>
+<span id="cb137-7"><a href="rlm.html#cb137-7" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">map_dfr</span>(<span class="dv">0</span><span class="sc">:</span>(<span class="dv">2</span><span class="sc">^</span>k <span class="sc">-</span> <span class="dv">1</span>), <span class="cf">function</span>(mask) {</span>
+<span id="cb137-8"><a href="rlm.html#cb137-8" tabindex="-1"></a>    sel <span class="ot">&lt;-</span> opcionales[<span class="fu">bitwAnd</span>(mask, <span class="dv">2</span><span class="sc">^</span>(<span class="fu">seq_len</span>(k) <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">&gt;</span> <span class="dv">0</span>]</span>
+<span id="cb137-9"><a href="rlm.html#cb137-9" tabindex="-1"></a>    m <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">reformulate</span>(<span class="fu">c</span>(forzadas, sel), respuesta), <span class="at">data =</span> data)</span>
+<span id="cb137-10"><a href="rlm.html#cb137-10" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">coef</span>(m))</span>
+<span id="cb137-11"><a href="rlm.html#cb137-11" tabindex="-1"></a>    sse <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">resid</span>(m)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb137-12"><a href="rlm.html#cb137-12" tabindex="-1"></a>    h <span class="ot">&lt;-</span> <span class="fu">hatvalues</span>(m)</span>
+<span id="cb137-13"><a href="rlm.html#cb137-13" tabindex="-1"></a>    <span class="fu">tibble</span>(</span>
+<span id="cb137-14"><a href="rlm.html#cb137-14" tabindex="-1"></a>      <span class="at">variables_opcionales =</span> <span class="cf">if</span> (<span class="fu">length</span>(sel)) <span class="fu">paste</span>(sel, <span class="at">collapse =</span> <span class="st">&quot; + &quot;</span>) <span class="cf">else</span> <span class="st">&quot;(ninguna)&quot;</span>,</span>
+<span id="cb137-15"><a href="rlm.html#cb137-15" tabindex="-1"></a>      <span class="at">p =</span> p,</span>
+<span id="cb137-16"><a href="rlm.html#cb137-16" tabindex="-1"></a>      <span class="at">R2 =</span> <span class="fu">summary</span>(m)<span class="sc">$</span>r.squared,</span>
+<span id="cb137-17"><a href="rlm.html#cb137-17" tabindex="-1"></a>      <span class="at">R2_aj =</span> <span class="fu">summary</span>(m)<span class="sc">$</span>adj.r.squared,</span>
+<span id="cb137-18"><a href="rlm.html#cb137-18" tabindex="-1"></a>      <span class="at">RMSE =</span> <span class="fu">sqrt</span>(sse <span class="sc">/</span> (n <span class="sc">-</span> p)),</span>
+<span id="cb137-19"><a href="rlm.html#cb137-19" tabindex="-1"></a>      <span class="at">AIC =</span> <span class="fu">AIC</span>(m),</span>
+<span id="cb137-20"><a href="rlm.html#cb137-20" tabindex="-1"></a>      <span class="at">BIC =</span> <span class="fu">BIC</span>(m),</span>
+<span id="cb137-21"><a href="rlm.html#cb137-21" tabindex="-1"></a>      <span class="at">Cp =</span> sse <span class="sc">/</span> mse_comp <span class="sc">-</span> (n <span class="sc">-</span> <span class="dv">2</span> <span class="sc">*</span> p),</span>
+<span id="cb137-22"><a href="rlm.html#cb137-22" tabindex="-1"></a>      <span class="at">PRESS =</span> <span class="fu">sum</span>((<span class="fu">resid</span>(m) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> h))<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb137-23"><a href="rlm.html#cb137-23" tabindex="-1"></a>      <span class="at">VIF_max =</span> <span class="fu">max</span>(<span class="fu">vif_tabla</span>(m)<span class="sc">$</span>VIF_equiv)</span>
+<span id="cb137-24"><a href="rlm.html#cb137-24" tabindex="-1"></a>    )</span>
+<span id="cb137-25"><a href="rlm.html#cb137-25" tabindex="-1"></a>  }) <span class="sc">|&gt;</span></span>
+<span id="cb137-26"><a href="rlm.html#cb137-26" tabindex="-1"></a>    <span class="fu">arrange</span>(AIC) <span class="sc">|&gt;</span></span>
+<span id="cb137-27"><a href="rlm.html#cb137-27" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">delta_AIC =</span> AIC <span class="sc">-</span> <span class="fu">min</span>(AIC), <span class="at">.after =</span> AIC)</span>
+<span id="cb137-28"><a href="rlm.html#cb137-28" tabindex="-1"></a>}</span>
+<span id="cb137-29"><a href="rlm.html#cb137-29" tabindex="-1"></a></span>
+<span id="cb137-30"><a href="rlm.html#cb137-30" tabindex="-1"></a>opcionales <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;cemento&quot;</span>, <span class="st">&quot;escoria&quot;</span>, <span class="st">&quot;agua&quot;</span>, <span class="st">&quot;superplast&quot;</span>,</span>
+<span id="cb137-31"><a href="rlm.html#cb137-31" tabindex="-1"></a>                <span class="st">&quot;agregado_grueso&quot;</span>, <span class="st">&quot;agregado_fino&quot;</span>)</span>
+<span id="cb137-32"><a href="rlm.html#cb137-32" tabindex="-1"></a></span>
+<span id="cb137-33"><a href="rlm.html#cb137-33" tabindex="-1"></a>tabla_modelos <span class="ot">&lt;-</span> <span class="fu">todas_regresiones</span>(</span>
+<span id="cb137-34"><a href="rlm.html#cb137-34" tabindex="-1"></a>  <span class="at">respuesta =</span> <span class="st">&quot;raiz_resistencia&quot;</span>,</span>
+<span id="cb137-35"><a href="rlm.html#cb137-35" tabindex="-1"></a>  <span class="at">forzadas =</span> <span class="fu">c</span>(<span class="st">&quot;ceniza&quot;</span>, <span class="st">&quot;etapa&quot;</span>),</span>
+<span id="cb137-36"><a href="rlm.html#cb137-36" tabindex="-1"></a>  <span class="at">opcionales =</span> opcionales,</span>
+<span id="cb137-37"><a href="rlm.html#cb137-37" tabindex="-1"></a>  <span class="at">data =</span> df_rlm</span>
+<span id="cb137-38"><a href="rlm.html#cb137-38" tabindex="-1"></a>)</span>
+<span id="cb137-39"><a href="rlm.html#cb137-39" tabindex="-1"></a></span>
+<span id="cb137-40"><a href="rlm.html#cb137-40" tabindex="-1"></a><span class="fu">nrow</span>(tabla_modelos)</span></code></pre></div>
+<pre><code>## [1] 64</code></pre>
+<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="rlm.html#cb139-1" tabindex="-1"></a>tabla_modelos <span class="sc">|&gt;</span></span>
+<span id="cb139-2"><a href="rlm.html#cb139-2" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<span id="cb139-3"><a href="rlm.html#cb139-3" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Los 10 mejores modelos por AIC (ceniza y etapa forzadas en todos)&quot;</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-top-modelos">Table 8.9: </span>Los 10 mejores modelos por AIC (ceniza y etapa forzadas en todos)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+variables_opcionales
+</th>
+<th style="text-align:right;">
+p
+</th>
+<th style="text-align:right;">
+R2
+</th>
+<th style="text-align:right;">
+R2_aj
+</th>
+<th style="text-align:right;">
+RMSE
+</th>
+<th style="text-align:right;">
+AIC
+</th>
+<th style="text-align:right;">
+delta_AIC
+</th>
+<th style="text-align:right;">
+BIC
+</th>
+<th style="text-align:right;">
+Cp
+</th>
+<th style="text-align:right;">
+PRESS
+</th>
+<th style="text-align:right;">
+VIF_max
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+cemento + escoria + agua + agregado_grueso + agregado_fino
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0.823
+</td>
+<td style="text-align:right;">
+0.821
+</td>
+<td style="text-align:right;">
+0.612
+</td>
+<td style="text-align:right;">
+1923.090
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+1972.463
+</td>
+<td style="text-align:right;">
+8.410
+</td>
+<td style="text-align:right;">
+390.461
+</td>
+<td style="text-align:right;">
+7.826
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cemento + escoria + agua
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+0.822
+</td>
+<td style="text-align:right;">
+0.821
+</td>
+<td style="text-align:right;">
+0.613
+</td>
+<td style="text-align:right;">
+1923.521
+</td>
+<td style="text-align:right;">
+0.431
+</td>
+<td style="text-align:right;">
+1963.019
+</td>
+<td style="text-align:right;">
+8.809
+</td>
+<td style="text-align:right;">
+390.105
+</td>
+<td style="text-align:right;">
+1.796
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cemento + escoria + agua + superplast + agregado_grueso + agregado_fino
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.823
+</td>
+<td style="text-align:right;">
+0.821
+</td>
+<td style="text-align:right;">
+0.612
+</td>
+<td style="text-align:right;">
+1924.676
+</td>
+<td style="text-align:right;">
+1.586
+</td>
+<td style="text-align:right;">
+1978.987
+</td>
+<td style="text-align:right;">
+10.000
+</td>
+<td style="text-align:right;">
+391.429
+</td>
+<td style="text-align:right;">
+7.826
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cemento + escoria + agua + agregado_grueso
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+0.822
+</td>
+<td style="text-align:right;">
+0.821
+</td>
+<td style="text-align:right;">
+0.613
+</td>
+<td style="text-align:right;">
+1924.851
+</td>
+<td style="text-align:right;">
+1.761
+</td>
+<td style="text-align:right;">
+1969.286
+</td>
+<td style="text-align:right;">
+10.142
+</td>
+<td style="text-align:right;">
+390.723
+</td>
+<td style="text-align:right;">
+2.014
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cemento + escoria + agua + agregado_fino
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+0.822
+</td>
+<td style="text-align:right;">
+0.821
+</td>
+<td style="text-align:right;">
+0.613
+</td>
+<td style="text-align:right;">
+1925.400
+</td>
+<td style="text-align:right;">
+2.310
+</td>
+<td style="text-align:right;">
+1969.836
+</td>
+<td style="text-align:right;">
+10.689
+</td>
+<td style="text-align:right;">
+390.950
+</td>
+<td style="text-align:right;">
+2.366
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cemento + escoria + agua + superplast
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+0.822
+</td>
+<td style="text-align:right;">
+0.821
+</td>
+<td style="text-align:right;">
+0.613
+</td>
+<td style="text-align:right;">
+1925.521
+</td>
+<td style="text-align:right;">
+2.431
+</td>
+<td style="text-align:right;">
+1969.957
+</td>
+<td style="text-align:right;">
+10.809
+</td>
+<td style="text-align:right;">
+391.276
+</td>
+<td style="text-align:right;">
+2.478
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cemento + escoria + agua + superplast + agregado_grueso
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0.822
+</td>
+<td style="text-align:right;">
+0.821
+</td>
+<td style="text-align:right;">
+0.613
+</td>
+<td style="text-align:right;">
+1926.723
+</td>
+<td style="text-align:right;">
+3.633
+</td>
+<td style="text-align:right;">
+1976.096
+</td>
+<td style="text-align:right;">
+12.015
+</td>
+<td style="text-align:right;">
+391.835
+</td>
+<td style="text-align:right;">
+2.940
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cemento + escoria + agua + superplast + agregado_fino
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0.822
+</td>
+<td style="text-align:right;">
+0.821
+</td>
+<td style="text-align:right;">
+0.613
+</td>
+<td style="text-align:right;">
+1927.392
+</td>
+<td style="text-align:right;">
+4.302
+</td>
+<td style="text-align:right;">
+1976.765
+</td>
+<td style="text-align:right;">
+12.680
+</td>
+<td style="text-align:right;">
+392.085
+</td>
+<td style="text-align:right;">
+3.155
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cemento + escoria + superplast + agregado_grueso + agregado_fino
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0.819
+</td>
+<td style="text-align:right;">
+0.817
+</td>
+<td style="text-align:right;">
+0.619
+</td>
+<td style="text-align:right;">
+1946.914
+</td>
+<td style="text-align:right;">
+23.824
+</td>
+<td style="text-align:right;">
+1996.287
+</td>
+<td style="text-align:right;">
+32.287
+</td>
+<td style="text-align:right;">
+399.484
+</td>
+<td style="text-align:right;">
+3.886
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cemento + escoria + agregado_grueso + agregado_fino
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+0.816
+</td>
+<td style="text-align:right;">
+0.815
+</td>
+<td style="text-align:right;">
+0.623
+</td>
+<td style="text-align:right;">
+1958.568
+</td>
+<td style="text-align:right;">
+35.478
+</td>
+<td style="text-align:right;">
+2003.004
+</td>
+<td style="text-align:right;">
+44.223
+</td>
+<td style="text-align:right;">
+403.718
+</td>
+<td style="text-align:right;">
+2.586
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="rlm.html#cb140-1" tabindex="-1"></a>mejor_aic <span class="ot">&lt;-</span> tabla_modelos <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="dv">1</span>)</span>
+<span id="cb140-2"><a href="rlm.html#cb140-2" tabindex="-1"></a>mejor_vif <span class="ot">&lt;-</span> tabla_modelos <span class="sc">|&gt;</span> <span class="fu">filter</span>(VIF_max <span class="sc">&lt;=</span> <span class="dv">5</span>) <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="dv">1</span>)</span>
+<span id="cb140-3"><a href="rlm.html#cb140-3" tabindex="-1"></a></span>
+<span id="cb140-4"><a href="rlm.html#cb140-4" tabindex="-1"></a>vars_sel <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(mejor_vif<span class="sc">$</span>variables_opcionales, <span class="st">&quot; </span><span class="sc">\\</span><span class="st">+ &quot;</span>)[[<span class="dv">1</span>]]</span>
+<span id="cb140-5"><a href="rlm.html#cb140-5" tabindex="-1"></a>m_sel <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">reformulate</span>(<span class="fu">c</span>(<span class="st">&quot;ceniza&quot;</span>, <span class="st">&quot;etapa&quot;</span>, vars_sel), <span class="st">&quot;raiz_resistencia&quot;</span>), <span class="at">data =</span> df_rlm)</span></code></pre></div>
+<p>La regla de selección es: <strong>menor AIC entre los modelos sin multicolinealidad problemática (<span class="math inline">\(VIF \le 5\)</span>)</strong>, lo que combina el análisis de la sección anterior con el criterio pedido.</p>
+<ul>
+<li>El modelo de menor AIC global incluye cemento + escoria + agua + agregado_grueso + agregado_fino (AIC = 1923.1, <span class="math inline">\(VIF_{max}\)</span> = 7.8).</li>
+<li>El mejor modelo con <span class="math inline">\(VIF \le 5\)</span> incluye cemento + escoria + agua (AIC = 1923.5, <span class="math inline">\(VIF_{max}\)</span> = 1.8).</li>
+</ul>
+<p>La diferencia de AIC entre ambos es de 0.43 unidades. Una diferencia menor a 2 se considera insignificante, de modo que los dos modelos son prácticamente equivalentes en ajuste; el segundo es más parsimonioso, sin multicolinealidad y tiene menor BIC. Se elige este último como <strong>modelo seleccionado</strong> (aditivo).</p>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="rlm.html#cb141-1" tabindex="-1"></a><span class="fu">summary</span>(m_sel)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = reformulate(c(&quot;ceniza&quot;, &quot;etapa&quot;, vars_sel), &quot;raiz_resistencia&quot;), 
+##     data = df_rlm)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.99933 -0.38765 -0.01493  0.37133  1.95979 
+## 
+## Coefficients:
+##                 Estimate Std. Error t value            Pr(&gt;|t|)    
+## (Intercept)    3.7539001  0.2151549   17.45 &lt;0.0000000000000002 ***
+## ceniza         0.0048192  0.0004001   12.05 &lt;0.0000000000000002 ***
+## etapaEstandar  1.5751200  0.0483109   32.60 &lt;0.0000000000000002 ***
+## etapaTardio    2.5215171  0.0530091   47.57 &lt;0.0000000000000002 ***
+## cemento        0.0097615  0.0002309   42.27 &lt;0.0000000000000002 ***
+## escoria        0.0074737  0.0002662   28.07 &lt;0.0000000000000002 ***
+## agua          -0.0161790  0.0009536  -16.97 &lt;0.0000000000000002 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.6129 on 1023 degrees of freedom
+## Multiple R-squared:  0.822,  Adjusted R-squared:  0.821 
+## F-statistic: 787.6 on 6 and 1023 DF,  p-value: &lt; 0.00000000000000022</code></pre>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="rlm.html#cb143-1" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb143-2"><a href="rlm.html#cb143-2" tabindex="-1"></a>  <span class="at">indicador =</span> <span class="fu">c</span>(<span class="st">&quot;kappa(modelo)&quot;</span>, <span class="st">&quot;ICN con predictores estandarizados&quot;</span>),</span>
+<span id="cb143-3"><a href="rlm.html#cb143-3" tabindex="-1"></a>  <span class="at">valor =</span> <span class="fu">c</span>(<span class="fu">kappa</span>(m_sel), <span class="fu">icn</span>(m_sel, <span class="at">estandarizar =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb143-4"><a href="rlm.html#cb143-4" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb143-5"><a href="rlm.html#cb143-5" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Número de condición del modelo seleccionado&quot;</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-seleccion-detalle">Table 8.10: </span>Número de condición del modelo seleccionado
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+indicador
+</th>
+<th style="text-align:right;">
+valor
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+kappa(modelo)
+</td>
+<td style="text-align:right;">
+2573.14
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ICN con predictores estandarizados
+</td>
+<td style="text-align:right;">
+2.46
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="rlm.html#cb144-1" tabindex="-1"></a><span class="fu">vif_tabla</span>(m_sel) <span class="sc">|&gt;</span></span>
+<span id="cb144-2"><a href="rlm.html#cb144-2" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;VIF del modelo seleccionado&quot;</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-seleccion-detalle">Table 8.10: </span>VIF del modelo seleccionado
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+termino
+</th>
+<th style="text-align:right;">
+GVIF
+</th>
+<th style="text-align:right;">
+gl
+</th>
+<th style="text-align:right;">
+VIF_equiv
+</th>
+<th style="text-align:left;">
+problema
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+ceniza
+</td>
+<td style="text-align:right;">
+1.80
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1.80
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+etapa
+</td>
+<td style="text-align:right;">
+1.07
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1.04
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cemento
+</td>
+<td style="text-align:right;">
+1.60
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1.60
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+escoria
+</td>
+<td style="text-align:right;">
+1.45
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1.45
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+agua
+</td>
+<td style="text-align:right;">
+1.14
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1.14
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+</tr>
+</tbody>
+</table>
+<p>Todos los VIF son menores que 5: el modelo seleccionado no presenta multicolinealidad.</p>
+</div>
+<div id="depende-el-efecto-de-la-ceniza-de-la-etapa-de-curado-1" class="section level2 hasAnchor" number="8.5">
+<h2><span class="header-section-number">8.5</span> ¿Depende el efecto de la ceniza de la etapa de curado?<a href="rlm.html#depende-el-efecto-de-la-ceniza-de-la-etapa-de-curado-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>La pregunta de investigación es si la ceniza reduce la resistencia temprana y la mejora con el curado. Eso corresponde a una <strong>interacción</strong> entre ceniza y etapa. Se contrasta con una prueba <span class="math inline">\(F\)</span> de modelos anidados:</p>
+<p><span class="math display">\[H_0: \beta_{\text{ceniza}\times\text{Estándar}} = \beta_{\text{ceniza}\times\text{Tardío}} = 0 \quad \text{(el efecto de la ceniza no depende de la etapa)}\]</span></p>
+<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb145-1"><a href="rlm.html#cb145-1" tabindex="-1"></a>m_int <span class="ot">&lt;-</span> <span class="fu">update</span>(m_sel, . <span class="sc">~</span> . <span class="sc">+</span> ceniza<span class="sc">:</span>etapa)</span>
+<span id="cb145-2"><a href="rlm.html#cb145-2" tabindex="-1"></a><span class="fu">anova</span>(m_sel, m_int)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: raiz_resistencia ~ ceniza + etapa + cemento + escoria + agua
+## Model 2: raiz_resistencia ~ ceniza + etapa + cemento + escoria + agua + 
+##     ceniza:etapa
+##   Res.Df    RSS Df Sum of Sq      F       Pr(&gt;F)    
+## 1   1023 384.29                                     
+## 2   1021 373.28  2    11.014 15.063 0.0000003573 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="rlm.html#cb147-1" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>
+<span id="cb147-2"><a href="rlm.html#cb147-2" tabindex="-1"></a>  <span class="fu">resumen_modelo</span>(m_completo, <span class="st">&quot;Completo (8 predictores, aditivo)&quot;</span>),</span>
+<span id="cb147-3"><a href="rlm.html#cb147-3" tabindex="-1"></a>  <span class="fu">resumen_modelo</span>(m_sel, <span class="st">&quot;Seleccionado (aditivo)&quot;</span>),</span>
+<span id="cb147-4"><a href="rlm.html#cb147-4" tabindex="-1"></a>  <span class="fu">resumen_modelo</span>(m_int, <span class="st">&quot;Seleccionado + interaccion ceniza x etapa&quot;</span>)</span>
+<span id="cb147-5"><a href="rlm.html#cb147-5" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb147-6"><a href="rlm.html#cb147-6" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Comparación de los modelos candidatos (respuesta: raiz de la resistencia)&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-comparacion-modelos">Table 8.11: </span>Comparación de los modelos candidatos (respuesta: raiz de la resistencia)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+modelo
+</th>
+<th style="text-align:right;">
+p
+</th>
+<th style="text-align:right;">
+R2
+</th>
+<th style="text-align:right;">
+R2_ajustado
+</th>
+<th style="text-align:right;">
+RMSE
+</th>
+<th style="text-align:right;">
+AIC
+</th>
+<th style="text-align:right;">
+BIC
+</th>
+<th style="text-align:right;">
+PRESS
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Completo (8 predictores, aditivo)
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.8229
+</td>
+<td style="text-align:right;">
+0.8213
+</td>
+<td style="text-align:right;">
+0.6124
+</td>
+<td style="text-align:right;">
+1924.677
+</td>
+<td style="text-align:right;">
+1978.987
+</td>
+<td style="text-align:right;">
+391.4289
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Seleccionado (aditivo)
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+0.8220
+</td>
+<td style="text-align:right;">
+0.8210
+</td>
+<td style="text-align:right;">
+0.6129
+</td>
+<td style="text-align:right;">
+1923.521
+</td>
+<td style="text-align:right;">
+1963.019
+</td>
+<td style="text-align:right;">
+390.1051
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Seleccionado + interaccion ceniza x etapa
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0.8271
+</td>
+<td style="text-align:right;">
+0.8258
+</td>
+<td style="text-align:right;">
+0.6046
+</td>
+<td style="text-align:right;">
+1897.570
+</td>
+<td style="text-align:right;">
+1946.943
+</td>
+<td style="text-align:right;">
+380.3655
+</td>
+</tr>
+</tbody>
+</table>
+<p>La interacción es significativa (<span class="math inline">\(p &lt; 0.001\)</span>) y reduce el AIC en 26 unidades, con mejor <span class="math inline">\(R^2_{aj}\)</span>, <span class="math inline">\(BIC\)</span> y <span class="math inline">\(PRESS\)</span> que los demás. Se adopta como <strong>modelo final</strong>:</p>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="rlm.html#cb148-1" tabindex="-1"></a>modelo_final <span class="ot">&lt;-</span> m_int</span>
+<span id="cb148-2"><a href="rlm.html#cb148-2" tabindex="-1"></a><span class="fu">summary</span>(modelo_final)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = raiz_resistencia ~ ceniza + etapa + cemento + escoria + 
+##     agua + ceniza:etapa, data = df_rlm)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.98535 -0.37373 -0.01175  0.36179  1.94594 
+## 
+## Coefficients:
+##                        Estimate Std. Error t value             Pr(&gt;|t|)    
+## (Intercept)           3.4703672  0.2188913  15.854 &lt; 0.0000000000000002 ***
+## ceniza                0.0053952  0.0007088   7.612   0.0000000000000612 ***
+## etapaEstandar         1.6774679  0.0589501  28.456 &lt; 0.0000000000000002 ***
+## etapaTardio           2.4017623  0.0644797  37.248 &lt; 0.0000000000000002 ***
+## cemento               0.0098956  0.0002300  43.029 &lt; 0.0000000000000002 ***
+## escoria               0.0076308  0.0002642  28.879 &lt; 0.0000000000000002 ***
+## agua                 -0.0150073  0.0009647 -15.557 &lt; 0.0000000000000002 ***
+## ceniza:etapaEstandar -0.0017554  0.0007887  -2.226               0.0263 *  
+## ceniza:etapaTardio    0.0022664  0.0008912   2.543               0.0111 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.6046 on 1021 degrees of freedom
+## Multiple R-squared:  0.8271, Adjusted R-squared:  0.8258 
+## F-statistic: 610.7 on 8 and 1021 DF,  p-value: &lt; 0.00000000000000022</code></pre>
+<p><span class="math display">\[\sqrt{\text{Resistencia}} = \beta_0 + \beta_1\,\text{ceniza} + \beta_2 D_{\text{Est}} + \beta_3 D_{\text{Tar}} + \beta_4\,\text{cemento} + \beta_5\,\text{escoria} + \beta_6\,\text{agua} + \beta_7\,(\text{ceniza}\times D_{\text{Est}}) + \beta_8\,(\text{ceniza}\times D_{\text{Tar}}) + \varepsilon\]</span></p>
+<div id="coeficientes-e-inferencia" class="section level3 hasAnchor" number="8.5.1">
+<h3><span class="header-section-number">8.5.1</span> Coeficientes e inferencia<a href="rlm.html#coeficientes-e-inferencia" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Para cada coeficiente, <span class="math inline">\(H_0: \beta_j = 0\)</span> frente a <span class="math inline">\(H_1: \beta_j \neq 0\)</span>, con <span class="math inline">\(t_0 = \hat{\beta}_j / \operatorname{se}(\hat{\beta}_j) \sim t_{n-p}\)</span>.</p>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb150-1"><a href="rlm.html#cb150-1" tabindex="-1"></a>ic_coef <span class="ot">&lt;-</span> <span class="fu">confint</span>(modelo_final)</span>
+<span id="cb150-2"><a href="rlm.html#cb150-2" tabindex="-1"></a>coef_final <span class="ot">&lt;-</span> <span class="fu">summary</span>(modelo_final)<span class="sc">$</span>coefficients</span>
+<span id="cb150-3"><a href="rlm.html#cb150-3" tabindex="-1"></a></span>
+<span id="cb150-4"><a href="rlm.html#cb150-4" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb150-5"><a href="rlm.html#cb150-5" tabindex="-1"></a>  <span class="at">termino =</span> <span class="fu">rownames</span>(coef_final),</span>
+<span id="cb150-6"><a href="rlm.html#cb150-6" tabindex="-1"></a>  <span class="at">estimacion =</span> coef_final[, <span class="st">&quot;Estimate&quot;</span>],</span>
+<span id="cb150-7"><a href="rlm.html#cb150-7" tabindex="-1"></a>  <span class="at">error_est =</span> coef_final[, <span class="st">&quot;Std. Error&quot;</span>],</span>
+<span id="cb150-8"><a href="rlm.html#cb150-8" tabindex="-1"></a>  <span class="at">t =</span> coef_final[, <span class="st">&quot;t value&quot;</span>],</span>
+<span id="cb150-9"><a href="rlm.html#cb150-9" tabindex="-1"></a>  <span class="at">p_valor =</span> coef_final[, <span class="st">&quot;Pr(&gt;|t|)&quot;</span>],</span>
+<span id="cb150-10"><a href="rlm.html#cb150-10" tabindex="-1"></a>  <span class="at">IC95_inf =</span> ic_coef[, <span class="dv">1</span>],</span>
+<span id="cb150-11"><a href="rlm.html#cb150-11" tabindex="-1"></a>  <span class="at">IC95_sup =</span> ic_coef[, <span class="dv">2</span>]</span>
+<span id="cb150-12"><a href="rlm.html#cb150-12" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb150-13"><a href="rlm.html#cb150-13" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Coeficientes del modelo final (escala raiz de MPa)&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-coeficientes">Table 8.12: </span>Coeficientes del modelo final (escala raiz de MPa)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+termino
+</th>
+<th style="text-align:right;">
+estimacion
+</th>
+<th style="text-align:right;">
+error_est
+</th>
+<th style="text-align:right;">
+t
+</th>
+<th style="text-align:right;">
+p_valor
+</th>
+<th style="text-align:right;">
+IC95_inf
+</th>
+<th style="text-align:right;">
+IC95_sup
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+3.4704
+</td>
+<td style="text-align:right;">
+0.2189
+</td>
+<td style="text-align:right;">
+15.8543
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+3.0408
+</td>
+<td style="text-align:right;">
+3.8999
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ceniza
+</td>
+<td style="text-align:right;">
+0.0054
+</td>
+<td style="text-align:right;">
+0.0007
+</td>
+<td style="text-align:right;">
+7.6122
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+0.0040
+</td>
+<td style="text-align:right;">
+0.0068
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+etapaEstandar
+</td>
+<td style="text-align:right;">
+1.6775
+</td>
+<td style="text-align:right;">
+0.0590
+</td>
+<td style="text-align:right;">
+28.4557
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+1.5618
+</td>
+<td style="text-align:right;">
+1.7931
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+etapaTardio
+</td>
+<td style="text-align:right;">
+2.4018
+</td>
+<td style="text-align:right;">
+0.0645
+</td>
+<td style="text-align:right;">
+37.2483
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+2.2752
+</td>
+<td style="text-align:right;">
+2.5283
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cemento
+</td>
+<td style="text-align:right;">
+0.0099
+</td>
+<td style="text-align:right;">
+0.0002
+</td>
+<td style="text-align:right;">
+43.0289
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+0.0094
+</td>
+<td style="text-align:right;">
+0.0103
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+escoria
+</td>
+<td style="text-align:right;">
+0.0076
+</td>
+<td style="text-align:right;">
+0.0003
+</td>
+<td style="text-align:right;">
+28.8787
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+0.0071
+</td>
+<td style="text-align:right;">
+0.0081
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+agua
+</td>
+<td style="text-align:right;">
+-0.0150
+</td>
+<td style="text-align:right;">
+0.0010
+</td>
+<td style="text-align:right;">
+-15.5568
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+-0.0169
+</td>
+<td style="text-align:right;">
+-0.0131
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ceniza:etapaEstandar
+</td>
+<td style="text-align:right;">
+-0.0018
+</td>
+<td style="text-align:right;">
+0.0008
+</td>
+<td style="text-align:right;">
+-2.2256
+</td>
+<td style="text-align:right;">
+0.0263
+</td>
+<td style="text-align:right;">
+-0.0033
+</td>
+<td style="text-align:right;">
+-0.0002
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ceniza:etapaTardio
+</td>
+<td style="text-align:right;">
+0.0023
+</td>
+<td style="text-align:right;">
+0.0009
+</td>
+<td style="text-align:right;">
+2.5430
+</td>
+<td style="text-align:right;">
+0.0111
+</td>
+<td style="text-align:right;">
+0.0005
+</td>
+<td style="text-align:right;">
+0.0040
+</td>
+</tr>
+</tbody>
+</table>
+<p>Contraste conjunto de cada término. La variable cualitativa se evalúa con sus dos dummies juntas (prueba <span class="math inline">\(F\)</span> con 2 grados de libertad):</p>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="rlm.html#cb151-1" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">Anova</span>(modelo_final, <span class="at">type =</span> <span class="st">&quot;II&quot;</span>)</span></code></pre></div>
+<pre><code>## Anova Table (Type II tests)
+## 
+## Response: raiz_resistencia
+##              Sum Sq   Df  F value                Pr(&gt;F)    
+## ceniza        54.50    1  149.083 &lt; 0.00000000000000022 ***
+## etapa        864.12    2 1181.782 &lt; 0.00000000000000022 ***
+## cemento      676.90    1 1851.486 &lt; 0.00000000000000022 ***
+## escoria      304.90    1  833.977 &lt; 0.00000000000000022 ***
+## agua          88.48    1  242.013 &lt; 0.00000000000000022 ***
+## ceniza:etapa  11.01    2   15.063          0.0000003573 ***
+## Residuals    373.28 1021                                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+<div id="pendiente-de-la-ceniza-en-cada-etapa" class="section level3 hasAnchor" number="8.5.2">
+<h3><span class="header-section-number">8.5.2</span> Pendiente de la ceniza en cada etapa<a href="rlm.html#pendiente-de-la-ceniza-en-cada-etapa" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Como hay interacción, el efecto de la ceniza se obtiene con combinaciones lineales de coeficientes: en la etapa temprana es <span class="math inline">\(\beta_1\)</span>; en la estándar, <span class="math inline">\(\beta_1 + \beta_7\)</span>; en la tardía, <span class="math inline">\(\beta_1 + \beta_8\)</span>.</p>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="rlm.html#cb153-1" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">coef</span>(modelo_final)</span>
+<span id="cb153-2"><a href="rlm.html#cb153-2" tabindex="-1"></a>V <span class="ot">&lt;-</span> <span class="fu">vcov</span>(modelo_final)</span>
+<span id="cb153-3"><a href="rlm.html#cb153-3" tabindex="-1"></a>gl <span class="ot">&lt;-</span> modelo_final<span class="sc">$</span>df.residual</span>
+<span id="cb153-4"><a href="rlm.html#cb153-4" tabindex="-1"></a></span>
+<span id="cb153-5"><a href="rlm.html#cb153-5" tabindex="-1"></a>comb <span class="ot">&lt;-</span> <span class="cf">function</span>(pesos) {</span>
+<span id="cb153-6"><a href="rlm.html#cb153-6" tabindex="-1"></a>  l <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">length</span>(b)), <span class="fu">names</span>(b))</span>
+<span id="cb153-7"><a href="rlm.html#cb153-7" tabindex="-1"></a>  l[<span class="fu">names</span>(pesos)] <span class="ot">&lt;-</span> pesos</span>
+<span id="cb153-8"><a href="rlm.html#cb153-8" tabindex="-1"></a>  est <span class="ot">&lt;-</span> <span class="fu">sum</span>(l <span class="sc">*</span> b)</span>
+<span id="cb153-9"><a href="rlm.html#cb153-9" tabindex="-1"></a>  ee <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">drop</span>(<span class="fu">t</span>(l) <span class="sc">%*%</span> V <span class="sc">%*%</span> l))</span>
+<span id="cb153-10"><a href="rlm.html#cb153-10" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb153-11"><a href="rlm.html#cb153-11" tabindex="-1"></a>    <span class="at">pendiente_por_kg =</span> est, <span class="at">error_est =</span> ee, <span class="at">t =</span> est <span class="sc">/</span> ee,</span>
+<span id="cb153-12"><a href="rlm.html#cb153-12" tabindex="-1"></a>    <span class="at">p_valor =</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="fu">abs</span>(est <span class="sc">/</span> ee), gl, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb153-13"><a href="rlm.html#cb153-13" tabindex="-1"></a>    <span class="at">IC95_inf =</span> est <span class="sc">-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, gl) <span class="sc">*</span> ee,</span>
+<span id="cb153-14"><a href="rlm.html#cb153-14" tabindex="-1"></a>    <span class="at">IC95_sup =</span> est <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, gl) <span class="sc">*</span> ee</span>
+<span id="cb153-15"><a href="rlm.html#cb153-15" tabindex="-1"></a>  )</span>
+<span id="cb153-16"><a href="rlm.html#cb153-16" tabindex="-1"></a>}</span>
+<span id="cb153-17"><a href="rlm.html#cb153-17" tabindex="-1"></a></span>
+<span id="cb153-18"><a href="rlm.html#cb153-18" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>
+<span id="cb153-19"><a href="rlm.html#cb153-19" tabindex="-1"></a>  <span class="at">Temprano =</span> <span class="fu">comb</span>(<span class="fu">c</span>(<span class="at">ceniza =</span> <span class="dv">1</span>)),</span>
+<span id="cb153-20"><a href="rlm.html#cb153-20" tabindex="-1"></a>  <span class="at">Estandar =</span> <span class="fu">comb</span>(<span class="fu">c</span>(<span class="at">ceniza =</span> <span class="dv">1</span>, <span class="st">&quot;ceniza:etapaEstandar&quot;</span> <span class="ot">=</span> <span class="dv">1</span>)),</span>
+<span id="cb153-21"><a href="rlm.html#cb153-21" tabindex="-1"></a>  <span class="at">Tardio =</span> <span class="fu">comb</span>(<span class="fu">c</span>(<span class="at">ceniza =</span> <span class="dv">1</span>, <span class="st">&quot;ceniza:etapaTardio&quot;</span> <span class="ot">=</span> <span class="dv">1</span>)),</span>
+<span id="cb153-22"><a href="rlm.html#cb153-22" tabindex="-1"></a>  <span class="at">.id =</span> <span class="st">&quot;etapa&quot;</span></span>
+<span id="cb153-23"><a href="rlm.html#cb153-23" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb153-24"><a href="rlm.html#cb153-24" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Cambio en raiz(resistencia) por kg/m3 adicional de ceniza, por etapa de curado&quot;</span>, <span class="at">digits =</span> <span class="dv">5</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-pendientes">Table 8.13: </span>Cambio en raiz(resistencia) por kg/m3 adicional de ceniza, por etapa de curado
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+etapa
+</th>
+<th style="text-align:right;">
+pendiente_por_kg
+</th>
+<th style="text-align:right;">
+error_est
+</th>
+<th style="text-align:right;">
+t
+</th>
+<th style="text-align:right;">
+p_valor
+</th>
+<th style="text-align:right;">
+IC95_inf
+</th>
+<th style="text-align:right;">
+IC95_sup
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Temprano
+</td>
+<td style="text-align:right;">
+0.00540
+</td>
+<td style="text-align:right;">
+0.00071
+</td>
+<td style="text-align:right;">
+7.61219
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.00400
+</td>
+<td style="text-align:right;">
+0.00679
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Estandar
+</td>
+<td style="text-align:right;">
+0.00364
+</td>
+<td style="text-align:right;">
+0.00047
+</td>
+<td style="text-align:right;">
+7.72464
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.00272
+</td>
+<td style="text-align:right;">
+0.00456
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tardio
+</td>
+<td style="text-align:right;">
+0.00766
+</td>
+<td style="text-align:right;">
+0.00068
+</td>
+<td style="text-align:right;">
+11.19592
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.00632
+</td>
+<td style="text-align:right;">
+0.00900
+</td>
+</tr>
+</tbody>
+</table>
+<p>En las tres etapas la pendiente de la ceniza es positiva, y es mayor en la etapa tardía que en la estándar. Estos efectos se miden <strong>manteniendo constantes</strong> el cemento, la escoria y el agua, es decir, representan ceniza <em>agregada</em> a la misma cantidad de cemento y no una sustitución. La sustitución se evalúa más abajo.</p>
+</div>
+</div>
+<div id="supuestos-de-los-errores-del-modelo-final" class="section level2 hasAnchor" number="8.6">
+<h2><span class="header-section-number">8.6</span> Supuestos de los errores del modelo final<a href="rlm.html#supuestos-de-los-errores-del-modelo-final" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="rlm.html#cb154-1" tabindex="-1"></a><span class="fu">supuestos_errores</span>(modelo_final) <span class="sc">|&gt;</span></span>
+<span id="cb154-2"><a href="rlm.html#cb154-2" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Pruebas de supuestos de los errores: modelo final&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-supuestos-final">Table 8.14: </span>Pruebas de supuestos de los errores: modelo final
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+supuesto
+</th>
+<th style="text-align:left;">
+prueba
+</th>
+<th style="text-align:left;">
+H0
+</th>
+<th style="text-align:right;">
+p_valor
+</th>
+<th style="text-align:left;">
+decision
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Linealidad (forma funcional)
+</td>
+<td style="text-align:left;">
+RESET de Ramsey
+</td>
+<td style="text-align:left;">
+El modelo esta bien especificado (relacion lineal)
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Se rechaza H0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Normalidad de los errores
+</td>
+<td style="text-align:left;">
+Shapiro-Wilk
+</td>
+<td style="text-align:left;">
+Los errores son normales
+</td>
+<td style="text-align:right;">
+0.0481
+</td>
+<td style="text-align:left;">
+Se rechaza H0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Normalidad de los errores
+</td>
+<td style="text-align:left;">
+Lilliefors
+</td>
+<td style="text-align:left;">
+Los errores son normales
+</td>
+<td style="text-align:right;">
+0.0307
+</td>
+<td style="text-align:left;">
+Se rechaza H0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Varianza constante
+</td>
+<td style="text-align:left;">
+Breusch-Pagan (studentizada)
+</td>
+<td style="text-align:left;">
+Var(error) es constante (homocedasticidad)
+</td>
+<td style="text-align:right;">
+0.0017
+</td>
+<td style="text-align:left;">
+Se rechaza H0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Independencia
+</td>
+<td style="text-align:left;">
+Durbin-Watson
+</td>
+<td style="text-align:left;">
+No hay autocorrelacion de orden 1
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Se rechaza H0
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="rlm.html#cb155-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb155-2"><a href="rlm.html#cb155-2" tabindex="-1"></a><span class="fu">plot</span>(modelo_final, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span></code></pre></div>
+<p><img src="Proyecto_Final_Metodos_Estadisticos_files/figure-html/rlm-graficos-final-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="rlm.html#cb156-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="rlm.html#cb157-1" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb157-2"><a href="rlm.html#cb157-2" tabindex="-1"></a>  <span class="at">tercil =</span> <span class="fu">c</span>(<span class="st">&quot;T1 (ajustados bajos)&quot;</span>, <span class="st">&quot;T2&quot;</span>, <span class="st">&quot;T3 (ajustados altos)&quot;</span>),</span>
+<span id="cb157-3"><a href="rlm.html#cb157-3" tabindex="-1"></a>  <span class="at">sd_residuos =</span> <span class="fu">sd_terciles</span>(modelo_final)</span>
+<span id="cb157-4"><a href="rlm.html#cb157-4" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb157-5"><a href="rlm.html#cb157-5" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Desviación estándar de los residuos por tercil del valor ajustado&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-terciles-final">Table 8.15: </span>Desviación estándar de los residuos por tercil del valor ajustado
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+tercil
+</th>
+<th style="text-align:right;">
+sd_residuos
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+T1 (ajustados bajos)
+</td>
+<td style="text-align:right;">
+0.5863
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+T2
+</td>
+<td style="text-align:right;">
+0.6237
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+T3 (ajustados altos)
+</td>
+<td style="text-align:right;">
+0.5746
+</td>
+</tr>
+</tbody>
+</table>
+<p>Lectura de los supuestos en el modelo final:</p>
+<ul>
+<li><strong>Normalidad:</strong> los residuos están muy cerca de la normalidad en el Q-Q, pero Shapiro-Wilk y Lilliefors la rechazan por muy poco (p cercano a 0.05); con <span class="math inline">\(n = 1030\)</span> es una desviación pequeña, y el modelo mejora claramente frente a la escala original.</li>
+<li><strong>Varianza constante:</strong> Breusch-Pagan rechaza, aunque la desviación de los residuos por tercil varía poco.</li>
+<li><strong>Independencia:</strong> Durbin-Watson rechaza, por las mezclas repetidas.</li>
+<li><strong>Linealidad:</strong> el RESET rechaza. El modelo es una aproximación lineal: se discute en la sección siguiente.</li>
+</ul>
+<p>Como la heterocedasticidad y la dependencia no sesgan los coeficientes pero sí los errores estándar, se corrige la inferencia.</p>
+<div id="falta-de-linealidad-reset" class="section level3 hasAnchor" number="8.6.1">
+<h3><span class="header-section-number">8.6.1</span> Falta de linealidad (RESET)<a href="rlm.html#falta-de-linealidad-reset" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>El RESET rechaza la forma funcional. Parte de la curvatura proviene de que la etapa agrupa edades muy distintas: dentro de una misma etapa la edad todavía influye. Como sensibilidad, se agrega <code>log_edad</code> al modelo final (solo con ese fin, ya que es redundante con la etapa y produce multicolinealidad):</p>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="rlm.html#cb158-1" tabindex="-1"></a>m_amp <span class="ot">&lt;-</span> <span class="fu">update</span>(modelo_final, . <span class="sc">~</span> . <span class="sc">+</span> log_edad)</span>
+<span id="cb158-2"><a href="rlm.html#cb158-2" tabindex="-1"></a></span>
+<span id="cb158-3"><a href="rlm.html#cb158-3" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>
+<span id="cb158-4"><a href="rlm.html#cb158-4" tabindex="-1"></a>  <span class="fu">resumen_modelo</span>(modelo_final, <span class="st">&quot;Final (etapa dummy)&quot;</span>),</span>
+<span id="cb158-5"><a href="rlm.html#cb158-5" tabindex="-1"></a>  <span class="fu">resumen_modelo</span>(m_amp, <span class="st">&quot;Final + log_edad (solo sensibilidad)&quot;</span>)</span>
+<span id="cb158-6"><a href="rlm.html#cb158-6" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb158-7"><a href="rlm.html#cb158-7" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Sensibilidad: efecto de la edad dentro de cada etapa&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-sensibilidad-edad">Table 8.16: </span>Sensibilidad: efecto de la edad dentro de cada etapa
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+modelo
+</th>
+<th style="text-align:right;">
+p
+</th>
+<th style="text-align:right;">
+R2
+</th>
+<th style="text-align:right;">
+R2_ajustado
+</th>
+<th style="text-align:right;">
+RMSE
+</th>
+<th style="text-align:right;">
+AIC
+</th>
+<th style="text-align:right;">
+BIC
+</th>
+<th style="text-align:right;">
+PRESS
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Final (etapa dummy)
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0.8271
+</td>
+<td style="text-align:right;">
+0.8258
+</td>
+<td style="text-align:right;">
+0.6046
+</td>
+<td style="text-align:right;">
+1897.570
+</td>
+<td style="text-align:right;">
+1946.943
+</td>
+<td style="text-align:right;">
+380.3655
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Final + log_edad (solo sensibilidad)
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.8434
+</td>
+<td style="text-align:right;">
+0.8420
+</td>
+<td style="text-align:right;">
+0.5758
+</td>
+<td style="text-align:right;">
+1797.987
+</td>
+<td style="text-align:right;">
+1852.297
+</td>
+<td style="text-align:right;">
+345.4290
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="rlm.html#cb159-1" tabindex="-1"></a><span class="fu">tabla_robusta</span>(m_amp, <span class="fu">vcov_cluster</span>(m_amp, df_rlm<span class="sc">$</span>id_mezcla),</span>
+<span id="cb159-2"><a href="rlm.html#cb159-2" tabindex="-1"></a>              <span class="at">gl =</span> <span class="fu">n_distinct</span>(df_rlm<span class="sc">$</span>id_mezcla) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb159-3"><a href="rlm.html#cb159-3" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(termino, <span class="st">&quot;ceniza&quot;</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb159-4"><a href="rlm.html#cb159-4" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Coeficientes de ceniza en el modelo ampliado (errores agrupados por mezcla)&quot;</span>, <span class="at">digits =</span> <span class="dv">5</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-sensibilidad-edad">Table 8.16: </span>Coeficientes de ceniza en el modelo ampliado (errores agrupados por mezcla)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+termino
+</th>
+<th style="text-align:right;">
+estimacion
+</th>
+<th style="text-align:right;">
+ee_robusto
+</th>
+<th style="text-align:right;">
+t
+</th>
+<th style="text-align:right;">
+p_valor
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+ceniza
+</td>
+<td style="text-align:right;">
+0.00654
+</td>
+<td style="text-align:right;">
+0.00068
+</td>
+<td style="text-align:right;">
+9.67183
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ceniza:etapaEstandar
+</td>
+<td style="text-align:right;">
+-0.00270
+</td>
+<td style="text-align:right;">
+0.00070
+</td>
+<td style="text-align:right;">
+-3.86851
+</td>
+<td style="text-align:right;">
+0.00013
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ceniza:etapaTardio
+</td>
+<td style="text-align:right;">
+0.00262
+</td>
+<td style="text-align:right;">
+0.00088
+</td>
+<td style="text-align:right;">
+2.95854
+</td>
+<td style="text-align:right;">
+0.00326
+</td>
+</tr>
+</tbody>
+</table>
+<p>Si la interacción ceniza × etapa sigue siendo significativa en el modelo ampliado, la conclusión sobre el efecto diferenciado de la ceniza no depende de la forma en que se codifica la edad. Que la etapa no capture toda la influencia de la edad es una limitación del modelo, aceptada porque el objetivo exige una variable cualitativa con dummies.</p>
+</div>
+<div id="inferencia-robusta-hc3-y-errores-agrupados-por-mezcla" class="section level3 hasAnchor" number="8.6.2">
+<h3><span class="header-section-number">8.6.2</span> Inferencia robusta: HC3 y errores agrupados por mezcla<a href="rlm.html#inferencia-robusta-hc3-y-errores-agrupados-por-mezcla" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>El estimador HC3 corrige la heterocedasticidad. El estimador agrupado por mezcla (CR1) corrige además la correlación entre las filas de una misma mezcla; es el más adecuado para esta estructura de datos.</p>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="rlm.html#cb160-1" tabindex="-1"></a>V_hc3 <span class="ot">&lt;-</span> <span class="fu">vcov_hc3</span>(modelo_final)</span>
+<span id="cb160-2"><a href="rlm.html#cb160-2" tabindex="-1"></a>V_cl <span class="ot">&lt;-</span> <span class="fu">vcov_cluster</span>(modelo_final, df_rlm<span class="sc">$</span>id_mezcla)</span>
+<span id="cb160-3"><a href="rlm.html#cb160-3" tabindex="-1"></a>G_rlm <span class="ot">&lt;-</span> <span class="fu">n_distinct</span>(df_rlm<span class="sc">$</span>id_mezcla)</span>
+<span id="cb160-4"><a href="rlm.html#cb160-4" tabindex="-1"></a></span>
+<span id="cb160-5"><a href="rlm.html#cb160-5" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb160-6"><a href="rlm.html#cb160-6" tabindex="-1"></a>  <span class="at">termino =</span> <span class="fu">names</span>(<span class="fu">coef</span>(modelo_final)),</span>
+<span id="cb160-7"><a href="rlm.html#cb160-7" tabindex="-1"></a>  <span class="at">estimacion =</span> <span class="fu">coef</span>(modelo_final),</span>
+<span id="cb160-8"><a href="rlm.html#cb160-8" tabindex="-1"></a>  <span class="at">ee_clasico =</span> <span class="fu">summary</span>(modelo_final)<span class="sc">$</span>coefficients[, <span class="st">&quot;Std. Error&quot;</span>],</span>
+<span id="cb160-9"><a href="rlm.html#cb160-9" tabindex="-1"></a>  <span class="at">ee_HC3 =</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(V_hc3)),</span>
+<span id="cb160-10"><a href="rlm.html#cb160-10" tabindex="-1"></a>  <span class="at">ee_por_mezcla =</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(V_cl)),</span>
+<span id="cb160-11"><a href="rlm.html#cb160-11" tabindex="-1"></a>  <span class="at">p_clasico =</span> <span class="fu">summary</span>(modelo_final)<span class="sc">$</span>coefficients[, <span class="st">&quot;Pr(&gt;|t|)&quot;</span>],</span>
+<span id="cb160-12"><a href="rlm.html#cb160-12" tabindex="-1"></a>  <span class="at">p_HC3 =</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="fu">abs</span>(<span class="fu">coef</span>(modelo_final) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(V_hc3))),</span>
+<span id="cb160-13"><a href="rlm.html#cb160-13" tabindex="-1"></a>                 modelo_final<span class="sc">$</span>df.residual, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb160-14"><a href="rlm.html#cb160-14" tabindex="-1"></a>  <span class="at">p_por_mezcla =</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="fu">abs</span>(<span class="fu">coef</span>(modelo_final) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(V_cl))),</span>
+<span id="cb160-15"><a href="rlm.html#cb160-15" tabindex="-1"></a>                        G_rlm <span class="sc">-</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb160-16"><a href="rlm.html#cb160-16" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb160-17"><a href="rlm.html#cb160-17" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Errores estándar y p-valores: clásicos, HC3 y agrupados por mezcla&quot;</span>, <span class="at">digits =</span> <span class="dv">5</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-robusto">Table 8.17: </span>Errores estándar y p-valores: clásicos, HC3 y agrupados por mezcla
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+termino
+</th>
+<th style="text-align:right;">
+estimacion
+</th>
+<th style="text-align:right;">
+ee_clasico
+</th>
+<th style="text-align:right;">
+ee_HC3
+</th>
+<th style="text-align:right;">
+ee_por_mezcla
+</th>
+<th style="text-align:right;">
+p_clasico
+</th>
+<th style="text-align:right;">
+p_HC3
+</th>
+<th style="text-align:right;">
+p_por_mezcla
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+3.47037
+</td>
+<td style="text-align:right;">
+0.21889
+</td>
+<td style="text-align:right;">
+0.25932
+</td>
+<td style="text-align:right;">
+0.39396
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ceniza
+</td>
+<td style="text-align:right;">
+0.00540
+</td>
+<td style="text-align:right;">
+0.00071
+</td>
+<td style="text-align:right;">
+0.00067
+</td>
+<td style="text-align:right;">
+0.00063
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+etapaEstandar
+</td>
+<td style="text-align:right;">
+1.67747
+</td>
+<td style="text-align:right;">
+0.05895
+</td>
+<td style="text-align:right;">
+0.06287
+</td>
+<td style="text-align:right;">
+0.05276
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+etapaTardio
+</td>
+<td style="text-align:right;">
+2.40176
+</td>
+<td style="text-align:right;">
+0.06448
+</td>
+<td style="text-align:right;">
+0.06878
+</td>
+<td style="text-align:right;">
+0.09457
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cemento
+</td>
+<td style="text-align:right;">
+0.00990
+</td>
+<td style="text-align:right;">
+0.00023
+</td>
+<td style="text-align:right;">
+0.00024
+</td>
+<td style="text-align:right;">
+0.00032
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+escoria
+</td>
+<td style="text-align:right;">
+0.00763
+</td>
+<td style="text-align:right;">
+0.00026
+</td>
+<td style="text-align:right;">
+0.00026
+</td>
+<td style="text-align:right;">
+0.00036
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+agua
+</td>
+<td style="text-align:right;">
+-0.01501
+</td>
+<td style="text-align:right;">
+0.00096
+</td>
+<td style="text-align:right;">
+0.00123
+</td>
+<td style="text-align:right;">
+0.00194
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+<td style="text-align:right;">
+0.00000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ceniza:etapaEstandar
+</td>
+<td style="text-align:right;">
+-0.00176
+</td>
+<td style="text-align:right;">
+0.00079
+</td>
+<td style="text-align:right;">
+0.00079
+</td>
+<td style="text-align:right;">
+0.00066
+</td>
+<td style="text-align:right;">
+0.02626
+</td>
+<td style="text-align:right;">
+0.02680
+</td>
+<td style="text-align:right;">
+0.00846
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ceniza:etapaTardio
+</td>
+<td style="text-align:right;">
+0.00227
+</td>
+<td style="text-align:right;">
+0.00089
+</td>
+<td style="text-align:right;">
+0.00086
+</td>
+<td style="text-align:right;">
+0.00091
+</td>
+<td style="text-align:right;">
+0.01114
+</td>
+<td style="text-align:right;">
+0.00883
+</td>
+<td style="text-align:right;">
+0.01316
+</td>
+</tr>
+</tbody>
+</table>
+<p>Contraste conjunto de la interacción con errores agrupados por mezcla (<span class="math inline">\(H_0\)</span>: el efecto de la ceniza no depende de la etapa):</p>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="rlm.html#cb161-1" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">linearHypothesis</span>(</span>
+<span id="cb161-2"><a href="rlm.html#cb161-2" tabindex="-1"></a>  modelo_final,</span>
+<span id="cb161-3"><a href="rlm.html#cb161-3" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;ceniza:etapaEstandar = 0&quot;</span>, <span class="st">&quot;ceniza:etapaTardio = 0&quot;</span>),</span>
+<span id="cb161-4"><a href="rlm.html#cb161-4" tabindex="-1"></a>  <span class="at">vcov. =</span> V_cl</span>
+<span id="cb161-5"><a href="rlm.html#cb161-5" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## 
+## Linear hypothesis test:
+## ceniza:etapaEstandar = 0
+## ceniza:etapaTardio = 0
+## 
+## Model 1: restricted model
+## Model 2: raiz_resistencia ~ ceniza + etapa + cemento + escoria + agua + 
+##     ceniza:etapa
+## 
+## Note: Coefficient covariance matrix supplied.
+## 
+##   Res.Df Df      F       Pr(&gt;F)    
+## 1   1023                           
+## 2   1021  2 18.044 0.0000000199 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Con los errores robustos, los coeficientes principales siguen siendo significativos y la interacción se mantiene, aunque con p-valores más grandes que los clásicos (lo esperado al corregir la dependencia). Las conclusiones del modelo final son por tanto robustas.</p>
+</div>
+<div id="observaciones-influyentes" class="section level3 hasAnchor" number="8.6.3">
+<h3><span class="header-section-number">8.6.3</span> Observaciones influyentes<a href="rlm.html#observaciones-influyentes" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="rlm.html#cb163-1" tabindex="-1"></a>n_obs <span class="ot">&lt;-</span> <span class="fu">nrow</span>(df_rlm)</span>
+<span id="cb163-2"><a href="rlm.html#cb163-2" tabindex="-1"></a>p_final <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">coef</span>(modelo_final))</span>
+<span id="cb163-3"><a href="rlm.html#cb163-3" tabindex="-1"></a>cook <span class="ot">&lt;-</span> <span class="fu">cooks.distance</span>(modelo_final)</span>
+<span id="cb163-4"><a href="rlm.html#cb163-4" tabindex="-1"></a>influyentes <span class="ot">&lt;-</span> <span class="fu">which</span>(cook <span class="sc">&gt;</span> <span class="dv">4</span> <span class="sc">/</span> n_obs)</span>
+<span id="cb163-5"><a href="rlm.html#cb163-5" tabindex="-1"></a></span>
+<span id="cb163-6"><a href="rlm.html#cb163-6" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb163-7"><a href="rlm.html#cb163-7" tabindex="-1"></a>  <span class="at">indicador =</span> <span class="fu">c</span>(<span class="st">&quot;Observaciones con distancia de Cook &gt; 4/n&quot;</span>,</span>
+<span id="cb163-8"><a href="rlm.html#cb163-8" tabindex="-1"></a>                <span class="st">&quot;Distancia de Cook maxima&quot;</span>,</span>
+<span id="cb163-9"><a href="rlm.html#cb163-9" tabindex="-1"></a>                <span class="st">&quot;Observaciones con apalancamiento &gt; 2p/n&quot;</span>),</span>
+<span id="cb163-10"><a href="rlm.html#cb163-10" tabindex="-1"></a>  <span class="at">valor =</span> <span class="fu">c</span>(<span class="fu">length</span>(influyentes), <span class="fu">max</span>(cook), <span class="fu">sum</span>(<span class="fu">hatvalues</span>(modelo_final) <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">*</span> p_final <span class="sc">/</span> n_obs))</span>
+<span id="cb163-11"><a href="rlm.html#cb163-11" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb163-12"><a href="rlm.html#cb163-12" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Diagnóstico de influencia del modelo final&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-influencia">Table 8.18: </span>Diagnóstico de influencia del modelo final
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+indicador
+</th>
+<th style="text-align:right;">
+valor
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Observaciones con distancia de Cook &gt; 4/n
+</td>
+<td style="text-align:right;">
+71.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Distancia de Cook maxima
+</td>
+<td style="text-align:right;">
+0.0291
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Observaciones con apalancamiento &gt; 2p/n
+</td>
+<td style="text-align:right;">
+42.0000
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="rlm.html#cb164-1" tabindex="-1"></a><span class="co"># Sensibilidad: coeficientes sin las observaciones influyentes</span></span>
+<span id="cb164-2"><a href="rlm.html#cb164-2" tabindex="-1"></a>m_sin_infl <span class="ot">&lt;-</span> <span class="fu">update</span>(modelo_final, <span class="at">data =</span> df_rlm[<span class="sc">-</span>influyentes, ])</span>
+<span id="cb164-3"><a href="rlm.html#cb164-3" tabindex="-1"></a></span>
+<span id="cb164-4"><a href="rlm.html#cb164-4" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb164-5"><a href="rlm.html#cb164-5" tabindex="-1"></a>  <span class="at">termino =</span> <span class="fu">names</span>(<span class="fu">coef</span>(modelo_final)),</span>
+<span id="cb164-6"><a href="rlm.html#cb164-6" tabindex="-1"></a>  <span class="at">con_todas =</span> <span class="fu">coef</span>(modelo_final),</span>
+<span id="cb164-7"><a href="rlm.html#cb164-7" tabindex="-1"></a>  <span class="at">sin_influyentes =</span> <span class="fu">coef</span>(m_sin_infl)</span>
+<span id="cb164-8"><a href="rlm.html#cb164-8" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb164-9"><a href="rlm.html#cb164-9" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Sensibilidad de los coeficientes a las observaciones influyentes&quot;</span>, <span class="at">digits =</span> <span class="dv">5</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-influencia">Table 8.18: </span>Sensibilidad de los coeficientes a las observaciones influyentes
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+termino
+</th>
+<th style="text-align:right;">
+con_todas
+</th>
+<th style="text-align:right;">
+sin_influyentes
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+3.47037
+</td>
+<td style="text-align:right;">
+3.80072
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ceniza
+</td>
+<td style="text-align:right;">
+0.00540
+</td>
+<td style="text-align:right;">
+0.00575
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+etapaEstandar
+</td>
+<td style="text-align:right;">
+1.67747
+</td>
+<td style="text-align:right;">
+1.65607
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+etapaTardio
+</td>
+<td style="text-align:right;">
+2.40176
+</td>
+<td style="text-align:right;">
+2.38291
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cemento
+</td>
+<td style="text-align:right;">
+0.00990
+</td>
+<td style="text-align:right;">
+0.00998
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+escoria
+</td>
+<td style="text-align:right;">
+0.00763
+</td>
+<td style="text-align:right;">
+0.00769
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+agua
+</td>
+<td style="text-align:right;">
+-0.01501
+</td>
+<td style="text-align:right;">
+-0.01701
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ceniza:etapaEstandar
+</td>
+<td style="text-align:right;">
+-0.00176
+</td>
+<td style="text-align:right;">
+-0.00175
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ceniza:etapaTardio
+</td>
+<td style="text-align:right;">
+0.00227
+</td>
+<td style="text-align:right;">
+0.00258
+</td>
+</tr>
+</tbody>
+</table>
+<p>La distancia de Cook máxima es muy pequeña (muy lejos de 1), así que ninguna observación domina el ajuste, y los coeficientes cambian poco al excluir las de mayor influencia. No se eliminan datos.</p>
+</div>
+</div>
+<div id="interpretación-del-modelo-final" class="section level2 hasAnchor" number="8.7">
+<h2><span class="header-section-number">8.7</span> Interpretación del modelo final<a href="rlm.html#interpretaci%C3%B3n-del-modelo-final" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="interpretación-de-los-coeficientes" class="section level3 hasAnchor" number="8.7.1">
+<h3><span class="header-section-number">8.7.1</span> Interpretación de los coeficientes<a href="rlm.html#interpretaci%C3%B3n-de-los-coeficientes" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Los coeficientes están en la escala de la raíz cuadrada de la resistencia (<span class="math inline">\(\sqrt{\text{MPa}}\)</span>). Con ceniza igual a 0, por ejemplo, la etapa estándar presenta 1.68 unidades más que la temprana y la tardía 2.4, con las demás variables constantes. El cemento y la escoria aportan resistencia y el agua la reduce, como se espera del comportamiento del concreto. Para expresar los resultados en MPa se retrotransforma.</p>
+</div>
+<div id="retrotransformación-y-escenarios-en-mpa" class="section level3 hasAnchor" number="8.7.2">
+<h3><span class="header-section-number">8.7.2</span> Retrotransformación y escenarios en MPa<a href="rlm.html#retrotransformaci%C3%B3n-y-escenarios-en-mpa" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Si <span class="math inline">\(\sqrt{Y} \mid x \sim N(\mu, \sigma^2)\)</span>, entonces la <strong>mediana</strong> de <span class="math inline">\(Y\)</span> es <span class="math inline">\(\hat{\mu}^2\)</span> y la <strong>media</strong> es <span class="math inline">\(\hat{\mu}^2 + \hat{\sigma}^2\)</span> (no basta con elevar al cuadrado, porque eso estima la mediana). Se comparan tres mezclas, con escoria y agua en sus medias:</p>
+<ul>
+<li><strong>Control:</strong> cemento en su media y sin ceniza.</li>
+<li><strong>Sustitución:</strong> se reducen 100 kg/m³ de cemento y se agregan 100 kg/m³ de ceniza.</li>
+<li><strong>Adición:</strong> se agregan 100 kg/m³ de ceniza manteniendo el cemento.</li>
+</ul>
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="rlm.html#cb165-1" tabindex="-1"></a>cem0 <span class="ot">&lt;-</span> <span class="fu">mean</span>(df_rlm<span class="sc">$</span>cemento)</span>
+<span id="cb165-2"><a href="rlm.html#cb165-2" tabindex="-1"></a></span>
+<span id="cb165-3"><a href="rlm.html#cb165-3" tabindex="-1"></a>escenarios <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
+<span id="cb165-4"><a href="rlm.html#cb165-4" tabindex="-1"></a>  <span class="at">escenario =</span> <span class="fu">c</span>(<span class="st">&quot;Control&quot;</span>, <span class="st">&quot;Sustitucion (-100 cemento, +100 ceniza)&quot;</span>, <span class="st">&quot;Adicion (+100 ceniza)&quot;</span>),</span>
+<span id="cb165-5"><a href="rlm.html#cb165-5" tabindex="-1"></a>  <span class="at">etapa =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;Temprano&quot;</span>, <span class="st">&quot;Estandar&quot;</span>, <span class="st">&quot;Tardio&quot;</span>), <span class="at">levels =</span> <span class="fu">levels</span>(df_rlm<span class="sc">$</span>etapa))</span>
+<span id="cb165-6"><a href="rlm.html#cb165-6" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb165-7"><a href="rlm.html#cb165-7" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb165-8"><a href="rlm.html#cb165-8" tabindex="-1"></a>    <span class="at">ceniza =</span> <span class="fu">if_else</span>(<span class="fu">str_starts</span>(escenario, <span class="st">&quot;Control&quot;</span>), <span class="dv">0</span>, <span class="dv">100</span>),</span>
+<span id="cb165-9"><a href="rlm.html#cb165-9" tabindex="-1"></a>    <span class="at">cemento =</span> <span class="fu">if_else</span>(<span class="fu">str_starts</span>(escenario, <span class="st">&quot;Sustitucion&quot;</span>), cem0 <span class="sc">-</span> <span class="dv">100</span>, cem0),</span>
+<span id="cb165-10"><a href="rlm.html#cb165-10" tabindex="-1"></a>    <span class="at">escoria =</span> <span class="fu">mean</span>(df_rlm<span class="sc">$</span>escoria),</span>
+<span id="cb165-11"><a href="rlm.html#cb165-11" tabindex="-1"></a>    <span class="at">agua =</span> <span class="fu">mean</span>(df_rlm<span class="sc">$</span>agua)</span>
+<span id="cb165-12"><a href="rlm.html#cb165-12" tabindex="-1"></a>  )</span>
+<span id="cb165-13"><a href="rlm.html#cb165-13" tabindex="-1"></a></span>
+<span id="cb165-14"><a href="rlm.html#cb165-14" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_final, <span class="at">newdata =</span> escenarios, <span class="at">interval =</span> <span class="st">&quot;confidence&quot;</span>)</span>
+<span id="cb165-15"><a href="rlm.html#cb165-15" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">summary</span>(modelo_final)<span class="sc">$</span>sigma<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb165-16"><a href="rlm.html#cb165-16" tabindex="-1"></a></span>
+<span id="cb165-17"><a href="rlm.html#cb165-17" tabindex="-1"></a>escenarios <span class="sc">|&gt;</span></span>
+<span id="cb165-18"><a href="rlm.html#cb165-18" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb165-19"><a href="rlm.html#cb165-19" tabindex="-1"></a>    <span class="at">mediana_MPa =</span> pred[, <span class="st">&quot;fit&quot;</span>]<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb165-20"><a href="rlm.html#cb165-20" tabindex="-1"></a>    <span class="at">IC95_inf_MPa =</span> pred[, <span class="st">&quot;lwr&quot;</span>]<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb165-21"><a href="rlm.html#cb165-21" tabindex="-1"></a>    <span class="at">IC95_sup_MPa =</span> pred[, <span class="st">&quot;upr&quot;</span>]<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb165-22"><a href="rlm.html#cb165-22" tabindex="-1"></a>    <span class="at">media_MPa =</span> pred[, <span class="st">&quot;fit&quot;</span>]<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> s2</span>
+<span id="cb165-23"><a href="rlm.html#cb165-23" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb165-24"><a href="rlm.html#cb165-24" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(escenario, etapa, ceniza, cemento, mediana_MPa, IC95_inf_MPa, IC95_sup_MPa, media_MPa) <span class="sc">|&gt;</span></span>
+<span id="cb165-25"><a href="rlm.html#cb165-25" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Resistencia predicha (MPa) por escenario y etapa de curado (IC del 95% para la mediana)&quot;</span>, <span class="at">digits =</span> <span class="dv">1</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-escenarios">Table 8.19: </span>Resistencia predicha (MPa) por escenario y etapa de curado (IC del 95% para la mediana)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+escenario
+</th>
+<th style="text-align:left;">
+etapa
+</th>
+<th style="text-align:right;">
+ceniza
+</th>
+<th style="text-align:right;">
+cemento
+</th>
+<th style="text-align:right;">
+mediana_MPa
+</th>
+<th style="text-align:right;">
+IC95_inf_MPa
+</th>
+<th style="text-align:right;">
+IC95_sup_MPa
+</th>
+<th style="text-align:right;">
+media_MPa
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+Temprano
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+281.2
+</td>
+<td style="text-align:right;">
+16.7
+</td>
+<td style="text-align:right;">
+16.0
+</td>
+<td style="text-align:right;">
+17.5
+</td>
+<td style="text-align:right;">
+17.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+Estandar
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+281.2
+</td>
+<td style="text-align:right;">
+33.3
+</td>
+<td style="text-align:right;">
+32.4
+</td>
+<td style="text-align:right;">
+34.2
+</td>
+<td style="text-align:right;">
+33.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+Tardio
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+281.2
+</td>
+<td style="text-align:right;">
+42.2
+</td>
+<td style="text-align:right;">
+40.9
+</td>
+<td style="text-align:right;">
+43.4
+</td>
+<td style="text-align:right;">
+42.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sustitucion (-100 cemento, +100 ceniza)
+</td>
+<td style="text-align:left;">
+Temprano
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+181.2
+</td>
+<td style="text-align:right;">
+13.3
+</td>
+<td style="text-align:right;">
+12.4
+</td>
+<td style="text-align:right;">
+14.1
+</td>
+<td style="text-align:right;">
+13.6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sustitucion (-100 cemento, +100 ceniza)
+</td>
+<td style="text-align:left;">
+Estandar
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+181.2
+</td>
+<td style="text-align:right;">
+26.5
+</td>
+<td style="text-align:right;">
+25.8
+</td>
+<td style="text-align:right;">
+27.1
+</td>
+<td style="text-align:right;">
+26.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sustitucion (-100 cemento, +100 ceniza)
+</td>
+<td style="text-align:left;">
+Tardio
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+181.2
+</td>
+<td style="text-align:right;">
+39.3
+</td>
+<td style="text-align:right;">
+38.1
+</td>
+<td style="text-align:right;">
+40.5
+</td>
+<td style="text-align:right;">
+39.7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Adicion (+100 ceniza)
+</td>
+<td style="text-align:left;">
+Temprano
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+281.2
+</td>
+<td style="text-align:right;">
+21.4
+</td>
+<td style="text-align:right;">
+20.4
+</td>
+<td style="text-align:right;">
+22.5
+</td>
+<td style="text-align:right;">
+21.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Adicion (+100 ceniza)
+</td>
+<td style="text-align:left;">
+Estandar
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+281.2
+</td>
+<td style="text-align:right;">
+37.6
+</td>
+<td style="text-align:right;">
+36.8
+</td>
+<td style="text-align:right;">
+38.4
+</td>
+<td style="text-align:right;">
+38.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Adicion (+100 ceniza)
+</td>
+<td style="text-align:left;">
+Tardio
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+281.2
+</td>
+<td style="text-align:right;">
+52.7
+</td>
+<td style="text-align:right;">
+51.3
+</td>
+<td style="text-align:right;">
+54.1
+</td>
+<td style="text-align:right;">
+53.1
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="rlm.html#cb166-1" tabindex="-1"></a>tab_esc <span class="ot">&lt;-</span> escenarios <span class="sc">|&gt;</span></span>
+<span id="cb166-2"><a href="rlm.html#cb166-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mediana_MPa =</span> pred[, <span class="st">&quot;fit&quot;</span>]<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb166-3"><a href="rlm.html#cb166-3" tabindex="-1"></a></span>
+<span id="cb166-4"><a href="rlm.html#cb166-4" tabindex="-1"></a>control <span class="ot">&lt;-</span> tab_esc <span class="sc">|&gt;</span></span>
+<span id="cb166-5"><a href="rlm.html#cb166-5" tabindex="-1"></a>  <span class="fu">filter</span>(escenario <span class="sc">==</span> <span class="st">&quot;Control&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb166-6"><a href="rlm.html#cb166-6" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(etapa, <span class="at">control_MPa =</span> mediana_MPa)</span>
+<span id="cb166-7"><a href="rlm.html#cb166-7" tabindex="-1"></a></span>
+<span id="cb166-8"><a href="rlm.html#cb166-8" tabindex="-1"></a>tab_esc <span class="sc">|&gt;</span></span>
+<span id="cb166-9"><a href="rlm.html#cb166-9" tabindex="-1"></a>  <span class="fu">filter</span>(escenario <span class="sc">!=</span> <span class="st">&quot;Control&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb166-10"><a href="rlm.html#cb166-10" tabindex="-1"></a>  <span class="fu">left_join</span>(control, <span class="at">by =</span> <span class="st">&quot;etapa&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb166-11"><a href="rlm.html#cb166-11" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb166-12"><a href="rlm.html#cb166-12" tabindex="-1"></a>    <span class="at">diferencia_MPa =</span> mediana_MPa <span class="sc">-</span> control_MPa,</span>
+<span id="cb166-13"><a href="rlm.html#cb166-13" tabindex="-1"></a>    <span class="at">diferencia_pct =</span> <span class="dv">100</span> <span class="sc">*</span> diferencia_MPa <span class="sc">/</span> control_MPa</span>
+<span id="cb166-14"><a href="rlm.html#cb166-14" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb166-15"><a href="rlm.html#cb166-15" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(escenario, etapa, control_MPa, mediana_MPa, diferencia_MPa, diferencia_pct) <span class="sc">|&gt;</span></span>
+<span id="cb166-16"><a href="rlm.html#cb166-16" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Cambio de la resistencia (mediana, MPa) frente a la mezcla de control&quot;</span>, <span class="at">digits =</span> <span class="dv">1</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-escenarios-diferencia">Table 8.20: </span>Cambio de la resistencia (mediana, MPa) frente a la mezcla de control
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+escenario
+</th>
+<th style="text-align:left;">
+etapa
+</th>
+<th style="text-align:right;">
+control_MPa
+</th>
+<th style="text-align:right;">
+mediana_MPa
+</th>
+<th style="text-align:right;">
+diferencia_MPa
+</th>
+<th style="text-align:right;">
+diferencia_pct
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Sustitucion (-100 cemento, +100 ceniza)
+</td>
+<td style="text-align:left;">
+Temprano
+</td>
+<td style="text-align:right;">
+16.7
+</td>
+<td style="text-align:right;">
+13.3
+</td>
+<td style="text-align:right;">
+-3.5
+</td>
+<td style="text-align:right;">
+-20.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sustitucion (-100 cemento, +100 ceniza)
+</td>
+<td style="text-align:left;">
+Estandar
+</td>
+<td style="text-align:right;">
+33.3
+</td>
+<td style="text-align:right;">
+26.5
+</td>
+<td style="text-align:right;">
+-6.8
+</td>
+<td style="text-align:right;">
+-20.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sustitucion (-100 cemento, +100 ceniza)
+</td>
+<td style="text-align:left;">
+Tardio
+</td>
+<td style="text-align:right;">
+42.2
+</td>
+<td style="text-align:right;">
+39.3
+</td>
+<td style="text-align:right;">
+-2.9
+</td>
+<td style="text-align:right;">
+-6.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Adicion (+100 ceniza)
+</td>
+<td style="text-align:left;">
+Temprano
+</td>
+<td style="text-align:right;">
+16.7
+</td>
+<td style="text-align:right;">
+21.4
+</td>
+<td style="text-align:right;">
+4.7
+</td>
+<td style="text-align:right;">
+28.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Adicion (+100 ceniza)
+</td>
+<td style="text-align:left;">
+Estandar
+</td>
+<td style="text-align:right;">
+33.3
+</td>
+<td style="text-align:right;">
+37.6
+</td>
+<td style="text-align:right;">
+4.3
+</td>
+<td style="text-align:right;">
+13.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Adicion (+100 ceniza)
+</td>
+<td style="text-align:left;">
+Tardio
+</td>
+<td style="text-align:right;">
+42.2
+</td>
+<td style="text-align:right;">
+52.7
+</td>
+<td style="text-align:right;">
+10.5
+</td>
+<td style="text-align:right;">
+25.0
+</td>
+</tr>
+</tbody>
+</table>
+<p>La tabla permite responder en las unidades del problema si sustituir cemento por ceniza compromete la resistencia en cada etapa. Los escenarios suponen que el resto de ingredientes permanece en su valor medio y que <code>cemento</code> e <code>ceniza</code> se mueven dentro del rango observado.</p>
+<p>Con el modelo ajustado, <strong>sustituir</strong> 100 kg/m³ de cemento por ceniza reduce la resistencia en las tres etapas, y la pérdida es mayor en la etapa estándar y menor en la tardía, mientras que <strong>agregar</strong> ceniza sin quitar cemento la aumenta. La ceniza tiene un aporte positivo propio, pero ese aporte no alcanza a compensar la resistencia perdida al retirar cemento en el mismo volumen.</p>
+</div>
+</div>
+<div id="conclusión-parcial-del-objetivo-5" class="section level2 hasAnchor" number="8.8">
+<h2><span class="header-section-number">8.8</span> Conclusión parcial del objetivo 5<a href="rlm.html#conclusi%C3%B3n-parcial-del-objetivo-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: decimal">
+<li><strong>Multicolinealidad:</strong> se detectó por redundancia entre <code>log_edad</code> y <code>etapa</code>, y entre <code>usa_ceniza</code> y <code>ceniza</code>; se eliminaron las redundantes. El modelo seleccionado queda con <span class="math inline">\(VIF_{max} &lt; 5\)</span>.</li>
+<li><strong>Transformación:</strong> la respuesta se transformó con raíz cuadrada porque la escala original violaba la varianza constante y la normalidad, y el logaritmo no corregía el problema.</li>
+<li><strong>Selección:</strong> con ceniza y etapa forzadas, el método de todas las regresiones posibles por AIC seleccionó cemento, escoria y agua como complementos (equivalente en AIC al modelo que añade los agregados, pero sin multicolinealidad).</li>
+<li><strong>Interacción:</strong> la interacción ceniza × etapa es significativa; el efecto de la ceniza depende de la etapa de curado.</li>
+<li><strong>Supuestos:</strong> la normalidad queda en el límite, persiste una heterocedasticidad leve, hay dependencia entre filas de una misma mezcla y el RESET indica que la forma lineal es una aproximación. La inferencia se contrastó con errores robustos (HC3 y agrupados por mezcla) y las conclusiones se mantienen.</li>
+<li><strong>Limitaciones:</strong> los datos son observacionales y la etapa de curado agrupa edades muy distintas (una variable cualitativa pierde información de la edad).</li>
+</ol>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="correlacion.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="conclusiones.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": false,
+    "twitter": false,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": null,
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

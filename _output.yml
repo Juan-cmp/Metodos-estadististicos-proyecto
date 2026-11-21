@@ -8,13 +8,8 @@ bookdown::gitbook:
         <li><a href="https://github.com/Juan-cmp/Metodos-estadististicos-proyecto" target="blank">Repositorio en GitHub</a></li>
         <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con Bookdown</a></li>
     edit: null
-    download: ["pdf", "epub"]
+    download: null
     search: yes
     sharing:
       facebook: false
       twitter: false
-bookdown::pdf_book:
-  latex_engine: xelatex
-  citation_package: natbib
-  keep_tex: yes
-bookdown::epub_book: default

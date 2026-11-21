@@ -1,0 +1,170 @@
+# Comparación de mezclas con y sin ceniza volante {#comparacion}
+
+Este capítulo desarrolla el **objetivo específico 2**: comparar la resistencia media entre mezclas con y sin ceniza volante y calcular el tamaño del efecto.
+
+## Hipótesis
+
+Sea $\mu_{\text{sin}}$ la resistencia media de las mezclas sin ceniza y $\mu_{\text{con}}$ la de las mezclas con ceniza.
+
+$$H_0: \mu_{\text{sin}} = \mu_{\text{con}} \qquad \text{vs.} \qquad H_1: \mu_{\text{sin}} \neq \mu_{\text{con}}$$
+
+Nivel de significancia: $\alpha = 0.05$.
+
+## Descripción por grupo
+
+```{r comp-descriptiva}
+df_fe |>
+  group_by(usa_ceniza) |>
+  summarise(
+    n = n(),
+    media = mean(resistencia),
+    sd = sd(resistencia),
+    mediana = median(resistencia),
+    Q1 = quantile(resistencia, 0.25),
+    Q3 = quantile(resistencia, 0.75),
+    .groups = "drop"
+  ) |>
+  tabla_kbl("Resistencia (MPa) según uso de ceniza volante")
+```
+
+```{r comp-boxplot}
+df_fe |>
+  ggplot(aes(x = usa_ceniza, y = resistencia, fill = usa_ceniza)) +
+  geom_boxplot(alpha = 0.85, show.legend = FALSE) +
+  scale_fill_manual(values = cols_ceniza) +
+  labs(
+    title = "Resistencia a la compresión según uso de ceniza",
+    x = NULL,
+    y = "Resistencia (MPa)"
+  ) +
+  tema_libro()
+```
+
+## Supuestos de la prueba
+
+Antes de comparar las medias se verifican los supuestos con $\alpha = 0.05$:
+
+- **Normalidad en cada grupo.** $H_0$: la resistencia del grupo es normal, frente a $H_1$: no lo es.
+- **Homogeneidad de varianzas (Levene).** $H_0: \sigma^2_{\text{sin}} = \sigma^2_{\text{con}}$, frente a $H_1: \sigma^2_{\text{sin}} \neq \sigma^2_{\text{con}}$.
+- **Independencia.** Los dos grupos están formados por mezclas diferentes (una mezcla es con o sin ceniza), pero **dentro de cada grupo** una misma mezcla se ensaya a varias edades (sección \@ref(estructura-mezclas)). Esas filas están correlacionadas, por lo que Welch y Wilcoxon son demasiado optimistas; se verifica con errores estándar agrupados por mezcla.
+
+```{r comp-supuestos}
+res_sin <- df_fe$resistencia[df_fe$usa_ceniza == "Sin ceniza"]
+res_con <- df_fe$resistencia[df_fe$usa_ceniza == "Con ceniza"]
+levene <- car::leveneTest(resistencia ~ usa_ceniza, data = df_fe)
+p_levene <- levene[["Pr(>F)"]][1]
+
+supuestos_comp <- bind_rows(
+  fila_sup("Normalidad (Sin ceniza)", "Lilliefors",
+           "resistencia es normal en el grupo", nortest::lillie.test(res_sin)$p.value),
+  fila_sup("Normalidad (Con ceniza)", "Lilliefors",
+           "resistencia es normal en el grupo", nortest::lillie.test(res_con)$p.value),
+  fila_sup("Igualdad de varianzas", "Levene",
+           "Las varianzas de ambos grupos son iguales", p_levene)
+)
+
+supuestos_comp |>
+  tabla_kbl("Verificación de supuestos para la comparación de dos grupos", digits = 4)
+```
+
+**Decisión sobre la prueba.** La prueba $t$ de Welch no exige varianzas iguales, y con grupos grandes ($n_{\text{sin}} = `r length(res_sin)`$, $n_{\text{con}} = `r length(res_con)`$) tolera desviaciones moderadas de la normalidad. Aun así, se usa la prueba no paramétrica de Wilcoxon como respaldo: si ambas coinciden, la conclusión no depende del supuesto de normalidad. Para la homogeneidad de varianzas: `r ifelse(p_levene < 0.05, "se rechaza H0 (varianzas distintas), lo que justifica usar Welch y no la t clásica", "no se rechaza H0")` ($p `r fmt_p(p_levene)`$).
+
+## Prueba de hipótesis
+
+```{r comp-welch}
+# Prueba t de Welch
+prueba_welch <- t.test(resistencia ~ usa_ceniza, data = df_fe, var.equal = FALSE)
+prueba_welch
+
+# Respaldo no paramétrico
+prueba_wilcoxon <- wilcox.test(resistencia ~ usa_ceniza, data = df_fe, conf.int = TRUE)
+prueba_wilcoxon
+```
+
+## Tamaño del efecto
+
+```{r comp-efecto}
+efecto_d <- effsize::cohen.d(resistencia ~ usa_ceniza, data = df_fe)
+efecto_d
+```
+
+La $d$ de Cohen es **0.13**, un efecto despreciable (menor que 0.2). La diferencia media de unos 2.1 MPa es pequeña frente a la variación entre mezclas (desviaciones de 14 a 18 MPa).
+
+## Corrección por mezclas repetidas
+
+La diferencia de medias equivale al coeficiente de `usa_ceniza` en una regresión simple. Se contrasta con errores estándar agrupados por mezcla (con $G - 1$ grados de libertad, $G$ = número de mezclas), que respetan la dependencia entre filas de una misma mezcla.
+
+```{r comp-cluster}
+m_dif <- lm(resistencia ~ usa_ceniza, data = df_fe)
+V_dif <- vcov_cluster(m_dif, df_fe$id_mezcla)
+G_mezclas <- n_distinct(df_fe$id_mezcla)
+
+tabla_robusta(m_dif, V_dif, gl = G_mezclas - 1) |>
+  tabla_kbl("Diferencia de medias con errores estándar agrupados por mezcla", digits = 4)
+```
+
+Welch encuentra una diferencia de 2.1 MPa que parece significativa ($p = 0.038$), pero Wilcoxon no ($p = 0.23$). Al tener en cuenta que una misma mezcla aparece varias veces, el $p$ sube a **0.22** y la diferencia deja de ser significativa. Con los datos crudos no hay evidencia firme de que la resistencia media difiera entre mezclas con y sin ceniza.
+
+## ¿Es una comparación justa? Balance de las mezclas
+
+Las mezclas con ceniza **no son la misma receta con ceniza añadida**: difieren en otros ingredientes y en la edad de ensayo. Esto puede sesgar la comparación directa.
+
+```{r comp-balance}
+df_fe |>
+  group_by(usa_ceniza) |>
+  summarise(
+    n = n(),
+    edad_media = mean(edad),
+    cemento = mean(cemento),
+    escoria = mean(escoria),
+    agua = mean(agua),
+    superplast = mean(superplast),
+    razon_agua_aglutinante = mean(razon_agua_aglutinante),
+    .groups = "drop"
+  ) |>
+  tabla_kbl("Características medias de las mezclas por uso de ceniza")
+```
+
+```{r comp-superplast}
+table(df_fe$usa_ceniza, df_fe$usa_superplast)
+```
+
+Las mezclas con ceniza no son las mismas recetas con un ingrediente extra: llevan menos cemento (241 frente a 314 kg/m³), menos escoria (42 frente a 100), más superplastificante (8.8 frente a 4.1) y se ensayaron a edades más cortas (34 frente a 55 días en promedio). Casi todas usan superplastificante (458 de 464). Por eso la diferencia cruda no mide el efecto de la ceniza sola: mezcla el efecto de la ceniza con el de todas esas diferencias.
+
+## Comparación ajustada por covariables
+
+Para aislar el efecto de la ceniza se ajusta un modelo lineal que controla por edad (en logaritmo) y por los demás ingredientes.
+
+```{r comp-ajustada}
+modelo_ajustado <- lm(
+  resistencia ~ usa_ceniza + log_edad + cemento + escoria + agua + superplast,
+  data = df_fe
+)
+
+summary(modelo_ajustado)
+confint(modelo_ajustado)["usa_cenizaCon ceniza", ]
+```
+
+Este modelo es solo una primera aproximación para contrastar la diferencia cruda. Se verifican sus supuestos y su multicolinealidad; el modelo definitivo (con transformación de la respuesta, selección por AIC y diagnóstico completo) se desarrolla en el capítulo \@ref(rlm).
+
+```{r comp-supuestos-ajustado}
+bind_rows(
+  fila_sup("Normalidad de los errores", "Shapiro-Wilk",
+           "Los errores son normales", shapiro.test(resid(modelo_ajustado))$p.value),
+  fila_sup("Varianza constante", "Breusch-Pagan",
+           "Var(error) es constante", lmtest::bptest(modelo_ajustado)$p.value)
+) |>
+  tabla_kbl("Supuestos de los errores del modelo ajustado (escala original)", digits = 4)
+
+car::vif(modelo_ajustado) |>
+  enframe(name = "variable", value = "VIF") |>
+  tabla_kbl("VIF del modelo ajustado (problema si VIF > 5)", digits = 2)
+```
+
+Al controlar por la edad y por los demás ingredientes, la ceniza pasa de "restar" 2.1 MPa a "sumar" **8.8 MPa** (IC 7.5 a 10.0). El signo cambia porque las mezclas con ceniza eran más jóvenes y tenían menos cemento y escoria, y eso las hacía parecer más débiles. El modelo explica el 82% de la variación ($R^2$ ajustado 0.82). Es una primera aproximación: sus errores no son normales ni tienen varianza constante, por eso el modelo definitivo está en el capítulo \@ref(rlm).
+
+## Conclusión parcial del objetivo 2
+
+- **Comparación directa:** las mezclas sin ceniza resisten 2.1 MPa más en promedio, pero la diferencia no es significativa una vez que se tiene en cuenta que las mezclas se repiten ($p = 0.22$) y el efecto es despreciable ($d = 0.13$). No se rechaza $H_0$.
+- **Comparación ajustada:** al igualar edad e ingredientes, la ceniza se asocia con **+8.8 MPa**. La comparación directa no es justa porque las mezclas con ceniza son distintas en otras cosas.
+- **Mensaje:** el efecto de la ceniza solo se ve al separarlo de los demás ingredientes y de la edad.

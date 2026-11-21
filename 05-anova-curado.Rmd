@@ -1,0 +1,206 @@
+# Resistencia según las etapas de curado {#anova}
+
+Este capítulo desarrolla el **objetivo específico 3**: evaluar las diferencias de resistencia entre las etapas de curado (temprana, estándar y tardía) mediante análisis de varianza y pruebas post-hoc.
+
+## Hipótesis
+
+Sea $\mu_T$, $\mu_E$ y $\mu_D$ la resistencia media en las etapas temprana, estándar y tardía.
+
+$$H_0: \mu_T = \mu_E = \mu_D \qquad \text{vs.} \qquad H_1: \text{al menos una media difiere}$$
+
+Nivel de significancia: $\alpha = 0.05$.
+
+## Descripción por etapa
+
+```{r anova-descriptiva}
+df_fe |>
+  group_by(etapa_curado) |>
+  summarise(
+    n = n(),
+    media = mean(resistencia),
+    sd = sd(resistencia),
+    mediana = median(resistencia),
+    .groups = "drop"
+  ) |>
+  tabla_kbl("Resistencia (MPa) según etapa de curado")
+```
+
+```{r anova-boxplot}
+df_fe |>
+  ggplot(aes(x = etapa_curado, y = resistencia, fill = etapa_curado)) +
+  geom_boxplot(alpha = 0.85, show.legend = FALSE) +
+  scale_fill_manual(values = cols_etapa) +
+  labs(
+    title = "Resistencia a la compresión según etapa de curado",
+    x = NULL,
+    y = "Resistencia (MPa)"
+  ) +
+  tema_libro()
+```
+
+## Supuestos del ANOVA
+
+Se verifican con $\alpha = 0.05$:
+
+- **Normalidad de los residuos.** $H_0$: los errores son normales, frente a $H_1$: no lo son.
+- **Homogeneidad de varianzas (Levene).** $H_0: \sigma^2_T = \sigma^2_E = \sigma^2_D$, frente a $H_1$: al menos una varianza difiere.
+- **Varianza constante (Breusch-Pagan).** $H_0$: la varianza de los errores es constante.
+- **Independencia.** **No se cumple del todo**: una misma mezcla se ensaya a varias edades y por eso aparece en varias etapas de curado (sección \@ref(estructura-mezclas)). Es una estructura de mediciones repetidas, por lo que el ANOVA clásico es optimista; se verifica con errores estándar agrupados por mezcla.
+
+```{r anova-supuestos}
+modelo_anova <- aov(resistencia ~ etapa_curado, data = df_fe)
+levene_etapa <- car::leveneTest(resistencia ~ etapa_curado, data = df_fe)
+p_levene_etapa <- levene_etapa[["Pr(>F)"]][1]
+
+supuestos_anova <- bind_rows(
+  fila_sup("Normalidad de los residuos", "Lilliefors",
+           "Los errores son normales", nortest::lillie.test(residuals(modelo_anova))$p.value),
+  fila_sup("Normalidad de los residuos", "Shapiro-Wilk",
+           "Los errores son normales", shapiro.test(residuals(modelo_anova))$p.value),
+  fila_sup("Igualdad de varianzas entre etapas", "Levene",
+           "Las varianzas de las tres etapas son iguales", p_levene_etapa),
+  fila_sup("Varianza constante", "Breusch-Pagan",
+           "Var(error) es constante", lmtest::bptest(modelo_anova)$p.value)
+)
+
+supuestos_anova |>
+  tabla_kbl("Verificación de supuestos del ANOVA de un factor", digits = 4)
+```
+
+```{r anova-qq-residuos}
+qq_normal(residuals(modelo_anova), "Gráfico Q-Q: residuos del ANOVA")
+```
+
+**Decisión sobre la prueba.** Homogeneidad de varianzas: `r ifelse(p_levene_etapa < 0.05, "se rechaza H0 (varianzas distintas), por lo que el ANOVA clásico no es adecuado y se usa el ANOVA de Welch con las pruebas post-hoc de Games-Howell", "no se rechaza H0, por lo que el ANOVA clásico y Tukey son adecuados")` ($p `r fmt_p(p_levene_etapa)`$). Como la normalidad de los residuos se rechaza o es dudosa, los resultados se respaldan con Kruskal-Wallis.
+
+## ANOVA
+
+```{r anova-resultado}
+# ANOVA clásico
+summary(modelo_anova)
+
+# ANOVA de Welch (no asume varianzas iguales)
+oneway.test(resistencia ~ etapa_curado, data = df_fe, var.equal = FALSE)
+
+# Respaldo no paramétrico
+kruskal.test(resistencia ~ etapa_curado, data = df_fe)
+```
+
+```{r anova-eta}
+# Tamaño del efecto: eta cuadrado
+ss <- summary(modelo_anova)[[1]][["Sum Sq"]]
+eta_cuadrado <- ss[1] / sum(ss)
+eta_cuadrado
+```
+
+La etapa de curado explica el **33%** de la variación de la resistencia ($\eta^2 = 0.33$), un efecto grande. La media sube de 22.3 MPa (temprano) a 35.7 (estándar) y a 48.6 MPa (tardío).
+
+## Pruebas post-hoc
+
+```{r anova-posthoc}
+# Games-Howell (robusta a varianzas desiguales)
+rstatix::games_howell_test(df_fe, resistencia ~ etapa_curado)
+
+# Tukey (si se cumple homogeneidad de varianzas)
+TukeyHSD(modelo_anova)
+```
+
+Las tres etapas son distintas entre sí (todos los $p < 0.001$). La etapa estándar supera a la temprana en **13.4 MPa** (IC 11.0 a 15.9), la tardía supera a la temprana en **26.3 MPa** (IC 23.5 a 29.0) y la tardía supera a la estándar en **12.8 MPa** (IC 10.4 a 15.3). A más curado, más resistencia.
+
+## Corrección por mezclas repetidas
+
+Se contrasta el efecto de la etapa con errores estándar agrupados por mezcla. La prueba conjunta es un contraste de Wald: $H_0: \beta_{\text{Estándar}} = \beta_{\text{Tardío}} = 0$ (las tres etapas tienen la misma resistencia media).
+
+```{r anova-cluster}
+m_etapa <- lm(resistencia ~ etapa_curado, data = df_fe)
+V_etapa <- vcov_cluster(m_etapa, df_fe$id_mezcla)
+
+tabla_robusta(m_etapa, V_etapa, gl = n_distinct(df_fe$id_mezcla) - 1) |>
+  tabla_kbl("Efecto de la etapa con errores estándar agrupados por mezcla", digits = 4)
+
+car::linearHypothesis(
+  m_etapa,
+  names(coef(m_etapa))[-1],
+  vcov. = V_etapa
+)
+```
+
+Sí. Al tener en cuenta las mezclas repetidas, la diferencia entre etapas sigue siendo muy significativa ($F = 534$, $p < 0.001$). El efecto es tan grande que la corrección no cambia la conclusión.
+
+## ¿Depende el efecto de la ceniza de la etapa de curado?
+
+El problema planteado en la introducción es si la ceniza compromete la resistencia a edades tempranas y la mejora en edades tardías. Eso es una **interacción** entre el uso de ceniza y la etapa de curado, que se evalúa con un ANOVA de dos factores.
+
+```{r anova-medias-cruzadas}
+df_fe |>
+  group_by(usa_ceniza, etapa_curado) |>
+  summarise(n = n(), media = mean(resistencia), sd = sd(resistencia), .groups = "drop") |>
+  tabla_kbl("Resistencia (MPa) por uso de ceniza y etapa de curado")
+```
+
+```{r anova-interaccion-grafico}
+df_fe |>
+  group_by(usa_ceniza, etapa_curado) |>
+  summarise(media = mean(resistencia), .groups = "drop") |>
+  ggplot(aes(x = etapa_curado, y = media, color = usa_ceniza, group = usa_ceniza)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 3) +
+  scale_color_manual(values = cols_ceniza) +
+  labs(
+    title = "Resistencia media por etapa de curado y uso de ceniza",
+    x = "Etapa de curado",
+    y = "Resistencia media (MPa)",
+    color = NULL
+  ) +
+  tema_libro()
+```
+
+Supuestos del ANOVA de dos factores ($\alpha = 0.05$): normalidad de los residuos ($H_0$: los errores son normales) y homogeneidad de varianzas entre las seis combinaciones (Levene, $H_0$: todas las varianzas son iguales).
+
+```{r anova-dos-factores}
+modelo_dos_factores <- aov(resistencia ~ usa_ceniza * etapa_curado, data = df_fe)
+
+df_celdas <- df_fe |> mutate(celda = interaction(usa_ceniza, etapa_curado))
+
+bind_rows(
+  fila_sup("Normalidad de los residuos", "Shapiro-Wilk",
+           "Los errores son normales", shapiro.test(residuals(modelo_dos_factores))$p.value),
+  fila_sup("Igualdad de varianzas entre celdas", "Levene",
+           "Las varianzas de las seis celdas son iguales",
+           car::leveneTest(resistencia ~ celda, data = df_celdas)[["Pr(>F)"]][1]),
+  fila_sup("Varianza constante", "Breusch-Pagan",
+           "Var(error) es constante", lmtest::bptest(modelo_dos_factores)$p.value)
+) |>
+  tabla_kbl("Verificación de supuestos del ANOVA de dos factores", digits = 4)
+
+summary(modelo_dos_factores)
+```
+
+Si estos supuestos fallan, la interacción debe confirmarse con un modelo que corrija la escala de la respuesta; ese análisis se hace en el capítulo \@ref(rlm), donde se transforma la respuesta y se verifican los supuestos de forma completa.
+
+La interacción apenas es significativa ($p = 0.048$), y los supuestos de este análisis simple no se cumplen, así que no conviene apoyarse solo en él. Lo que sí muestran las medias es que la diferencia con y sin ceniza cambia según la etapa: casi igual en la temprana (22.6 frente a 21.6 MPa), 6 MPa menos con ceniza en la estándar (39.0 frente a 33.0) y 2 MPa menos en la tardía (49.5 frente a 47.2). Por eso el efecto de la ceniza no se puede resumir con un único número. La confirmación está en el análisis siguiente y en el capítulo \@ref(rlm).
+
+## Interacción ajustada por covariables
+
+Para descartar que la interacción sea producto de que las recetas con ceniza usan menos cemento o más superplastificante, se compara un modelo con y sin interacción controlando por esos ingredientes.
+
+```{r anova-interaccion-ajustada}
+m_sin_inter <- lm(
+  resistencia ~ ceniza + etapa_curado + cemento + escoria + agua + superplast,
+  data = df_fe
+)
+m_con_inter <- lm(
+  resistencia ~ ceniza * etapa_curado + cemento + escoria + agua + superplast,
+  data = df_fe
+)
+
+anova(m_sin_inter, m_con_inter)
+summary(m_con_inter)$coefficients
+```
+
+Al controlar por los ingredientes, la interacción es clara ($p < 0.001$). Cada kg/m³ de ceniza agregado, sin quitar cemento, aporta **+0.052 MPa** en la etapa temprana, **+0.036** en la estándar y **+0.075** en la tardía. Dicho en 100 kg/m³: +5.2, +3.6 y +7.5 MPa. La ceniza ayuda en las tres etapas, menos en la estándar y más en la tardía.
+
+## Conclusión parcial del objetivo 3
+
+- **Etapa de curado:** es el factor más fuerte. Explica el 33% de la variación y la resistencia sube de 22 a 36 y a 49 MPa. Las diferencias se mantienen al corregir por mezclas repetidas.
+- **Ceniza por etapa:** el efecto de la ceniza depende de la etapa. Cuando se controla por los demás ingredientes, aporta resistencia en las tres, sobre todo en la tardía.

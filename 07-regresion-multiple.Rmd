@@ -1,0 +1,688 @@
+# Modelo de regresión lineal múltiple {#rlm}
+
+Este capítulo desarrolla el **objetivo específico 5**: construir un modelo de regresión lineal múltiple para explicar la resistencia del concreto, que incluya la etapa de curado como variable cualitativa (variables *dummy*), verificando la multicolinealidad, seleccionando variables con el método de **todas las regresiones posibles** según el **AIC** y validando los supuestos de los errores.
+
+El modelo es
+
+$$\mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}, \qquad \varepsilon_i \overset{iid}{\sim} N(0, \sigma^2), \qquad \hat{\boldsymbol{\beta}} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{y},$$
+
+con $k$ predictores, $p = k + 1$ coeficientes (incluido el intercepto) y $n - p$ grados de libertad del error. Cada coeficiente $\beta_j$ se interpreta como el cambio esperado en $y$ por cada unidad de $x_j$ **manteniendo constantes las demás variables**; por eso no coincide, en general, con la pendiente de una regresión simple.
+
+> **Criterio de trabajo.** Siguiendo la regla de la guía de transformaciones, solo se transforma la respuesta para corregir el incumplimiento de un supuesto (no para subir el $R^2$), y se compara siempre volviendo a mirar los residuos.
+
+## Datos, variable respuesta y variable cualitativa
+
+```{r rlm-datos}
+df_rlm <- df_fe |>
+  mutate(
+    etapa = factor(
+      case_when(
+        edad <= 7 ~ "Temprano",
+        edad <= 28 ~ "Estandar",
+        TRUE ~ "Tardio"
+      ),
+      levels = c("Temprano", "Estandar", "Tardio")
+    ),
+    raiz_resistencia = sqrt(resistencia)
+  ) |>
+  as.data.frame()
+
+# Funciones auxiliares de este capítulo ---------------------------------------
+
+# VIF (o GVIF para factores). VIF_equiv = GVIF^(1/gl) es comparable con el umbral 5.
+vif_tabla <- function(m) {
+  v <- car::vif(m)
+  tab <- if (is.matrix(v)) {
+    tibble(termino = rownames(v), GVIF = v[, "GVIF"], gl = v[, "Df"])
+  } else {
+    tibble(termino = names(v), GVIF = unname(v), gl = 1)
+  }
+  tab |> mutate(VIF_equiv = GVIF^(1 / gl), problema = VIF_equiv > 5)
+}
+
+# Número de condición de X'X: ICN = sqrt(lambda_max / lambda_min)
+icn <- function(m, estandarizar = FALSE) {
+  X <- model.matrix(m)
+  if (estandarizar) X <- scale(X[, -1, drop = FALSE])
+  ev <- eigen(crossprod(X), symmetric = TRUE, only.values = TRUE)$values
+  sqrt(max(ev) / min(ev))
+}
+
+# Pruebas formales de los supuestos de los errores
+supuestos_errores <- function(m) {
+  e <- resid(m)
+  bind_rows(
+    fila_sup("Linealidad (forma funcional)", "RESET de Ramsey",
+             "El modelo esta bien especificado (relacion lineal)",
+             lmtest::resettest(m, power = 2:3, type = "fitted")$p.value),
+    fila_sup("Normalidad de los errores", "Shapiro-Wilk",
+             "Los errores son normales", shapiro.test(e)$p.value),
+    fila_sup("Normalidad de los errores", "Lilliefors",
+             "Los errores son normales", nortest::lillie.test(e)$p.value),
+    fila_sup("Varianza constante", "Breusch-Pagan (studentizada)",
+             "Var(error) es constante (homocedasticidad)", lmtest::bptest(m)$p.value),
+    fila_sup("Independencia", "Durbin-Watson",
+             "No hay autocorrelacion de orden 1", lmtest::dwtest(m)$p.value)
+  )
+}
+
+# Desviación estándar de los residuos por tercil del valor ajustado
+sd_terciles <- function(m) {
+  f <- fitted(m)
+  g <- cut(f, quantile(f, 0:3 / 3), include.lowest = TRUE)
+  as.numeric(tapply(resid(m), g, sd))
+}
+
+# Resumen de un modelo para comparar
+resumen_modelo <- function(m, nombre) {
+  s <- summary(m)
+  h <- hatvalues(m)
+  tibble(
+    modelo = nombre,
+    p = length(coef(m)),
+    R2 = s$r.squared,
+    R2_ajustado = s$adj.r.squared,
+    RMSE = s$sigma,
+    AIC = AIC(m),
+    BIC = BIC(m),
+    PRESS = sum((resid(m) / (1 - h))^2)
+  )
+}
+
+# Matriz de varianzas robusta HC3 (sandwich), calculada a mano
+vcov_hc3 <- function(m) {
+  X <- model.matrix(m)
+  w <- resid(m) / (1 - hatvalues(m))
+  XtX_inv <- solve(crossprod(X))
+  XtX_inv %*% crossprod(X * w) %*% XtX_inv
+}
+```
+
+La respuesta es `resistencia` (MPa). Las variables candidatas son los siete ingredientes de la mezcla (cemento, escoria, ceniza volante, agua, superplastificante, agregado grueso y agregado fino) y la **etapa de curado**, que es cualitativa de tres niveles.
+
+### Variables dummy
+
+Una variable cualitativa con $c$ niveles se representa con $c - 1$ variables *dummy*; el nivel omitido es la **categoría de referencia**. Aquí la referencia es la etapa *Temprano* ($\le 7$ días):
+
+$$D_{\text{Estándar}} = \begin{cases} 1 & \text{si la edad es 14 o 28 días} \\ 0 & \text{en otro caso} \end{cases} \qquad D_{\text{Tardío}} = \begin{cases} 1 & \text{si la edad es} > 28 \text{ días} \\ 0 & \text{en otro caso} \end{cases}$$
+
+```{r rlm-dummies}
+ejemplo_dummies <- df_rlm |>
+  distinct(etapa, .keep_all = TRUE) |>
+  arrange(etapa)
+X_ejemplo <- model.matrix(~ etapa, data = ejemplo_dummies)
+
+tibble(
+  edad_ejemplo = ejemplo_dummies$edad,
+  etapa = as.character(ejemplo_dummies$etapa),
+  D_Estandar = X_ejemplo[, "etapaEstandar"],
+  D_Tardio = X_ejemplo[, "etapaTardio"]
+) |>
+  tabla_kbl("Codificación dummy de la etapa de curado (referencia: Temprano)", digits = 0)
+```
+
+Los coeficientes de las dummies miden la diferencia de resistencia de cada etapa frente a la etapa temprana, con el resto de variables constantes.
+
+¿Por qué `etapa` y no la edad continua? Porque el modelo debe usar una variable cualitativa mediante dummies. La sección siguiente muestra que **no pueden usarse a la vez** la edad (o su logaritmo) y la etapa, porque son redundantes.
+
+## Análisis de multicolinealidad
+
+La multicolinealidad se analiza **antes** de ajustar y seleccionar el modelo, porque determina qué variables pueden convivir. Se sospecha su existencia si hay (1) alta correlación entre predictores, (2) significancia global pero no marginal, o (3) cambios fuertes en $\hat{\beta}$ al agregar o quitar variables. Se confirma con el **número de condición** ($ICN > 30$) y con el **VIF** ($VIF_j > 5$ señala la variable responsable).
+
+### Correlación entre los predictores
+
+```{r rlm-cor-predictores, fig.height=5.5}
+cor_pred <- df_rlm |>
+  dplyr::select(cemento, escoria, ceniza, agua, superplast,
+                agregado_grueso, agregado_fino, log_edad) |>
+  cor()
+
+cor_pred |>
+  as.data.frame() |>
+  tibble::rownames_to_column("v1") |>
+  pivot_longer(-v1, names_to = "v2", values_to = "r") |>
+  ggplot(aes(x = v1, y = v2, fill = r)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = round(r, 2), color = abs(r) > 0.8), size = 3) +
+  scale_color_manual(values = c("TRUE" = "white", "FALSE" = "#0b0b0b"), guide = "none") +
+  scale_fill_gradient2(low = "#2a78d6", mid = "#f0efec", high = "#e34948", limits = c(-1, 1)) +
+  labs(title = "Correlación de Pearson entre predictores", x = NULL, y = NULL, fill = "r") +
+  tema_libro() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "right")
+```
+
+Las correlaciones entre ingredientes son moderadas (ninguna cercana a 1), pero el gráfico no basta: las variables derivadas (`log_edad`, `usa_ceniza`) están construidas a partir de otras. Se confirma con el VIF.
+
+### Modelo inicial con todas las variables posibles
+
+Se ajusta un modelo con **todas** las variables disponibles, incluidas las redundantes, para ver qué variables son responsables:
+
+```{r rlm-vif-redundante}
+m_redundante <- lm(
+  raiz_resistencia ~ cemento + escoria + ceniza + agua + superplast +
+    agregado_grueso + agregado_fino + log_edad + etapa + usa_ceniza,
+  data = df_rlm
+)
+
+vif_tabla(m_redundante) |>
+  tabla_kbl("VIF del modelo con todas las variables (incluye redundantes)", digits = 2)
+```
+
+```{r rlm-icn-redundante}
+tibble(
+  indicador = c("kappa(modelo)", "ICN exacto sqrt(lambda_max/lambda_min)"),
+  valor = c(kappa(m_redundante), icn(m_redundante))
+) |>
+  tabla_kbl("Número de condición del modelo con todas las variables", digits = 1)
+```
+
+El $ICN$ supera con creces 30 y varios VIF superan 5. Las variables responsables son:
+
+- **`ceniza` junto con `usa_ceniza`:** `usa_ceniza` solo indica si `ceniza > 0`, así que ambas miden lo mismo.
+- **`log_edad` junto con `etapa`:** la etapa es una categorización de la misma edad.
+
+Como el objetivo exige una variable cualitativa con dummies, se conserva `etapa` y se eliminan `log_edad` y `usa_ceniza`. Esta decisión se toma por multicolinealidad, no por ajuste.
+
+### Modelo con las variables depuradas
+
+```{r rlm-vif-depurado}
+m_completo <- lm(
+  raiz_resistencia ~ cemento + escoria + ceniza + agua + superplast +
+    agregado_grueso + agregado_fino + etapa,
+  data = df_rlm
+)
+
+vif_tabla(m_completo) |>
+  tabla_kbl("VIF del modelo depurado (ocho predictores)", digits = 2)
+
+tibble(
+  indicador = c("kappa(modelo)", "ICN exacto", "ICN con predictores estandarizados"),
+  valor = c(kappa(m_completo), icn(m_completo), icn(m_completo, estandarizar = TRUE))
+) |>
+  tabla_kbl("Número de condición del modelo depurado", digits = 1)
+```
+
+Al eliminar la redundancia, la etapa deja de ser colineal (VIF cercano a 1). Quedan VIF entre 5 y 8 en los ingredientes de la mezcla (cemento, escoria, agua, ceniza y los dos agregados). Esto es estructural: en un metro cúbico los ingredientes se compensan entre sí, de modo que al subir uno otros bajan.
+
+El $ICN$ calculado sobre las variables originales es enorme porque depende de las escalas (los agregados rondan los 1000 kg/m³ y el superplastificante está entre 0 y 32), mientras que con los predictores estandarizados es pequeño. Por eso el diagnóstico decisivo es el VIF. La multicolinealidad residual se controla en la selección de variables, imponiendo $VIF \le 5$.
+
+## Modelo completo y supuestos de los errores
+
+### Ajuste en la escala original
+
+```{r rlm-completo-original}
+m_orig <- lm(
+  resistencia ~ cemento + escoria + ceniza + agua + superplast +
+    agregado_grueso + agregado_fino + etapa,
+  data = df_rlm
+)
+summary(m_orig)
+```
+
+**Significancia global.** $H_0: \beta_1 = \cdots = \beta_k = 0$ frente a $H_1$: al menos un $\beta_j \neq 0$, con $F_0 = \dfrac{SSR/k}{SSE/(n-p)} \sim F_{k,\,n-p}$.
+
+```{r rlm-r2-original}
+tibble(
+  indicador = c("R2", "R2 ajustado", "sigma (RMSE, MPa)", "F global", "p-valor de F"),
+  valor = c(
+    summary(m_orig)$r.squared,
+    summary(m_orig)$adj.r.squared,
+    summary(m_orig)$sigma,
+    unname(summary(m_orig)$fstatistic["value"]),
+    pf(summary(m_orig)$fstatistic[1], summary(m_orig)$fstatistic[2],
+       summary(m_orig)$fstatistic[3], lower.tail = FALSE)
+  )
+) |>
+  tabla_kbl("Ajuste del modelo completo (escala original)", digits = 4)
+```
+
+El modelo explica $R^2 = `r round(summary(m_orig)$r.squared, 3)`$ de la variabilidad y $R^2_{aj} = `r round(summary(m_orig)$adj.r.squared, 3)`$, y la prueba $F$ rechaza $H_0$ ($p `r fmt_p(pf(summary(m_orig)$fstatistic[1], summary(m_orig)$fstatistic[2], summary(m_orig)$fstatistic[3], lower.tail = FALSE))`$). El $R^2$ no dice que el modelo sea correcto; hay que revisar los errores.
+
+### Supuestos de los errores
+
+Los supuestos del modelo son: (S1) linealidad, (S2) varianza constante, (S3) normalidad e (S4) independencia de los errores. Cada uno se contrasta formalmente:
+
+```{r rlm-supuestos-original}
+supuestos_errores(m_orig) |>
+  tabla_kbl("Pruebas de supuestos de los errores: modelo completo en escala original", digits = 4)
+```
+
+```{r rlm-graficos-original, fig.height=7}
+par(mfrow = c(2, 2))
+plot(m_orig, which = 1:4)
+par(mfrow = c(1, 1))
+```
+
+Con un nivel de significancia de $0.05$, Breusch-Pagan y los contrastes de normalidad rechazan sus hipótesis nulas. Además, la desviación estándar de los residuos crece con el valor ajustado (efecto abanico): señal de varianza creciente. **Se justifica corregir con una transformación de la respuesta.**
+
+El RESET y Durbin-Watson también rechazan; ambos se discuten más abajo, porque una transformación de la respuesta no los corrige.
+
+> **Sobre la independencia.** Durbin-Watson rechaza la independencia en todos los modelos (estadístico cercano a 1.4, autocorrelación positiva). No es un efecto temporal: las filas no tienen un orden temporal conocido. La causa es la estructura de los datos descrita en la sección \@ref(estructura-mezclas): las 1,030 filas corresponden a `r n_distinct(df_rlm$id_mezcla)` mezclas, y una misma mezcla se ensaya a varias edades, con filas consecutivas de la misma mezcla. Sus residuos están correlacionados. Esto no sesga los coeficientes, pero **subestima los errores estándar**, por lo que la inferencia del modelo final se corrige agrupando por mezcla.
+
+### Elección de la transformación
+
+La resistencia es siempre positiva (mínimo `r round(min(df_rlm$resistencia), 2)` MPa), por lo que puede transformarse. Se estima $\lambda$ de Box-Cox y se comparan las candidatas volviendo a mirar los residuos:
+
+```{r rlm-boxcox, fig.height=4.5}
+bc <- MASS::boxcox(
+  resistencia ~ cemento + escoria + ceniza + agua + superplast +
+    agregado_grueso + agregado_fino + etapa,
+  data = df_rlm, lambda = seq(-0.5, 1.5, 0.01), plotit = TRUE
+)
+lambda_hat <- bc$x[which.max(bc$y)]
+ic_lambda <- range(bc$x[bc$y > max(bc$y) - qchisq(0.95, 1) / 2])
+```
+
+El máximo está en $\hat{\lambda} = `r round(lambda_hat, 2)`$ con un intervalo de confianza aproximado del 95% de $[`r round(ic_lambda[1], 2)`,\ `r round(ic_lambda[2], 2)`]$. Ese intervalo **excluye** $\lambda = 1$ (no transformar) y $\lambda = 0$ (logaritmo). El valor interpretable más cercano es $\lambda = 0.5$ (raíz cuadrada), que queda justo por debajo del intervalo; se adopta por interpretabilidad y porque, como muestra la tabla siguiente, los residuos mejoran claramente.
+
+```{r rlm-comparar-transformaciones}
+f_comp <- resistencia ~ cemento + escoria + ceniza + agua + superplast +
+  agregado_grueso + agregado_fino + etapa
+
+m_t_orig <- lm(f_comp, data = df_rlm)
+m_t_log  <- lm(update(f_comp, log(resistencia) ~ .), data = df_rlm)
+m_t_raiz <- lm(update(f_comp, sqrt(resistencia) ~ .), data = df_rlm)
+
+comparar_t <- function(m, nombre) {
+  s <- sd_terciles(m)
+  tibble(
+    escala = nombre,
+    p_BreuschPagan = lmtest::bptest(m)$p.value,
+    p_ShapiroWilk = shapiro.test(resid(m))$p.value,
+    sd_resid_T1 = s[1], sd_resid_T2 = s[2], sd_resid_T3 = s[3],
+    razon_sd_max_min = max(s) / min(s)
+  )
+}
+
+bind_rows(
+  comparar_t(m_t_orig, "y (original)"),
+  comparar_t(m_t_log, "log(y)"),
+  comparar_t(m_t_raiz, "raiz(y)")
+) |>
+  tabla_kbl("Comparación de transformaciones de la respuesta (T1-T3: terciles del valor ajustado)", digits = 4)
+```
+
+- **Escala original:** la dispersión crece con el nivel (razón de desviaciones de `r round(max(sd_terciles(m_t_orig)) / min(sd_terciles(m_t_orig)), 2)`) y falla la normalidad.
+- **Logaritmo:** *no corrige*: invierte el patrón (la dispersión pasa a ser mayor en los valores bajos) y empeora la normalidad. Es consistente con que $\hat{\lambda}$ excluye el cero.
+- **Raíz cuadrada:** la dispersión queda casi constante (razón `r round(max(sd_terciles(m_t_raiz)) / min(sd_terciles(m_t_raiz)), 2)`) y la normalidad de los residuos no se rechaza.
+
+Se adopta `raiz_resistencia = sqrt(resistencia)` como respuesta. Los $R^2$ de modelos con distinta respuesta **no son comparables**; la decisión se fundamenta en los residuos y en $\hat{\lambda}$.
+
+### Modelo completo en la escala de la raíz cuadrada
+
+```{r rlm-completo-raiz}
+summary(m_completo)
+supuestos_errores(m_completo) |>
+  tabla_kbl("Supuestos de los errores: modelo completo con raiz(resistencia)", digits = 4)
+```
+
+Con la raíz cuadrada la normalidad de los errores ya no se rechaza, pero persiste una heterocedasticidad leve detectada por Breusch-Pagan (con $n = 1030$ la prueba detecta desviaciones pequeñas), la autocorrelación por mezclas repetidas y una falta de linealidad según el RESET. Para no depender de esos supuestos, la inferencia del modelo final se contrastará con errores estándar robustos (HC3) y agrupados por mezcla.
+
+## Selección de variables: todas las regresiones posibles con AIC
+
+El método de **todas las regresiones posibles** ajusta todos los modelos que pueden formarse con los predictores y los compara con un criterio estadístico. Con $k$ predictores serían $2^k - 1$ modelos.
+
+Para llegar a una conclusión sobre el objetivo del estudio, **se fuerzan en todos los modelos la ceniza volante y la etapa de curado** (las dos dummies entran siempre juntas). Quedan seis predictores opcionales (cemento, escoria, agua, superplastificante, agregado grueso y agregado fino), es decir, $2^6 = 64$ modelos. El criterio de selección es el **criterio de información de Akaike**:
+
+$$AIC = n \ln\!\left(\frac{SSE}{n}\right) + 2p \qquad (\text{menor es mejor}).$$
+
+Para cada modelo también se reportan $R^2$, $R^2_{aj}$, $\sqrt{MSE}$, $BIC$, $C_p$ de Mallows y $PRESS$:
+
+$$R^2_{aj} = 1 - \frac{SSE/(n-p)}{SST/(n-1)}, \qquad C_p = \frac{SSE_p}{MSE_{\text{completo}}} - (n - 2p), \qquad PRESS = \sum_{i}\left(\frac{e_i}{1-h_{ii}}\right)^2.$$
+
+```{r rlm-todas-regresiones}
+todas_regresiones <- function(respuesta, forzadas, opcionales, data) {
+  k <- length(opcionales)
+  n <- nrow(data)
+  m_comp <- lm(reformulate(c(forzadas, opcionales), respuesta), data = data)
+  mse_comp <- sum(resid(m_comp)^2) / m_comp$df.residual
+
+  purrr::map_dfr(0:(2^k - 1), function(mask) {
+    sel <- opcionales[bitwAnd(mask, 2^(seq_len(k) - 1)) > 0]
+    m <- lm(reformulate(c(forzadas, sel), respuesta), data = data)
+    p <- length(coef(m))
+    sse <- sum(resid(m)^2)
+    h <- hatvalues(m)
+    tibble(
+      variables_opcionales = if (length(sel)) paste(sel, collapse = " + ") else "(ninguna)",
+      p = p,
+      R2 = summary(m)$r.squared,
+      R2_aj = summary(m)$adj.r.squared,
+      RMSE = sqrt(sse / (n - p)),
+      AIC = AIC(m),
+      BIC = BIC(m),
+      Cp = sse / mse_comp - (n - 2 * p),
+      PRESS = sum((resid(m) / (1 - h))^2),
+      VIF_max = max(vif_tabla(m)$VIF_equiv)
+    )
+  }) |>
+    arrange(AIC) |>
+    mutate(delta_AIC = AIC - min(AIC), .after = AIC)
+}
+
+opcionales <- c("cemento", "escoria", "agua", "superplast",
+                "agregado_grueso", "agregado_fino")
+
+tabla_modelos <- todas_regresiones(
+  respuesta = "raiz_resistencia",
+  forzadas = c("ceniza", "etapa"),
+  opcionales = opcionales,
+  data = df_rlm
+)
+
+nrow(tabla_modelos)
+```
+
+```{r rlm-top-modelos}
+tabla_modelos |>
+  slice_head(n = 10) |>
+  tabla_kbl("Los 10 mejores modelos por AIC (ceniza y etapa forzadas en todos)", digits = 3)
+```
+
+```{r rlm-seleccion}
+mejor_aic <- tabla_modelos |> slice(1)
+mejor_vif <- tabla_modelos |> filter(VIF_max <= 5) |> slice(1)
+
+vars_sel <- strsplit(mejor_vif$variables_opcionales, " \\+ ")[[1]]
+m_sel <- lm(reformulate(c("ceniza", "etapa", vars_sel), "raiz_resistencia"), data = df_rlm)
+```
+
+La regla de selección es: **menor AIC entre los modelos sin multicolinealidad problemática ($VIF \le 5$)**, lo que combina el análisis de la sección anterior con el criterio pedido.
+
+- El modelo de menor AIC global incluye `r mejor_aic$variables_opcionales` (AIC = `r round(mejor_aic$AIC, 1)`, $VIF_{max}$ = `r round(mejor_aic$VIF_max, 1)`).
+- El mejor modelo con $VIF \le 5$ incluye `r mejor_vif$variables_opcionales` (AIC = `r round(mejor_vif$AIC, 1)`, $VIF_{max}$ = `r round(mejor_vif$VIF_max, 1)`).
+
+La diferencia de AIC entre ambos es de `r round(mejor_vif$delta_AIC, 2)` unidades. Una diferencia menor a 2 se considera insignificante, de modo que los dos modelos son prácticamente equivalentes en ajuste; el segundo es más parsimonioso, sin multicolinealidad y tiene menor BIC. Se elige este último como **modelo seleccionado** (aditivo).
+
+```{r rlm-seleccion-detalle}
+summary(m_sel)
+
+tibble(
+  indicador = c("kappa(modelo)", "ICN con predictores estandarizados"),
+  valor = c(kappa(m_sel), icn(m_sel, estandarizar = TRUE))
+) |>
+  tabla_kbl("Número de condición del modelo seleccionado", digits = 2)
+
+vif_tabla(m_sel) |>
+  tabla_kbl("VIF del modelo seleccionado", digits = 2)
+```
+
+Todos los VIF son menores que 5: el modelo seleccionado no presenta multicolinealidad.
+
+## ¿Depende el efecto de la ceniza de la etapa de curado?
+
+La pregunta de investigación es si la ceniza reduce la resistencia temprana y la mejora con el curado. Eso corresponde a una **interacción** entre ceniza y etapa. Se contrasta con una prueba $F$ de modelos anidados:
+
+$$H_0: \beta_{\text{ceniza}\times\text{Estándar}} = \beta_{\text{ceniza}\times\text{Tardío}} = 0 \quad \text{(el efecto de la ceniza no depende de la etapa)}$$
+
+```{r rlm-interaccion}
+m_int <- update(m_sel, . ~ . + ceniza:etapa)
+anova(m_sel, m_int)
+```
+
+```{r rlm-comparacion-modelos}
+bind_rows(
+  resumen_modelo(m_completo, "Completo (8 predictores, aditivo)"),
+  resumen_modelo(m_sel, "Seleccionado (aditivo)"),
+  resumen_modelo(m_int, "Seleccionado + interaccion ceniza x etapa")
+) |>
+  tabla_kbl("Comparación de los modelos candidatos (respuesta: raiz de la resistencia)", digits = 4)
+```
+
+La interacción es significativa ($p `r fmt_p(anova(m_sel, m_int)[["Pr(>F)"]][2])`$) y reduce el AIC en `r round(AIC(m_sel) - AIC(m_int), 1)` unidades, con mejor $R^2_{aj}$, $BIC$ y $PRESS$ que los demás. Se adopta como **modelo final**:
+
+```{r rlm-modelo-final}
+modelo_final <- m_int
+summary(modelo_final)
+```
+
+$$\sqrt{\text{Resistencia}} = \beta_0 + \beta_1\,\text{ceniza} + \beta_2 D_{\text{Est}} + \beta_3 D_{\text{Tar}} + \beta_4\,\text{cemento} + \beta_5\,\text{escoria} + \beta_6\,\text{agua} + \beta_7\,(\text{ceniza}\times D_{\text{Est}}) + \beta_8\,(\text{ceniza}\times D_{\text{Tar}}) + \varepsilon$$
+
+### Coeficientes e inferencia
+
+Para cada coeficiente, $H_0: \beta_j = 0$ frente a $H_1: \beta_j \neq 0$, con $t_0 = \hat{\beta}_j / \operatorname{se}(\hat{\beta}_j) \sim t_{n-p}$.
+
+```{r rlm-coeficientes}
+ic_coef <- confint(modelo_final)
+coef_final <- summary(modelo_final)$coefficients
+
+tibble(
+  termino = rownames(coef_final),
+  estimacion = coef_final[, "Estimate"],
+  error_est = coef_final[, "Std. Error"],
+  t = coef_final[, "t value"],
+  p_valor = coef_final[, "Pr(>|t|)"],
+  IC95_inf = ic_coef[, 1],
+  IC95_sup = ic_coef[, 2]
+) |>
+  tabla_kbl("Coeficientes del modelo final (escala raiz de MPa)", digits = 4)
+```
+
+Contraste conjunto de cada término. La variable cualitativa se evalúa con sus dos dummies juntas (prueba $F$ con 2 grados de libertad):
+
+```{r rlm-anova-tipo2}
+car::Anova(modelo_final, type = "II")
+```
+
+### Pendiente de la ceniza en cada etapa
+
+Como hay interacción, el efecto de la ceniza se obtiene con combinaciones lineales de coeficientes: en la etapa temprana es $\beta_1$; en la estándar, $\beta_1 + \beta_7$; en la tardía, $\beta_1 + \beta_8$.
+
+```{r rlm-pendientes}
+b <- coef(modelo_final)
+V <- vcov(modelo_final)
+gl <- modelo_final$df.residual
+
+comb <- function(pesos) {
+  l <- setNames(rep(0, length(b)), names(b))
+  l[names(pesos)] <- pesos
+  est <- sum(l * b)
+  ee <- sqrt(drop(t(l) %*% V %*% l))
+  tibble(
+    pendiente_por_kg = est, error_est = ee, t = est / ee,
+    p_valor = 2 * pt(abs(est / ee), gl, lower.tail = FALSE),
+    IC95_inf = est - qt(0.975, gl) * ee,
+    IC95_sup = est + qt(0.975, gl) * ee
+  )
+}
+
+bind_rows(
+  Temprano = comb(c(ceniza = 1)),
+  Estandar = comb(c(ceniza = 1, "ceniza:etapaEstandar" = 1)),
+  Tardio = comb(c(ceniza = 1, "ceniza:etapaTardio" = 1)),
+  .id = "etapa"
+) |>
+  tabla_kbl("Cambio en raiz(resistencia) por kg/m3 adicional de ceniza, por etapa de curado", digits = 5)
+```
+
+En las tres etapas la pendiente de la ceniza es positiva, y es mayor en la etapa tardía que en la estándar. Estos efectos se miden **manteniendo constantes** el cemento, la escoria y el agua, es decir, representan ceniza *agregada* a la misma cantidad de cemento y no una sustitución. La sustitución se evalúa más abajo.
+
+## Supuestos de los errores del modelo final
+
+```{r rlm-supuestos-final}
+supuestos_errores(modelo_final) |>
+  tabla_kbl("Pruebas de supuestos de los errores: modelo final", digits = 4)
+```
+
+```{r rlm-graficos-final, fig.height=7}
+par(mfrow = c(2, 2))
+plot(modelo_final, which = 1:4)
+par(mfrow = c(1, 1))
+```
+
+```{r rlm-terciles-final}
+tibble(
+  tercil = c("T1 (ajustados bajos)", "T2", "T3 (ajustados altos)"),
+  sd_residuos = sd_terciles(modelo_final)
+) |>
+  tabla_kbl("Desviación estándar de los residuos por tercil del valor ajustado", digits = 4)
+```
+
+Lectura de los supuestos en el modelo final:
+
+- **Normalidad:** los residuos están muy cerca de la normalidad en el Q-Q, pero Shapiro-Wilk y Lilliefors la rechazan por muy poco (p cercano a 0.05); con $n = 1030$ es una desviación pequeña, y el modelo mejora claramente frente a la escala original.
+- **Varianza constante:** Breusch-Pagan rechaza, aunque la desviación de los residuos por tercil varía poco.
+- **Independencia:** Durbin-Watson rechaza, por las mezclas repetidas.
+- **Linealidad:** el RESET rechaza. El modelo es una aproximación lineal: se discute en la sección siguiente.
+
+Como la heterocedasticidad y la dependencia no sesgan los coeficientes pero sí los errores estándar, se corrige la inferencia.
+
+### Falta de linealidad (RESET)
+
+El RESET rechaza la forma funcional. Parte de la curvatura proviene de que la etapa agrupa edades muy distintas: dentro de una misma etapa la edad todavía influye. Como sensibilidad, se agrega `log_edad` al modelo final (solo con ese fin, ya que es redundante con la etapa y produce multicolinealidad):
+
+```{r rlm-sensibilidad-edad}
+m_amp <- update(modelo_final, . ~ . + log_edad)
+
+bind_rows(
+  resumen_modelo(modelo_final, "Final (etapa dummy)"),
+  resumen_modelo(m_amp, "Final + log_edad (solo sensibilidad)")
+) |>
+  tabla_kbl("Sensibilidad: efecto de la edad dentro de cada etapa", digits = 4)
+
+tabla_robusta(m_amp, vcov_cluster(m_amp, df_rlm$id_mezcla),
+              gl = n_distinct(df_rlm$id_mezcla) - 1) |>
+  filter(str_detect(termino, "ceniza")) |>
+  tabla_kbl("Coeficientes de ceniza en el modelo ampliado (errores agrupados por mezcla)", digits = 5)
+```
+
+Si la interacción ceniza × etapa sigue siendo significativa en el modelo ampliado, la conclusión sobre el efecto diferenciado de la ceniza no depende de la forma en que se codifica la edad. Que la etapa no capture toda la influencia de la edad es una limitación del modelo, aceptada porque el objetivo exige una variable cualitativa con dummies.
+
+### Inferencia robusta: HC3 y errores agrupados por mezcla
+
+El estimador HC3 corrige la heterocedasticidad. El estimador agrupado por mezcla (CR1) corrige además la correlación entre las filas de una misma mezcla; es el más adecuado para esta estructura de datos.
+
+```{r rlm-robusto}
+V_hc3 <- vcov_hc3(modelo_final)
+V_cl <- vcov_cluster(modelo_final, df_rlm$id_mezcla)
+G_rlm <- n_distinct(df_rlm$id_mezcla)
+
+tibble(
+  termino = names(coef(modelo_final)),
+  estimacion = coef(modelo_final),
+  ee_clasico = summary(modelo_final)$coefficients[, "Std. Error"],
+  ee_HC3 = sqrt(diag(V_hc3)),
+  ee_por_mezcla = sqrt(diag(V_cl)),
+  p_clasico = summary(modelo_final)$coefficients[, "Pr(>|t|)"],
+  p_HC3 = 2 * pt(abs(coef(modelo_final) / sqrt(diag(V_hc3))),
+                 modelo_final$df.residual, lower.tail = FALSE),
+  p_por_mezcla = 2 * pt(abs(coef(modelo_final) / sqrt(diag(V_cl))),
+                        G_rlm - 1, lower.tail = FALSE)
+) |>
+  tabla_kbl("Errores estándar y p-valores: clásicos, HC3 y agrupados por mezcla", digits = 5)
+```
+
+Contraste conjunto de la interacción con errores agrupados por mezcla ($H_0$: el efecto de la ceniza no depende de la etapa):
+
+```{r rlm-wald-interaccion}
+car::linearHypothesis(
+  modelo_final,
+  c("ceniza:etapaEstandar = 0", "ceniza:etapaTardio = 0"),
+  vcov. = V_cl
+)
+```
+
+Con los errores robustos, los coeficientes principales siguen siendo significativos y la interacción se mantiene, aunque con p-valores más grandes que los clásicos (lo esperado al corregir la dependencia). Las conclusiones del modelo final son por tanto robustas.
+
+### Observaciones influyentes
+
+```{r rlm-influencia}
+n_obs <- nrow(df_rlm)
+p_final <- length(coef(modelo_final))
+cook <- cooks.distance(modelo_final)
+influyentes <- which(cook > 4 / n_obs)
+
+tibble(
+  indicador = c("Observaciones con distancia de Cook > 4/n",
+                "Distancia de Cook maxima",
+                "Observaciones con apalancamiento > 2p/n"),
+  valor = c(length(influyentes), max(cook), sum(hatvalues(modelo_final) > 2 * p_final / n_obs))
+) |>
+  tabla_kbl("Diagnóstico de influencia del modelo final", digits = 4)
+
+# Sensibilidad: coeficientes sin las observaciones influyentes
+m_sin_infl <- update(modelo_final, data = df_rlm[-influyentes, ])
+
+tibble(
+  termino = names(coef(modelo_final)),
+  con_todas = coef(modelo_final),
+  sin_influyentes = coef(m_sin_infl)
+) |>
+  tabla_kbl("Sensibilidad de los coeficientes a las observaciones influyentes", digits = 5)
+```
+
+La distancia de Cook máxima es muy pequeña (muy lejos de 1), así que ninguna observación domina el ajuste, y los coeficientes cambian poco al excluir las de mayor influencia. No se eliminan datos.
+
+## Interpretación del modelo final
+
+### Interpretación de los coeficientes
+
+Los coeficientes están en la escala de la raíz cuadrada de la resistencia ($\sqrt{\text{MPa}}$). Con ceniza igual a 0, por ejemplo, la etapa estándar presenta `r round(coef(modelo_final)["etapaEstandar"], 2)` unidades más que la temprana y la tardía `r round(coef(modelo_final)["etapaTardio"], 2)`, con las demás variables constantes. El cemento y la escoria aportan resistencia y el agua la reduce, como se espera del comportamiento del concreto. Para expresar los resultados en MPa se retrotransforma.
+
+### Retrotransformación y escenarios en MPa
+
+Si $\sqrt{Y} \mid x \sim N(\mu, \sigma^2)$, entonces la **mediana** de $Y$ es $\hat{\mu}^2$ y la **media** es $\hat{\mu}^2 + \hat{\sigma}^2$ (no basta con elevar al cuadrado, porque eso estima la mediana). Se comparan tres mezclas, con escoria y agua en sus medias:
+
+- **Control:** cemento en su media y sin ceniza.
+- **Sustitución:** se reducen 100 kg/m³ de cemento y se agregan 100 kg/m³ de ceniza.
+- **Adición:** se agregan 100 kg/m³ de ceniza manteniendo el cemento.
+
+```{r rlm-escenarios}
+cem0 <- mean(df_rlm$cemento)
+
+escenarios <- expand_grid(
+  escenario = c("Control", "Sustitucion (-100 cemento, +100 ceniza)", "Adicion (+100 ceniza)"),
+  etapa = factor(c("Temprano", "Estandar", "Tardio"), levels = levels(df_rlm$etapa))
+) |>
+  mutate(
+    ceniza = if_else(str_starts(escenario, "Control"), 0, 100),
+    cemento = if_else(str_starts(escenario, "Sustitucion"), cem0 - 100, cem0),
+    escoria = mean(df_rlm$escoria),
+    agua = mean(df_rlm$agua)
+  )
+
+pred <- predict(modelo_final, newdata = escenarios, interval = "confidence")
+s2 <- summary(modelo_final)$sigma^2
+
+escenarios |>
+  mutate(
+    mediana_MPa = pred[, "fit"]^2,
+    IC95_inf_MPa = pred[, "lwr"]^2,
+    IC95_sup_MPa = pred[, "upr"]^2,
+    media_MPa = pred[, "fit"]^2 + s2
+  ) |>
+  dplyr::select(escenario, etapa, ceniza, cemento, mediana_MPa, IC95_inf_MPa, IC95_sup_MPa, media_MPa) |>
+  tabla_kbl("Resistencia predicha (MPa) por escenario y etapa de curado (IC del 95% para la mediana)", digits = 1)
+```
+
+```{r rlm-escenarios-diferencia}
+tab_esc <- escenarios |>
+  mutate(mediana_MPa = pred[, "fit"]^2)
+
+control <- tab_esc |>
+  filter(escenario == "Control") |>
+  dplyr::select(etapa, control_MPa = mediana_MPa)
+
+tab_esc |>
+  filter(escenario != "Control") |>
+  left_join(control, by = "etapa") |>
+  mutate(
+    diferencia_MPa = mediana_MPa - control_MPa,
+    diferencia_pct = 100 * diferencia_MPa / control_MPa
+  ) |>
+  dplyr::select(escenario, etapa, control_MPa, mediana_MPa, diferencia_MPa, diferencia_pct) |>
+  tabla_kbl("Cambio de la resistencia (mediana, MPa) frente a la mezcla de control", digits = 1)
+```
+
+La tabla permite responder en las unidades del problema si sustituir cemento por ceniza compromete la resistencia en cada etapa. Los escenarios suponen que el resto de ingredientes permanece en su valor medio y que `cemento` e `ceniza` se mueven dentro del rango observado.
+
+Con el modelo ajustado, **sustituir** 100 kg/m³ de cemento por ceniza reduce la resistencia en las tres etapas, y la pérdida es mayor en la etapa estándar y menor en la tardía, mientras que **agregar** ceniza sin quitar cemento la aumenta. La ceniza tiene un aporte positivo propio, pero ese aporte no alcanza a compensar la resistencia perdida al retirar cemento en el mismo volumen.
+
+## Conclusión parcial del objetivo 5
+
+1. **Multicolinealidad:** se detectó por redundancia entre `log_edad` y `etapa`, y entre `usa_ceniza` y `ceniza`; se eliminaron las redundantes. El modelo seleccionado queda con $VIF_{max} < 5$.
+2. **Transformación:** la respuesta se transformó con raíz cuadrada porque la escala original violaba la varianza constante y la normalidad, y el logaritmo no corregía el problema.
+3. **Selección:** con ceniza y etapa forzadas, el método de todas las regresiones posibles por AIC seleccionó cemento, escoria y agua como complementos (equivalente en AIC al modelo que añade los agregados, pero sin multicolinealidad).
+4. **Interacción:** la interacción ceniza × etapa es significativa; el efecto de la ceniza depende de la etapa de curado.
+5. **Supuestos:** la normalidad queda en el límite, persiste una heterocedasticidad leve, hay dependencia entre filas de una misma mezcla y el RESET indica que la forma lineal es una aproximación. La inferencia se contrastó con errores robustos (HC3 y agrupados por mezcla) y las conclusiones se mantienen.
+6. **Limitaciones:** los datos son observacionales y la etapa de curado agrupa edades muy distintas (una variable cualitativa pierde información de la edad).

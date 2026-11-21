@@ -18,10 +18,129 @@ El estudio examina la relación entre la incorporación de ceniza volante, el ti
 
 ## Estructura del Documento
 
-- **Capítulo 1**: Introducción y Objetivos del Estudio.
-- **Capítulo 2**: Análisis Exploratorio de Datos (EDA).
-- **Capítulos siguientes**: Modelación y Conclusiones.
+- **Capítulo 2**: Introducción y Objetivos del Estudio.
+- **Capítulo 3**: Análisis Exploratorio de Datos (EDA).
+- **Capítulo 4**: Intervalos de confianza (objetivo 1).
+- **Capítulo 5**: Comparación de mezclas con y sin ceniza volante (objetivo 2).
+- **Capítulo 6**: Resistencia según las etapas de curado (objetivo 3).
+- **Capítulo 7**: Correlación entre ceniza volante y resistencia (objetivo 4).
+- **Capítulo 8**: Modelo de regresión lineal múltiple (multicolinealidad, variables dummy, selección por AIC y supuestos).
+- **Capítulo 9**: Conclusiones.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.align = 'center')
+
+# Tabla con el formato estándar del libro (salida HTML)
+tabla_kbl <- function(x, caption, digits = 3) {
+  x |>
+    knitr::kable(
+      caption = caption,
+      digits = digits,
+      format = "html"
+    ) |>
+    kableExtra::kable_styling(
+      bootstrap_options = c("striped", "hover", "condensed"),
+      full_width = FALSE,
+      position = "center"
+    )
+}
+
+# --- Paleta y tema de los gráficos --------------------------------------------
+# Colores validados con la skill dataviz (superficie blanca): azul y naranja
+# pasan los seis chequeos; la rampa azul ordinal pasa los chequeos ordinales.
+# Regla: el color sigue a la entidad en todo el libro
+#   Sin ceniza = azul, Con ceniza = naranja.
+#   Etapas de curado (ordenadas): rampa azul de claro (temprano) a oscuro (tardío).
+col_azul <- "#2a78d6"      # serie 1
+col_naranja <- "#eb6834"   # serie 2
+col_azul_claro <- "#9ec5f4" # relleno suave de la misma familia (histogramas, cajas)
+cols_ceniza <- c("Sin ceniza" = col_azul, "Con ceniza" = col_naranja)
+cols_etapa <- c("#86b6ef", "#2a78d6", "#104281")
+
+tema_libro <- function(base_size = 12) {
+  ggplot2::theme_minimal(base_size = base_size) +
+    ggplot2::theme(
+      plot.background = ggplot2::element_rect(fill = "white", color = NA),
+      panel.grid.minor = ggplot2::element_blank(),
+      panel.grid.major = ggplot2::element_line(color = "#e1e0d9", linewidth = 0.3),
+      axis.line.x = ggplot2::element_line(color = "#c3c2b7"),
+      axis.text = ggplot2::element_text(color = "#52514e"),
+      axis.title = ggplot2::element_text(color = "#52514e"),
+      plot.title = ggplot2::element_text(color = "#0b0b0b", face = "bold"),
+      plot.subtitle = ggplot2::element_text(color = "#52514e"),
+      legend.position = "top",
+      legend.title = ggplot2::element_blank()
+    )
+}
+
+# Histograma con curva de densidad (una sola serie: un solo color)
+hist_densidad <- function(data, var, binwidth, titulo, xlab) {
+  ggplot2::ggplot(data, ggplot2::aes(x = {{ var }})) +
+    ggplot2::geom_histogram(
+      ggplot2::aes(y = ggplot2::after_stat(density)),
+      binwidth = binwidth, fill = col_azul_claro, color = "white"
+    ) +
+    ggplot2::geom_density(color = col_azul, linewidth = 1) +
+    ggplot2::labs(title = titulo, x = xlab, y = "Densidad") +
+    tema_libro()
+}
+
+# Gráfico Q-Q normal con la recta de referencia
+qq_normal <- function(x, titulo) {
+  ggplot2::ggplot(data.frame(x = x), ggplot2::aes(sample = x)) +
+    ggplot2::stat_qq(color = col_azul, alpha = 0.5, size = 1.2) +
+    ggplot2::stat_qq_line(color = col_naranja, linewidth = 0.8) +
+    ggplot2::labs(
+      title = titulo,
+      subtitle = "La recta naranja es la referencia de una distribución normal",
+      x = "Cuantiles teóricos", y = "Cuantiles muestrales"
+    ) +
+    tema_libro()
+}
+
+# Fila de una tabla de verificación de supuestos (decisión con alpha = 0.05)
+fila_sup <- function(supuesto, prueba, h0, p_valor, alpha = 0.05) {
+  tibble::tibble(
+    supuesto = supuesto,
+    prueba = prueba,
+    H0 = h0,
+    p_valor = p_valor,
+    decision = ifelse(p_valor < alpha, "Se rechaza H0", "No se rechaza H0")
+  )
+}
+
+# Matriz de varianzas robusta agrupada por mezcla (CR1). Corrige la dependencia
+# entre filas de una misma mezcla ensayada a varias edades.
+vcov_cluster <- function(m, cluster) {
+  X <- model.matrix(m)
+  e <- resid(m)
+  XtX_inv <- solve(crossprod(X))
+  meat <- Reduce(`+`, lapply(split(seq_along(e), cluster), function(ix) {
+    s <- crossprod(X[ix, , drop = FALSE], e[ix])
+    tcrossprod(s)
+  }))
+  G <- length(unique(cluster))
+  n <- nrow(X)
+  p <- ncol(X)
+  XtX_inv %*% meat %*% XtX_inv * (G / (G - 1)) * ((n - 1) / (n - p))
+}
+
+# Tabla de coeficientes con una matriz de varianzas dada (gl = G - 1 si es agrupada)
+tabla_robusta <- function(m, V, gl) {
+  est <- coef(m)
+  ee <- sqrt(diag(V))
+  t0 <- est / ee
+  tibble::tibble(
+    termino = names(est),
+    estimacion = est,
+    ee_robusto = ee,
+    t = t0,
+    p_valor = 2 * pt(abs(t0), gl, lower.tail = FALSE)
+  )
+}
+
+# p-valor formateado para usar en el texto
+fmt_p <- function(p) {
+  ifelse(p < 0.001, "< 0.001", formatC(p, format = "f", digits = 3))
+}
 ```

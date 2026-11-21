@@ -76,16 +76,7 @@ diccionario_variables <- tibble(
 )
 
 diccionario_variables |>
-  knitr::kable(
-    caption = "Diccionario de variables del conjunto de datos",
-    format = ifelse(knitr::is_latex_output(), "latex", "html")
-  ) |>
-  kableExtra::kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed"),
-    latex_options = c("striped", "hold_position", "scale_down"),
-    full_width = FALSE,
-    position = "center"
-  )
+  tabla_kbl("Diccionario de variables del conjunto de datos")
 ```
 
 ## Exploración del data set.
@@ -118,17 +109,7 @@ calidad_datos <- tibble(
 )
 
 calidad_datos |>
-  knitr::kable(
-    caption = "Calidad y estructura de los datos",
-    digits = 0,
-    format = ifelse(knitr::is_latex_output(), "latex", "html")
-  ) |>
-  kableExtra::kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed"),
-    latex_options = c("striped", "hold_position"),
-    full_width = FALSE,
-    position = "center"
-  )
+  tabla_kbl("Calidad y estructura de los datos", digits = 0)
 
 duplicados <- tibble(
   indicador = "Filas duplicadas",
@@ -136,16 +117,7 @@ duplicados <- tibble(
 )
 
 duplicados |>
-  knitr::kable(
-    caption = "Filas duplicadas del conjunto de datos",
-    format = ifelse(knitr::is_latex_output(), "latex", "html")
-  ) |>
-  kableExtra::kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed"),
-    latex_options = c("striped", "hold_position"),
-    full_width = FALSE,
-    position = "center"
-  )
+  tabla_kbl("Filas duplicadas del conjunto de datos")
 ```
 
 ## Tabla descriptiva de las variables
@@ -174,17 +146,7 @@ tabla_descriptiva <- df_clean |>
   )
 
 tabla_descriptiva |>
-  knitr::kable(
-    caption = "Estadisticas descriptivas de las nueve variables",
-    digits = 3,
-    format = ifelse(knitr::is_latex_output(), "latex", "html")
-  ) |>
-  kableExtra::kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed"),
-    latex_options = c("striped", "hold_position", "scale_down"),
-    full_width = FALSE,
-    position = "center"
-  )
+  tabla_kbl("Estadisticas descriptivas de las nueve variables", digits = 3)
 ```
 
 ### Exploración de la variable de respuesta
@@ -203,38 +165,13 @@ tabla_resistencia <- df_clean %>% summarise(n = length(resistencia),
                  curtosis = kurtosis(resistencia))
 
 tabla_resistencia |>
-  knitr::kable(
-    caption = "Estadisticas descriptivas de la resistencia a la compresion",
-    digits = 3,
-    format = ifelse(knitr::is_latex_output(), "latex", "html")
-  ) |>
-  kableExtra::kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed"),
-    latex_options = c("striped", "hold_position", "scale_down"),
-    full_width = FALSE,
-    position = "center"
-  )
+  tabla_kbl("Estadisticas descriptivas de la resistencia a la compresion", digits = 3)
 ```
 Vemos que las 1030 observaciones de mezclas de concreto, tienen una resistencia de comprension de 35.817 MPa, con una desviación estándar de 16.70 MPa. Además, el 50% de las mezclas tienen una resistencia igual o menor a 34.442 MPa. Además, se observa una mezcla de concreto experimental con resistencia de 85.59 MPa siendo esta la observación con mayor Resistencia final a la compresión y otras con la minima resistencia entre las observaciones con 2.33 MPa.
 
 ```{r}
 options(scipen = 999)
-df_clean |> 
-  ggplot(aes(x = resistencia)) +
-  geom_histogram(
-    aes(y = after_stat(density)),
-    binwidth = 2,
-    fill = "darkblue",
-    color = "white",
-    alpha = 0.6
-  ) +
-  geom_density(color = "darkblue", linewidth = 1.2) +
-  labs(
-    title = "Distribución de la resistencia del concreto",
-    x = "Resistencia",
-    y = "Densidad"
-  ) +
-  theme_bw()
+hist_densidad(df_clean, resistencia, 2, "Distribución de la resistencia del concreto", "Resistencia")
 ```
 la resistencia muestra una distribución con forma parecida a una **simétrica con forma de campana**, centrada en torno a los $35\text{ MPa}$ y abarcando un rango desde los $2.3$ hasta los $82.6\text{ MPa}$. La curva de densidad sugiere un comportamiento cercano a la **distribución normal**, reflejando una muestra equilibrada que abarca desde concretos convencionales hasta mezclas de alto rendimiento.
 ## Exploracion de las varibles independientes
@@ -263,177 +200,47 @@ tabla_independientes <- df_clean |> select(ceniza, edad) |>
     curtosis = round(kurtosis(valor), 3))
 
 tabla_independientes |>
-  knitr::kable(
-    caption = "Estadisticas descriptivas de ceniza volante y edad",
-    digits = 3,
-    format = ifelse(knitr::is_latex_output(), "latex", "html")
-  ) |>
-  kableExtra::kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed"),
-    latex_options = c("striped", "hold_position", "scale_down"),
-    full_width = FALSE,
-    position = "center"
-  )
+  tabla_kbl("Estadisticas descriptivas de ceniza volante y edad", digits = 3)
   
 ```
 
 ```{r densidad-cemento}
-df_clean |> 
-  ggplot(aes(x = cemento)) +
-  geom_histogram(
-    aes(y = after_stat(density)),
-    binwidth = 20,
-    fill = "#1b9e77",
-    color = "white",
-    alpha = 0.6
-  ) +
-  geom_density(color = "#1b9e77", linewidth = 1.2) +
-  labs(
-    title = "Distribución de la dosificación de cemento",
-    x = "Cemento (kg/m³)",
-    y = "Densidad"
-  ) +
-  theme_bw()
+hist_densidad(df_clean, cemento, 20, "Distribución de la dosificación de cemento", "Cemento (kg/m³)")
 ```
 La distribución del **cemento** presenta una forma unimodal con un sesgo positivo moderado. La mayor concentración de observaciones se encuentra aproximadamente entre los $200$ y $350\text{ kg/m}^3$, mientras que algunos valores cercanos a $540\text{ kg/m}^3$ prolongan la cola superior. Esta asimetría y la extensión de la cola derecha evidencian una distribución **no normal**, aunque relativamente cercana a una forma acampanada.
 
 ```{r densidad-escoria}
-df_clean |> 
-  ggplot(aes(x = escoria)) +
-  geom_histogram(
-    aes(y = after_stat(density)),
-    binwidth = 20,
-    fill = "#66a61e",
-    color = "white",
-    alpha = 0.6
-  ) +
-  geom_density(color = "#66a61e", linewidth = 1.2) +
-  labs(
-    title = "Distribución de la dosificación de escoria",
-    x = "Escoria de alto horno (kg/m³)",
-    y = "Densidad"
-  ) +
-  theme_bw()
+hist_densidad(df_clean, escoria, 20, "Distribución de la dosificación de escoria", "Escoria de alto horno (kg/m³)")
 ```
 La distribución de **escoria** se concentra en valores bajos y presenta un marcado sesgo positivo. La mediana es de aproximadamente $22\text{ kg/m}^3$, mientras que una proporción importante de mezclas no contiene escoria y la cola se extiende hasta cerca de $360\text{ kg/m}^3$. La concentración en cero y la cola derecha prolongada muestran que la variable tiene una distribución **no normal**.
 
 ```{r densidad-agua}
-df_clean |> 
-  ggplot(aes(x = agua)) +
-  geom_histogram(
-    aes(y = after_stat(density)),
-    binwidth = 5,
-    fill = "#e6ab02",
-    color = "white",
-    alpha = 0.6
-  ) +
-  geom_density(color = "#e6ab02", linewidth = 1.2) +
-  labs(
-    title = "Distribución de la cantidad de agua",
-    x = "Agua (kg/m³)",
-    y = "Densidad"
-  ) +
-  theme_bw()
+hist_densidad(df_clean, agua, 5, "Distribución de la cantidad de agua", "Agua (kg/m³)")
 ```
 La distribución del **agua** es unimodal y relativamente simétrica, con una concentración principal alrededor de $180\text{ kg/m}^3$. Sin embargo, se observan pequeñas desviaciones en los extremos, con valores que van aproximadamente de $122$ a $247\text{ kg/m}^3$. Por ello, aunque su forma es cercana a una campana, las discrepancias en las colas evidencian una distribución **no normal** en sentido estricto.
 
 ```{r densidad-superplast}
-df_clean |> 
-  ggplot(aes(x = superplast)) +
-  geom_histogram(
-    aes(y = after_stat(density)),
-    binwidth = 2,
-    fill = "#d95f02",
-    color = "white",
-    alpha = 0.6
-  ) +
-  geom_density(color = "#d95f02", linewidth = 1.2) +
-  labs(
-    title = "Distribución de la dosificación de superplastificante",
-    x = "Superplastificante (kg/m³)",
-    y = "Densidad"
-  ) +
-  theme_bw()
+hist_densidad(df_clean, superplast, 2, "Distribución de la dosificación de superplastificante", "Superplastificante (kg/m³)")
 ```
 La distribución del **superplastificante** presenta un marcado sesgo positivo. Se observa una concentración importante en valores iguales o cercanos a $0\text{ kg/m}^3$, seguida de una cola que se extiende hasta aproximadamente $32\text{ kg/m}^3$. Este comportamiento refleja el uso diferenciado del aditivo entre las mezclas y confirma una distribución **no normal**.
 
 ```{r densidad-agregado-grueso}
-df_clean |> 
-  ggplot(aes(x = agregado_grueso)) +
-  geom_histogram(
-    aes(y = after_stat(density)),
-    binwidth = 15,
-    fill = "#7570b3",
-    color = "white",
-    alpha = 0.6
-  ) +
-  geom_density(color = "#7570b3", linewidth = 1.2) +
-  labs(
-    title = "Distribución del agregado grueso",
-    x = "Agregado grueso (kg/m³)",
-    y = "Densidad"
-  ) +
-  theme_bw()
+hist_densidad(df_clean, agregado_grueso, 15, "Distribución del agregado grueso", "Agregado grueso (kg/m³)")
 ```
 La distribución del **agregado grueso** es aproximadamente unimodal y simétrica, con la mayor parte de los valores entre $900$ y $1050\text{ kg/m}^3$. Se aprecia una ligera variación hacia los extremos, con un rango aproximado entre $801$ y $1145\text{ kg/m}^3$. En conjunto, la forma es cercana a la normal, aunque las pequeñas desviaciones observadas indican una distribución **no normal**.
 
 ```{r densidad-agregado-fino}
-df_clean |> 
-  ggplot(aes(x = agregado_fino)) +
-  geom_histogram(
-    aes(y = after_stat(density)),
-    binwidth = 15,
-    fill = "#a6761d",
-    color = "white",
-    alpha = 0.6
-  ) +
-  geom_density(color = "#a6761d", linewidth = 1.2) +
-  labs(
-    title = "Distribución del agregado fino",
-    x = "Agregado fino (kg/m³)",
-    y = "Densidad"
-  ) +
-  theme_bw()
+hist_densidad(df_clean, agregado_fino, 15, "Distribución del agregado fino", "Agregado fino (kg/m³)")
 ```
 La distribución del **agregado fino** es unimodal y relativamente equilibrada, con una concentración principal alrededor de $780\text{ kg/m}^3$. Presenta una ligera asimetría hacia la izquierda y valores comprendidos aproximadamente entre $594$ y $993\text{ kg/m}^3$. Aunque visualmente se aproxima a una distribución acampanada, las discrepancias en las colas evidencian una distribución **no normal**.
 
 ```{r}
-df_clean |> 
-  ggplot(aes(x = ceniza)) +
-  geom_histogram(
-    aes(y = after_stat(density)),
-    binwidth = 10,           # Intervalos de 10 kg/m^3
-    fill = "#d95f02",        # Tono naranja / teja
-    color = "white",
-    alpha = 0.6
-  ) +
-  geom_density(color = "#d95f02", linewidth = 1.2) +
-  labs(
-    title = "Distribución del contenido de Ceniza Volante",
-    x = "Ceniza Volante (kg/m³)",
-    y = "Densidad"
-  ) +
-  theme_bw()
+hist_densidad(df_clean, ceniza, 10, "Distribución del contenido de Ceniza Volante", "Ceniza Volante (kg/m³)")
 ```
 La distribución es fuertemente bimodal e inflada en ceros. Presenta una concentración masiva en los $0\text{ kg/m}^3$ correspondiente a las mezclas tradicionales de control ($55\%$ de la muestra), seguida de un segundo agrupamiento entre los $80$ y $160\text{ kg/m}^3$ en aquellas formulaciones donde sí se sustituyó cemento por ceniza. Esta notable asimetría y falta de continuidad confirma la **no normalidad** de la variabl.
 
 ```{r}
-df_clean |> 
-  ggplot(aes(x = edad)) +
-  geom_histogram(
-    aes(y = after_stat(density)),
-    binwidth = 14,           # Intervalos de 14 días (2 semanas)
-    fill = "#7570b3",        # Tono violeta
-    color = "white",
-    alpha = 0.6
-  ) +
-  geom_density(color = "#7570b3", linewidth = 1.2) +
-  labs(
-    title = "Distribución del Tiempo de Curado",
-    x = "Tiempo de Curado (Días)",
-    y = "Densidad"
-  ) +
-  theme_bw() 
+hist_densidad(df_clean, edad, 14, "Distribución del Tiempo de Curado", "Tiempo de Curado (Días)") 
 ```
 La distribución exhibe un marcado sesgo positivo con picos, concentrando la gran mayoría de las observaciones en los $28\text{ días}$ la cual es la edad estándar de diseño y en periodos tempranos ($\le 7\text{ días}$). La densidad decae drásticamente a partir de los $56\text{ días}$, extendiéndose en una cola larga hasta los $365\text{ días}$, lo cual evidencia una distribución **no normal** explicada por el diseño experimental enfocado en etapas normativas de obra.
 
@@ -444,36 +251,36 @@ La distribución exhibe un marcado sesgo positivo con picos, concentrando la gra
 # 1. Boxplot de Ceniza Volante
 p1 <- df %>%
   ggplot(aes(x = "", y = `Fly Ash (component 3)(kg in a m^3 mixture)`)) +
-  geom_boxplot(fill = "#d62728", alpha = 0.7) +
+  geom_boxplot(fill = col_azul_claro, color = col_azul, linewidth = 0.6) +
   labs(
     title = "Ceniza Volante (Fly Ash)",
     y = "Ceniza Volante (kg/m³)",
     x = ""
   ) +
-  theme_bw()
+  tema_libro()
 
 
 # 2. Boxplot de Edad de Curado
 p2 <- df %>%
   ggplot(aes(x = "", y = `Age (day)`)) +
-  geom_boxplot(fill = "#e377c2", alpha = 0.7) +
+  geom_boxplot(fill = col_azul_claro, color = col_azul, linewidth = 0.6) +
   labs(
     title = "Tiempo de Curado",
     y = "Edad (Días)",
     x = ""
   ) +
-  theme_bw()
+  tema_libro()
 
 # 3. Boxplot de Resistencia a la Compresión (Target / Variable Respuesta)
 p3 <- df %>%
   ggplot(aes(x = "", y = `Concrete compressive strength(MPa, megapascals)`)) +
-  geom_boxplot(fill = "#bcbd22", alpha = 0.7) +
+  geom_boxplot(fill = col_azul_claro, color = col_azul, linewidth = 0.6) +
   labs(
     title = "Resistencia a la Compresión",
     y = "Resistencia (MPa)",
     x = ""
   ) +
-  theme_bw()
+  tema_libro()
 ```
 
 ```{r}
@@ -514,8 +321,13 @@ El 50% de los datos tienen una resistencia menor o igual a $34.5\text{ MPa}$, mo
 ## Analisis Bivariado
 
 ```{r, fig.width= 13, fig.height= 13}
-df_clean |> 
-  ggpairs()
+df_clean |>
+  ggpairs(
+    lower = list(continuous = wrap("points", alpha = 0.3, color = col_azul, size = 0.6)),
+    diag = list(continuous = wrap("densityDiag", fill = col_azul_claro, color = col_azul)),
+    upper = list(continuous = wrap("cor", color = "#0b0b0b", size = 3))
+  ) +
+  tema_libro(9)
 ```
 
 
@@ -544,7 +356,32 @@ df_fe <- df_clean |>
       edad <= 7 ~ "Temprano (<= 7d)",
       edad > 7 & edad <= 28 ~ "Estándar (14-28d)",
       edad > 28 ~ "Tardío (> 28d)"
-    ), levels = c("Temprano (<= 7d)", "Estándar (14-28d)", "Tardío (> 28d)"))
+    ), levels = c("Temprano (<= 7d)", "Estándar (14-28d)", "Tardío (> 28d)")),
+
+    # Indicadores binarios: con / sin ceniza y con / sin superplastificante
+    usa_ceniza = factor(
+      if_else(ceniza > 0, "Con ceniza", "Sin ceniza"),
+      levels = c("Sin ceniza", "Con ceniza")
+    ),
+    usa_superplast = factor(
+      if_else(superplast > 0, "Con superplastificante", "Sin superplastificante"),
+      levels = c("Sin superplastificante", "Con superplastificante")
+    ),
+
+    # Edad en escala logarítmica (la relación con la resistencia es no lineal)
+    log_edad = log(edad),
+
+    # Razón agua / aglutinante total (la escoria también es aglutinante)
+    razon_agua_aglutinante = agua / (cemento + ceniza + escoria),
+
+    # Porcentaje de ceniza sobre el aglutinante total
+    pct_ceniza_total = ceniza / (cemento + ceniza + escoria) * 100,
+
+    # Identificador de mezcla: misma combinación de los siete ingredientes
+    id_mezcla = as.integer(factor(paste(
+      cemento, escoria, ceniza, agua, superplast,
+      agregado_grueso, agregado_fino, sep = "|"
+    )))
   )
 ```
 
@@ -559,11 +396,24 @@ df_fe <- df_clean |>
    * **`pct_ceniza`:** Indica qué porcentaje del cemento total fue reemplazado por ceniza volante.
    * **`razon_agua_cementante`:** Mide cuánta agua se usó en relación con el total de polvos aglutinantes ($\text{agua} / [\text{cemento} + \text{ceniza}]$), resumiendo tres columnas en una sola métrica de consistencia de la mezcla.
 
+3. **Variables añadidas tras revisar el diseño de los datos:**
+
+   Las mezclas con ceniza no son "la misma receta más ceniza": también difieren en cemento, agua, escoria y superplastificante (de hecho, casi todas las mezclas con ceniza usan superplastificante). Por eso se añadieron variables que permiten comparar de forma más limpia y controlar esa confusión:
+
+   * **`usa_ceniza`:** indicador binario (*Sin ceniza* / *Con ceniza*). Se usa en la comparación de dos grupos del objetivo 2, ya que `nivel_ceniza` deja el grupo "Bajo" con muy pocas observaciones.
+   * **`usa_superplast`:** indicador binario del uso del aditivo, empleado como control del solapamiento con la ceniza.
+   * **`log_edad`:** logaritmo natural de la edad. La relación edad-resistencia es no lineal (crece rápido al inicio y se estabiliza), por lo que el logaritmo la linealiza.
+   * **`razon_agua_aglutinante`:** $\text{agua} / [\text{cemento} + \text{ceniza} + \text{escoria}]$. Corrige `razon_agua_cementante`, que ignoraba la escoria aunque también es material aglutinante.
+   * **`pct_ceniza_total`:** porcentaje de ceniza sobre el aglutinante total (cemento + ceniza + escoria).
+
 ### Tabla descriptiva de las nuevas variables
 
 ```{r tabla-nuevas-variables-numericas}
 tabla_nuevas_numericas <- df_fe |>
-  select(razon_agua_cementante, pct_ceniza) |>
+  select(
+    razon_agua_cementante, pct_ceniza,
+    razon_agua_aglutinante, pct_ceniza_total, log_edad
+  ) |>
   pivot_longer(
     cols = everything(),
     names_to = "variable",
@@ -583,17 +433,7 @@ tabla_nuevas_numericas <- df_fe |>
   )
 
 tabla_nuevas_numericas |>
-  knitr::kable(
-    caption = "Estadisticas descriptivas de las nuevas variables numericas",
-    digits = 3,
-    format = ifelse(knitr::is_latex_output(), "latex", "html")
-  ) |>
-  kableExtra::kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed"),
-    latex_options = c("striped", "hold_position", "scale_down"),
-    full_width = FALSE,
-    position = "center"
-  )
+  tabla_kbl("Estadisticas descriptivas de las nuevas variables numericas", digits = 3)
 ```
 
 ```{r tabla-nuevas-variables-categoricas}
@@ -603,21 +443,48 @@ tabla_nuevas_categoricas <- bind_rows(
     transmute(variable = "nivel_ceniza", categoria = as.character(nivel_ceniza), frecuencia),
   df_fe |>
     count(etapa_curado, name = "frecuencia") |>
-    transmute(variable = "etapa_curado", categoria = as.character(etapa_curado), frecuencia)
+    transmute(variable = "etapa_curado", categoria = as.character(etapa_curado), frecuencia),
+  df_fe |>
+    count(usa_ceniza, name = "frecuencia") |>
+    transmute(variable = "usa_ceniza", categoria = as.character(usa_ceniza), frecuencia),
+  df_fe |>
+    count(usa_superplast, name = "frecuencia") |>
+    transmute(variable = "usa_superplast", categoria = as.character(usa_superplast), frecuencia)
 )
 
 tabla_nuevas_categoricas |>
-  knitr::kable(
-    caption = "Frecuencias de las nuevas variables categoricas",
-    format = ifelse(knitr::is_latex_output(), "latex", "html")
-  ) |>
-  kableExtra::kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed"),
-    latex_options = c("striped", "hold_position"),
-    full_width = FALSE,
-    position = "center"
-  )
+  tabla_kbl("Frecuencias de las nuevas variables categoricas")
 ```
+
+### Estructura de los datos: mezclas medidas a varias edades {#estructura-mezclas}
+
+Las 1,030 filas son ensayos de resistencia, pero **no todas corresponden a mezclas distintas**: una misma receta (los siete ingredientes idénticos) se ensaya a varias edades. Se identifica cada mezcla con `id_mezcla`:
+
+```{r tabla-estructura-mezclas}
+filas_por_mezcla <- df_fe |> count(id_mezcla, name = "filas")
+
+tibble(
+  indicador = c(
+    "Filas (ensayos)",
+    "Mezclas distintas (siete ingredientes idénticos)",
+    "Mezclas con una sola fila",
+    "Mezclas ensayadas más de una vez",
+    "Filas que pertenecen a mezclas repetidas",
+    "Máximo de filas de una misma mezcla"
+  ),
+  valor = c(
+    nrow(df_fe),
+    nrow(filas_por_mezcla),
+    sum(filas_por_mezcla$filas == 1),
+    sum(filas_por_mezcla$filas > 1),
+    sum(filas_por_mezcla$filas[filas_por_mezcla$filas > 1]),
+    max(filas_por_mezcla$filas)
+  )
+) |>
+  tabla_kbl("Mezclas distintas frente a ensayos", digits = 0)
+```
+
+Esto tiene una consecuencia importante: **las filas de una misma mezcla no son independientes** (comparten ingredientes y comportamiento), lo que viola el supuesto de independencia de las pruebas clásicas y subestima los errores estándar. Por eso, en los capítulos siguientes se verifica la independencia, se reporta su incumplimiento y se corrige la inferencia agrupando por mezcla (`id_mezcla`) con errores estándar robustos o bootstrap por mezclas. Además, esta estructura explica la autocorrelación positiva que se observa en los residuos del modelo de regresión.
 
 ## Pruebas de normalidad
 
@@ -635,9 +502,7 @@ Al aplicar la prueba de normalidad de Lilliefors a la variable **cemento**, se o
 Esta conclusión se corrobora visualmente mediante el **gráfico Q-Q**. Aunque los cuantiles centrales se aproximan a la recta teórica, se observan desviaciones en ambas colas, especialmente en la cola inferior y en los valores altos. En consecuencia, la variable **cemento** presenta una distribución aproximadamente acampanada, pero no normal.
 
 ```{r qq-cemento}
-qqnorm(df_clean$cemento, pch = 1, frame = FALSE,
-  main = "Gráfico Q-Q: Cemento")
-qqline(df_clean$cemento, col = "red", lwd = 2)
+qq_normal(df_clean$cemento, "Gráfico Q-Q: Cemento")
 ```
 
 ### Escoria
@@ -652,9 +517,7 @@ Al aplicar la prueba de normalidad de Lilliefors a la variable **escoria**, se o
 El **gráfico Q-Q** muestra desviaciones pronunciadas respecto de la recta teórica, asociadas con la concentración de observaciones en valores bajos y con una cola superior extendida. La forma observada es consistente con una distribución asimétrica y con la presencia de mezclas que no incorporan escoria.
 
 ```{r qq-escoria}
-qqnorm(df_clean$escoria, pch = 1, frame = FALSE,
-  main = "Gráfico Q-Q: Escoria de alto horno")
-qqline(df_clean$escoria, col = "red", lwd = 2)
+qq_normal(df_clean$escoria, "Gráfico Q-Q: Escoria de alto horno")
 ```
 
 ### Ceniza volante
@@ -669,9 +532,7 @@ Al aplicar la prueba de normalidad de Lilliefors a la variable **ceniza volante*
 Esta conclusión se corrobora mediante el **gráfico Q-Q**, donde la concentración de observaciones en $0\text{ kg/m}^3$ genera una desviación fuerte respecto de la recta, especialmente en la parte inferior, seguida de discrepancias en la cola superior. Por tanto, la inflación de ceros y la asimetría impiden considerar normal la dosificación de ceniza volante.
 
 ```{r qq-ceniza}
-qqnorm(df_clean$ceniza, pch = 1, frame = FALSE,
-  main = "Gráfico Q-Q: Ceniza volante")
-qqline(df_clean$ceniza, col = "red", lwd = 2)
+qq_normal(df_clean$ceniza, "Gráfico Q-Q: Ceniza volante")
 ```
 
 ### Agua
@@ -686,9 +547,7 @@ Al aplicar la prueba de normalidad de Lilliefors a la variable **agua**, se obtu
 En el **gráfico Q-Q**, los cuantiles centrales siguen de manera aproximada la recta teórica, pero se observan discrepancias sistemáticas en las colas. Esto indica una distribución relativamente cercana a la forma normal en el centro, aunque las desviaciones globales son suficientes para rechazar la normalidad.
 
 ```{r qq-agua}
-qqnorm(df_clean$agua, pch = 1, frame = FALSE,
-  main = "Gráfico Q-Q: Agua")
-qqline(df_clean$agua, col = "red", lwd = 2)
+qq_normal(df_clean$agua, "Gráfico Q-Q: Agua")
 ```
 
 ### Superplastificante
@@ -703,9 +562,7 @@ Al aplicar la prueba de normalidad de Lilliefors a la variable **superplastifica
 El **gráfico Q-Q** evidencia una desviación marcada en la parte inferior debido a la concentración de valores iguales o cercanos a cero, además de discrepancias en la cola superior. Este patrón confirma una distribución asimétrica y la presencia de mezclas sin este aditivo.
 
 ```{r qq-superplast}
-qqnorm(df_clean$superplast, pch = 1, frame = FALSE,
-  main = "Gráfico Q-Q: Superplastificante")
-qqline(df_clean$superplast, col = "red", lwd = 2)
+qq_normal(df_clean$superplast, "Gráfico Q-Q: Superplastificante")
 ```
 
 ### Agregado grueso
@@ -720,9 +577,7 @@ Al aplicar la prueba de normalidad de Lilliefors a la variable **agregado grueso
 En el **gráfico Q-Q**, los puntos centrales presentan una alineación razonable con la recta teórica, pero las colas se separan de ella, sobre todo en los valores extremos. Por ello, aunque la distribución parece relativamente simétrica, las desviaciones detectadas impiden asumir normalidad.
 
 ```{r qq-agregado-grueso}
-qqnorm(df_clean$agregado_grueso, pch = 1, frame = FALSE,
-  main = "Gráfico Q-Q: Agregado grueso")
-qqline(df_clean$agregado_grueso, col = "red", lwd = 2)
+qq_normal(df_clean$agregado_grueso, "Gráfico Q-Q: Agregado grueso")
 ```
 
 ### Agregado fino
@@ -737,9 +592,7 @@ Al aplicar la prueba de normalidad de Lilliefors a la variable **agregado fino**
 El **gráfico Q-Q** muestra una aproximación aceptable a la recta en los cuantiles centrales, pero desviaciones visibles en las colas. En consecuencia, la variable puede parecer cercana a la normalidad desde el punto de vista descriptivo, aunque la prueba y los extremos indican que no cumple estrictamente dicho supuesto.
 
 ```{r qq-agregado-fino}
-qqnorm(df_clean$agregado_fino, pch = 1, frame = FALSE,
-  main = "Gráfico Q-Q: Agregado fino")
-qqline(df_clean$agregado_fino, col = "red", lwd = 2)
+qq_normal(df_clean$agregado_fino, "Gráfico Q-Q: Agregado fino")
 ```
 
 ### Edad
@@ -754,9 +607,7 @@ Al aplicar la prueba de normalidad de Lilliefors a la variable **edad**, se obtu
 Esta conclusión se corrobora en el **gráfico Q-Q**, que presenta una forma escalonada por la concentración de ensayos en edades específicas, especialmente $7$, $14$ y $28$ días, junto con una desviación notable en la cola superior debido a los ensayos de hasta $365$ días. La variable presenta, por tanto, asimetría y concentración discreta incompatibles con una distribución normal.
 
 ```{r qq-edad}
-qqnorm(df_clean$edad, pch = 1, frame = FALSE,
-  main = "Gráfico Q-Q: Edad de curado")
-qqline(df_clean$edad, col = "red", lwd = 2)
+qq_normal(df_clean$edad, "Gráfico Q-Q: Edad de curado")
 ```
 
 ### Resistencia
@@ -771,9 +622,7 @@ Al aplicar la prueba de normalidad de Lilliefors a la variable **resistencia**, 
 En el **gráfico Q-Q**, los cuantiles centrales se aproximan a la recta teórica, pero se observan discrepancias en las colas, particularmente en los valores de resistencia más bajos y más altos. Así, aunque la distribución es relativamente equilibrada y cercana a la normal en el centro, no cumple estrictamente el supuesto de normalidad.
 
 ```{r qq-resistencia}
-qqnorm(df_clean$resistencia, pch = 1, frame = FALSE,
-  main = "Gráfico Q-Q: Resistencia a la compresión")
-qqline(df_clean$resistencia, col = "red", lwd = 2)
+qq_normal(df_clean$resistencia, "Gráfico Q-Q: Resistencia a la compresión")
 ```
 
 ### Resumen de las pruebas de normalidad
@@ -817,17 +666,7 @@ tabla_normalidad <- tibble(
   )
 
 tabla_normalidad |>
-  knitr::kable(
-    caption = "Resumen de las pruebas de normalidad de Lilliefors",
-    digits = 4,
-    format = ifelse(knitr::is_latex_output(), "latex", "html")
-  ) |>
-  kableExtra::kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed"),
-    latex_options = c("striped", "hold_position", "scale_down"),
-    full_width = FALSE,
-    position = "center"
-  )
+  tabla_kbl("Resumen de las pruebas de normalidad de Lilliefors", digits = 4)
 ```
 
 

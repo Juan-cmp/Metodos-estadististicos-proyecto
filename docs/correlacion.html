@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Capítulo 7 Correlación entre ceniza volante y resistencia | Análisis estadístico del efecto de la ceniza volante sobre la resistencia del concreto</title>
+  <meta name="description" content="Análisis estadístico del efecto de la ceniza volante y el tiempo de curado sobre la resistencia a la compresión del concreto." />
+  <meta name="generator" content="bookdown 0.47 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Capítulo 7 Correlación entre ceniza volante y resistencia | Análisis estadístico del efecto de la ceniza volante sobre la resistencia del concreto" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Análisis estadístico del efecto de la ceniza volante y el tiempo de curado sobre la resistencia a la compresión del concreto." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Capítulo 7 Correlación entre ceniza volante y resistencia | Análisis estadístico del efecto de la ceniza volante sobre la resistencia del concreto" />
+  
+  <meta name="twitter:description" content="Análisis estadístico del efecto de la ceniza volante y el tiempo de curado sobre la resistencia a la compresión del concreto." />
+  
+
+<meta name="author" content="Camilo Padilla &amp; Juan Campo" />
+
+
+<meta name="date" content="2026-11-21" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="anova.html"/>
+<link rel="next" href="rlm.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Proyecto Final - Métodos Estadísticos</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Presentación</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#estructura-del-documento"><i class="fa fa-check"></i><b>1.1</b> Estructura del Documento</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introducción y Objetivos</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#contexto"><i class="fa fa-check"></i><b>2.1</b> Contexto</a></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#problem%C3%A1tica"><i class="fa fa-check"></i><b>2.2</b> Problemática</a></li>
+<li class="chapter" data-level="2.3" data-path="intro.html"><a href="intro.html#objetivos-del-proyecto"><i class="fa fa-check"></i><b>2.3</b> Objetivos del Proyecto</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="intro.html"><a href="intro.html#objetivo-general"><i class="fa fa-check"></i><b>2.3.1</b> Objetivo general</a></li>
+<li class="chapter" data-level="2.3.2" data-path="intro.html"><a href="intro.html#objetivos-espec%C3%ADficos"><i class="fa fa-check"></i><b>2.3.2</b> Objetivos específicos</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="intro.html"><a href="intro.html#justificaci%C3%B3n"><i class="fa fa-check"></i><b>2.4</b> Justificación</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="eda.html"><a href="eda.html"><i class="fa fa-check"></i><b>3</b> Análisis Exploratorio de Datos (EDA)</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="eda.html"><a href="eda.html#dataset-y-ficha-tecnica"><i class="fa fa-check"></i><b>3.1</b> Dataset y ficha tecnica</a></li>
+<li class="chapter" data-level="3.2" data-path="eda.html"><a href="eda.html#importamos-librerias"><i class="fa fa-check"></i><b>3.2</b> Importamos librerias</a></li>
+<li class="chapter" data-level="3.3" data-path="eda.html"><a href="eda.html#carga-de-datos"><i class="fa fa-check"></i><b>3.3</b> Carga de Datos</a></li>
+<li class="chapter" data-level="3.4" data-path="eda.html"><a href="eda.html#diccionario-de-variables"><i class="fa fa-check"></i><b>3.4</b> Diccionario de Variables</a></li>
+<li class="chapter" data-level="3.5" data-path="eda.html"><a href="eda.html#exploraci%C3%B3n-del-data-set."><i class="fa fa-check"></i><b>3.5</b> Exploración del data set.</a></li>
+<li class="chapter" data-level="3.6" data-path="eda.html"><a href="eda.html#calidad-y-estructura-de-los-datos"><i class="fa fa-check"></i><b>3.6</b> Calidad y estructura de los datos</a></li>
+<li class="chapter" data-level="3.7" data-path="eda.html"><a href="eda.html#tabla-descriptiva-de-las-variables"><i class="fa fa-check"></i><b>3.7</b> Tabla descriptiva de las variables</a>
+<ul>
+<li class="chapter" data-level="3.7.1" data-path="eda.html"><a href="eda.html#exploraci%C3%B3n-de-la-variable-de-respuesta"><i class="fa fa-check"></i><b>3.7.1</b> Exploración de la variable de respuesta</a></li>
+</ul></li>
+<li class="chapter" data-level="3.8" data-path="eda.html"><a href="eda.html#anlisis-univariado-de-las-variables"><i class="fa fa-check"></i><b>3.8</b> Anlisis Univariado de las variables</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="eda.html"><a href="eda.html#analisis-boxplot-tiempo-de-curado"><i class="fa fa-check"></i><b>3.8.1</b> Analisis boxplot tiempo de curado</a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="eda.html"><a href="eda.html#analisis-bivariado"><i class="fa fa-check"></i><b>3.9</b> Analisis Bivariado</a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="eda.html"><a href="eda.html#creacion-de-nuevas-variables"><i class="fa fa-check"></i><b>3.9.1</b> Creacion de nuevas variables</a></li>
+<li class="chapter" data-level="3.9.2" data-path="eda.html"><a href="eda.html#tabla-descriptiva-de-las-nuevas-variables"><i class="fa fa-check"></i><b>3.9.2</b> Tabla descriptiva de las nuevas variables</a></li>
+<li class="chapter" data-level="3.9.3" data-path="eda.html"><a href="eda.html#estructura-mezclas"><i class="fa fa-check"></i><b>3.9.3</b> Estructura de los datos: mezclas medidas a varias edades</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="eda.html"><a href="eda.html#pruebas-de-normalidad"><i class="fa fa-check"></i><b>3.10</b> Pruebas de normalidad</a>
+<ul>
+<li class="chapter" data-level="3.10.1" data-path="eda.html"><a href="eda.html#cemento"><i class="fa fa-check"></i><b>3.10.1</b> Cemento</a></li>
+<li class="chapter" data-level="3.10.2" data-path="eda.html"><a href="eda.html#escoria"><i class="fa fa-check"></i><b>3.10.2</b> Escoria</a></li>
+<li class="chapter" data-level="3.10.3" data-path="eda.html"><a href="eda.html#ceniza-volante"><i class="fa fa-check"></i><b>3.10.3</b> Ceniza volante</a></li>
+<li class="chapter" data-level="3.10.4" data-path="eda.html"><a href="eda.html#agua"><i class="fa fa-check"></i><b>3.10.4</b> Agua</a></li>
+<li class="chapter" data-level="3.10.5" data-path="eda.html"><a href="eda.html#superplastificante"><i class="fa fa-check"></i><b>3.10.5</b> Superplastificante</a></li>
+<li class="chapter" data-level="3.10.6" data-path="eda.html"><a href="eda.html#agregado-grueso"><i class="fa fa-check"></i><b>3.10.6</b> Agregado grueso</a></li>
+<li class="chapter" data-level="3.10.7" data-path="eda.html"><a href="eda.html#agregado-fino"><i class="fa fa-check"></i><b>3.10.7</b> Agregado fino</a></li>
+<li class="chapter" data-level="3.10.8" data-path="eda.html"><a href="eda.html#edad"><i class="fa fa-check"></i><b>3.10.8</b> Edad</a></li>
+<li class="chapter" data-level="3.10.9" data-path="eda.html"><a href="eda.html#resistencia"><i class="fa fa-check"></i><b>3.10.9</b> Resistencia</a></li>
+<li class="chapter" data-level="3.10.10" data-path="eda.html"><a href="eda.html#resumen-de-las-pruebas-de-normalidad"><i class="fa fa-check"></i><b>3.10.10</b> Resumen de las pruebas de normalidad</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="ic.html"><a href="ic.html"><i class="fa fa-check"></i><b>4</b> Intervalos de confianza</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="ic.html"><a href="ic.html#verificaci%C3%B3n-de-supuestos"><i class="fa fa-check"></i><b>4.1</b> Verificación de supuestos</a></li>
+<li class="chapter" data-level="4.2" data-path="ic.html"><a href="ic.html#resistencia-a-la-compresi%C3%B3n"><i class="fa fa-check"></i><b>4.2</b> Resistencia a la compresión</a></li>
+<li class="chapter" data-level="4.3" data-path="ic.html"><a href="ic.html#ceniza-volante-1"><i class="fa fa-check"></i><b>4.3</b> Ceniza volante</a></li>
+<li class="chapter" data-level="4.4" data-path="ic.html"><a href="ic.html#resistencia-por-grupo"><i class="fa fa-check"></i><b>4.4</b> Resistencia por grupo</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="comparacion.html"><a href="comparacion.html"><i class="fa fa-check"></i><b>5</b> Comparación de mezclas con y sin ceniza volante</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="comparacion.html"><a href="comparacion.html#hip%C3%B3tesis"><i class="fa fa-check"></i><b>5.1</b> Hipótesis</a></li>
+<li class="chapter" data-level="5.2" data-path="comparacion.html"><a href="comparacion.html#descripci%C3%B3n-por-grupo"><i class="fa fa-check"></i><b>5.2</b> Descripción por grupo</a></li>
+<li class="chapter" data-level="5.3" data-path="comparacion.html"><a href="comparacion.html#supuestos-de-la-prueba"><i class="fa fa-check"></i><b>5.3</b> Supuestos de la prueba</a></li>
+<li class="chapter" data-level="5.4" data-path="comparacion.html"><a href="comparacion.html#prueba-de-hip%C3%B3tesis"><i class="fa fa-check"></i><b>5.4</b> Prueba de hipótesis</a></li>
+<li class="chapter" data-level="5.5" data-path="comparacion.html"><a href="comparacion.html#tama%C3%B1o-del-efecto"><i class="fa fa-check"></i><b>5.5</b> Tamaño del efecto</a></li>
+<li class="chapter" data-level="5.6" data-path="comparacion.html"><a href="comparacion.html#correcci%C3%B3n-por-mezclas-repetidas"><i class="fa fa-check"></i><b>5.6</b> Corrección por mezclas repetidas</a></li>
+<li class="chapter" data-level="5.7" data-path="comparacion.html"><a href="comparacion.html#es-una-comparaci%C3%B3n-justa-balance-de-las-mezclas"><i class="fa fa-check"></i><b>5.7</b> ¿Es una comparación justa? Balance de las mezclas</a></li>
+<li class="chapter" data-level="5.8" data-path="comparacion.html"><a href="comparacion.html#comparaci%C3%B3n-ajustada-por-covariables"><i class="fa fa-check"></i><b>5.8</b> Comparación ajustada por covariables</a></li>
+<li class="chapter" data-level="5.9" data-path="comparacion.html"><a href="comparacion.html#conclusi%C3%B3n-parcial-del-objetivo-2"><i class="fa fa-check"></i><b>5.9</b> Conclusión parcial del objetivo 2</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="anova.html"><a href="anova.html"><i class="fa fa-check"></i><b>6</b> Resistencia según las etapas de curado</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="anova.html"><a href="anova.html#hip%C3%B3tesis-1"><i class="fa fa-check"></i><b>6.1</b> Hipótesis</a></li>
+<li class="chapter" data-level="6.2" data-path="anova.html"><a href="anova.html#descripci%C3%B3n-por-etapa"><i class="fa fa-check"></i><b>6.2</b> Descripción por etapa</a></li>
+<li class="chapter" data-level="6.3" data-path="anova.html"><a href="anova.html#supuestos-del-anova"><i class="fa fa-check"></i><b>6.3</b> Supuestos del ANOVA</a></li>
+<li class="chapter" data-level="6.4" data-path="anova.html"><a href="anova.html#anova-1"><i class="fa fa-check"></i><b>6.4</b> ANOVA</a></li>
+<li class="chapter" data-level="6.5" data-path="anova.html"><a href="anova.html#pruebas-post-hoc"><i class="fa fa-check"></i><b>6.5</b> Pruebas post-hoc</a></li>
+<li class="chapter" data-level="6.6" data-path="anova.html"><a href="anova.html#correcci%C3%B3n-por-mezclas-repetidas-1"><i class="fa fa-check"></i><b>6.6</b> Corrección por mezclas repetidas</a></li>
+<li class="chapter" data-level="6.7" data-path="anova.html"><a href="anova.html#depende-el-efecto-de-la-ceniza-de-la-etapa-de-curado"><i class="fa fa-check"></i><b>6.7</b> ¿Depende el efecto de la ceniza de la etapa de curado?</a></li>
+<li class="chapter" data-level="6.8" data-path="anova.html"><a href="anova.html#interacci%C3%B3n-ajustada-por-covariables"><i class="fa fa-check"></i><b>6.8</b> Interacción ajustada por covariables</a></li>
+<li class="chapter" data-level="6.9" data-path="anova.html"><a href="anova.html#conclusi%C3%B3n-parcial-del-objetivo-3"><i class="fa fa-check"></i><b>6.9</b> Conclusión parcial del objetivo 3</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="correlacion.html"><a href="correlacion.html"><i class="fa fa-check"></i><b>7</b> Correlación entre ceniza volante y resistencia</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="correlacion.html"><a href="correlacion.html#hip%C3%B3tesis-2"><i class="fa fa-check"></i><b>7.1</b> Hipótesis</a></li>
+<li class="chapter" data-level="7.2" data-path="correlacion.html"><a href="correlacion.html#verificaci%C3%B3n-de-supuestos-1"><i class="fa fa-check"></i><b>7.2</b> Verificación de supuestos</a></li>
+<li class="chapter" data-level="7.3" data-path="correlacion.html"><a href="correlacion.html#visualizaci%C3%B3n"><i class="fa fa-check"></i><b>7.3</b> Visualización</a></li>
+<li class="chapter" data-level="7.4" data-path="correlacion.html"><a href="correlacion.html#correlaci%C3%B3n-global"><i class="fa fa-check"></i><b>7.4</b> Correlación global</a></li>
+<li class="chapter" data-level="7.5" data-path="correlacion.html"><a href="correlacion.html#correlaci%C3%B3n-solo-en-mezclas-con-ceniza"><i class="fa fa-check"></i><b>7.5</b> Correlación solo en mezclas con ceniza</a></li>
+<li class="chapter" data-level="7.6" data-path="correlacion.html"><a href="correlacion.html#correlaci%C3%B3n-a-nivel-de-mezcla"><i class="fa fa-check"></i><b>7.6</b> Correlación a nivel de mezcla</a></li>
+<li class="chapter" data-level="7.7" data-path="correlacion.html"><a href="correlacion.html#correlaci%C3%B3n-por-etapa-de-curado"><i class="fa fa-check"></i><b>7.7</b> Correlación por etapa de curado</a></li>
+<li class="chapter" data-level="7.8" data-path="correlacion.html"><a href="correlacion.html#correlaci%C3%B3n-parcial"><i class="fa fa-check"></i><b>7.8</b> Correlación parcial</a></li>
+<li class="chapter" data-level="7.9" data-path="correlacion.html"><a href="correlacion.html#matriz-de-correlaciones-con-las-variables-clave"><i class="fa fa-check"></i><b>7.9</b> Matriz de correlaciones con las variables clave</a></li>
+<li class="chapter" data-level="7.10" data-path="correlacion.html"><a href="correlacion.html#conclusi%C3%B3n-parcial-del-objetivo-4"><i class="fa fa-check"></i><b>7.10</b> Conclusión parcial del objetivo 4</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="rlm.html"><a href="rlm.html"><i class="fa fa-check"></i><b>8</b> Modelo de regresión lineal múltiple</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="rlm.html"><a href="rlm.html#datos-variable-respuesta-y-variable-cualitativa"><i class="fa fa-check"></i><b>8.1</b> Datos, variable respuesta y variable cualitativa</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="rlm.html"><a href="rlm.html#variables-dummy"><i class="fa fa-check"></i><b>8.1.1</b> Variables dummy</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="rlm.html"><a href="rlm.html#an%C3%A1lisis-de-multicolinealidad"><i class="fa fa-check"></i><b>8.2</b> Análisis de multicolinealidad</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="rlm.html"><a href="rlm.html#correlaci%C3%B3n-entre-los-predictores"><i class="fa fa-check"></i><b>8.2.1</b> Correlación entre los predictores</a></li>
+<li class="chapter" data-level="8.2.2" data-path="rlm.html"><a href="rlm.html#modelo-inicial-con-todas-las-variables-posibles"><i class="fa fa-check"></i><b>8.2.2</b> Modelo inicial con todas las variables posibles</a></li>
+<li class="chapter" data-level="8.2.3" data-path="rlm.html"><a href="rlm.html#modelo-con-las-variables-depuradas"><i class="fa fa-check"></i><b>8.2.3</b> Modelo con las variables depuradas</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="rlm.html"><a href="rlm.html#modelo-completo-y-supuestos-de-los-errores"><i class="fa fa-check"></i><b>8.3</b> Modelo completo y supuestos de los errores</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="rlm.html"><a href="rlm.html#ajuste-en-la-escala-original"><i class="fa fa-check"></i><b>8.3.1</b> Ajuste en la escala original</a></li>
+<li class="chapter" data-level="8.3.2" data-path="rlm.html"><a href="rlm.html#supuestos-de-los-errores"><i class="fa fa-check"></i><b>8.3.2</b> Supuestos de los errores</a></li>
+<li class="chapter" data-level="8.3.3" data-path="rlm.html"><a href="rlm.html#elecci%C3%B3n-de-la-transformaci%C3%B3n"><i class="fa fa-check"></i><b>8.3.3</b> Elección de la transformación</a></li>
+<li class="chapter" data-level="8.3.4" data-path="rlm.html"><a href="rlm.html#modelo-completo-en-la-escala-de-la-ra%C3%ADz-cuadrada"><i class="fa fa-check"></i><b>8.3.4</b> Modelo completo en la escala de la raíz cuadrada</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="rlm.html"><a href="rlm.html#selecci%C3%B3n-de-variables-todas-las-regresiones-posibles-con-aic"><i class="fa fa-check"></i><b>8.4</b> Selección de variables: todas las regresiones posibles con AIC</a></li>
+<li class="chapter" data-level="8.5" data-path="rlm.html"><a href="rlm.html#depende-el-efecto-de-la-ceniza-de-la-etapa-de-curado-1"><i class="fa fa-check"></i><b>8.5</b> ¿Depende el efecto de la ceniza de la etapa de curado?</a>
+<ul>
+<li class="chapter" data-level="8.5.1" data-path="rlm.html"><a href="rlm.html#coeficientes-e-inferencia"><i class="fa fa-check"></i><b>8.5.1</b> Coeficientes e inferencia</a></li>
+<li class="chapter" data-level="8.5.2" data-path="rlm.html"><a href="rlm.html#pendiente-de-la-ceniza-en-cada-etapa"><i class="fa fa-check"></i><b>8.5.2</b> Pendiente de la ceniza en cada etapa</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="rlm.html"><a href="rlm.html#supuestos-de-los-errores-del-modelo-final"><i class="fa fa-check"></i><b>8.6</b> Supuestos de los errores del modelo final</a>
+<ul>
+<li class="chapter" data-level="8.6.1" data-path="rlm.html"><a href="rlm.html#falta-de-linealidad-reset"><i class="fa fa-check"></i><b>8.6.1</b> Falta de linealidad (RESET)</a></li>
+<li class="chapter" data-level="8.6.2" data-path="rlm.html"><a href="rlm.html#inferencia-robusta-hc3-y-errores-agrupados-por-mezcla"><i class="fa fa-check"></i><b>8.6.2</b> Inferencia robusta: HC3 y errores agrupados por mezcla</a></li>
+<li class="chapter" data-level="8.6.3" data-path="rlm.html"><a href="rlm.html#observaciones-influyentes"><i class="fa fa-check"></i><b>8.6.3</b> Observaciones influyentes</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="rlm.html"><a href="rlm.html#interpretaci%C3%B3n-del-modelo-final"><i class="fa fa-check"></i><b>8.7</b> Interpretación del modelo final</a>
+<ul>
+<li class="chapter" data-level="8.7.1" data-path="rlm.html"><a href="rlm.html#interpretaci%C3%B3n-de-los-coeficientes"><i class="fa fa-check"></i><b>8.7.1</b> Interpretación de los coeficientes</a></li>
+<li class="chapter" data-level="8.7.2" data-path="rlm.html"><a href="rlm.html#retrotransformaci%C3%B3n-y-escenarios-en-mpa"><i class="fa fa-check"></i><b>8.7.2</b> Retrotransformación y escenarios en MPa</a></li>
+</ul></li>
+<li class="chapter" data-level="8.8" data-path="rlm.html"><a href="rlm.html#conclusi%C3%B3n-parcial-del-objetivo-5"><i class="fa fa-check"></i><b>8.8</b> Conclusión parcial del objetivo 5</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="conclusiones.html"><a href="conclusiones.html"><i class="fa fa-check"></i><b>9</b> Conclusiones</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="conclusiones.html"><a href="conclusiones.html#hallazgos-por-objetivo"><i class="fa fa-check"></i><b>9.1</b> Hallazgos por objetivo</a></li>
+<li class="chapter" data-level="9.2" data-path="conclusiones.html"><a href="conclusiones.html#respuesta-a-la-pregunta-de-investigaci%C3%B3n"><i class="fa fa-check"></i><b>9.2</b> Respuesta a la pregunta de investigación</a></li>
+<li class="chapter" data-level="9.3" data-path="conclusiones.html"><a href="conclusiones.html#limitaciones"><i class="fa fa-check"></i><b>9.3</b> Limitaciones</a></li>
+<li class="chapter" data-level="9.4" data-path="conclusiones.html"><a href="conclusiones.html#recomendaciones-y-trabajo-futuro"><i class="fa fa-check"></i><b>9.4</b> Recomendaciones y trabajo futuro</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/Juan-cmp/Metodos-estadististicos-proyecto" target="blank">Repositorio en GitHub</a></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con Bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Análisis estadístico del efecto de la ceniza volante sobre la resistencia del concreto</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="correlacion" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">Capítulo 7</span> Correlación entre ceniza volante y resistencia<a href="correlacion.html#correlacion" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Este capítulo desarrolla el <strong>objetivo específico 4</strong>: determinar el grado de correlación entre la cantidad de ceniza volante dosificada y la resistencia alcanzada.</p>
+<blockquote>
+<p><strong>Nota metodológica.</strong> Como ninguna variable es normal (capítulo 3) y la ceniza tiene aproximadamente 55% de ceros, se usa la correlación de <strong>Spearman</strong> (basada en rangos) como medida principal y la de Pearson como referencia.</p>
+</blockquote>
+<div id="hipótesis-2" class="section level2 hasAnchor" number="7.1">
+<h2><span class="header-section-number">7.1</span> Hipótesis<a href="correlacion.html#hip%C3%B3tesis-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Sea <span class="math inline">\(\rho_s\)</span> la correlación de Spearman entre <code>ceniza</code> y <code>resistencia</code>.</p>
+<p><span class="math display">\[H_0: \rho_s = 0 \qquad \text{vs.} \qquad H_1: \rho_s \neq 0\]</span></p>
+</div>
+<div id="verificación-de-supuestos-1" class="section level2 hasAnchor" number="7.2">
+<h2><span class="header-section-number">7.2</span> Verificación de supuestos<a href="correlacion.html#verificaci%C3%B3n-de-supuestos-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li><strong>Normalidad (para Pearson).</strong> <span class="math inline">\(H_0\)</span>: la variable es normal. Se usan los resultados del capítulo <a href="eda.html#eda">3</a>.</li>
+<li><strong>Relación monótona (para Spearman).</strong> Se evalúa gráficamente con una curva suavizada y comparando Pearson con Spearman.</li>
+<li><strong>Independencia.</strong> <strong>No se cumple del todo</strong>: la ceniza es constante dentro de una mezcla, y una misma mezcla aporta varias filas (sección <a href="eda.html#estructura-mezclas">3.9.3</a>). El tamaño de muestra efectivo es menor que 1,030 y los p-valores a nivel de fila son optimistas; se contrasta con una correlación a nivel de mezcla.</li>
+</ul>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="correlacion.html#cb107-1" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>
+<span id="cb107-2"><a href="correlacion.html#cb107-2" tabindex="-1"></a>  <span class="fu">fila_sup</span>(<span class="st">&quot;Normalidad de ceniza&quot;</span>, <span class="st">&quot;Lilliefors&quot;</span>,</span>
+<span id="cb107-3"><a href="correlacion.html#cb107-3" tabindex="-1"></a>           <span class="st">&quot;ceniza es normal&quot;</span>, resultado_ceniza<span class="sc">$</span>p.value),</span>
+<span id="cb107-4"><a href="correlacion.html#cb107-4" tabindex="-1"></a>  <span class="fu">fila_sup</span>(<span class="st">&quot;Normalidad de resistencia&quot;</span>, <span class="st">&quot;Lilliefors&quot;</span>,</span>
+<span id="cb107-5"><a href="correlacion.html#cb107-5" tabindex="-1"></a>           <span class="st">&quot;resistencia es normal&quot;</span>, resultado_resistencia<span class="sc">$</span>p.value)</span>
+<span id="cb107-6"><a href="correlacion.html#cb107-6" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb107-7"><a href="correlacion.html#cb107-7" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Normalidad de las variables correlacionadas&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:corr-supuestos">Table 7.1: </span>Normalidad de las variables correlacionadas
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+supuesto
+</th>
+<th style="text-align:left;">
+prueba
+</th>
+<th style="text-align:left;">
+H0
+</th>
+<th style="text-align:right;">
+p_valor
+</th>
+<th style="text-align:left;">
+decision
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Normalidad de ceniza
+</td>
+<td style="text-align:left;">
+Lilliefors
+</td>
+<td style="text-align:left;">
+ceniza es normal
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:left;">
+Se rechaza H0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Normalidad de resistencia
+</td>
+<td style="text-align:left;">
+Lilliefors
+</td>
+<td style="text-align:left;">
+resistencia es normal
+</td>
+<td style="text-align:right;">
+0.0003
+</td>
+<td style="text-align:left;">
+Se rechaza H0
+</td>
+</tr>
+</tbody>
+</table>
+<p>Ambas variables rechazan la normalidad (la ceniza, además, tiene aproximadamente 55% de ceros), por lo que <strong>la correlación de Pearson no es la medida adecuada</strong> y la inferencia se basa en <strong>Spearman</strong>, que solo exige una relación monótona. Con tantos valores repetidos (ceros) hay empates, por lo que el p-valor se calcula de forma asintótica (<code>exact = FALSE</code>).</p>
+</div>
+<div id="visualización" class="section level2 hasAnchor" number="7.3">
+<h2><span class="header-section-number">7.3</span> Visualización<a href="correlacion.html#visualizaci%C3%B3n" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="correlacion.html#cb108-1" tabindex="-1"></a>df_fe <span class="sc">|&gt;</span></span>
+<span id="cb108-2"><a href="correlacion.html#cb108-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> ceniza, <span class="at">y =</span> resistencia)) <span class="sc">+</span></span>
+<span id="cb108-3"><a href="correlacion.html#cb108-3" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">color =</span> col_azul) <span class="sc">+</span></span>
+<span id="cb108-4"><a href="correlacion.html#cb108-4" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;loess&quot;</span>, <span class="at">color =</span> col_naranja, <span class="at">fill =</span> col_naranja, <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">se =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb108-5"><a href="correlacion.html#cb108-5" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb108-6"><a href="correlacion.html#cb108-6" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Ceniza volante vs. resistencia&quot;</span>,</span>
+<span id="cb108-7"><a href="correlacion.html#cb108-7" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Ceniza volante (kg/m³)&quot;</span>,</span>
+<span id="cb108-8"><a href="correlacion.html#cb108-8" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Resistencia (MPa)&quot;</span></span>
+<span id="cb108-9"><a href="correlacion.html#cb108-9" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb108-10"><a href="correlacion.html#cb108-10" tabindex="-1"></a>  <span class="fu">tema_libro</span>()</span></code></pre></div>
+<p><img src="Proyecto_Final_Metodos_Estadisticos_files/figure-html/corr-dispersion-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="correlación-global" class="section level2 hasAnchor" number="7.4">
+<h2><span class="header-section-number">7.4</span> Correlación global<a href="correlacion.html#correlaci%C3%B3n-global" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="correlacion.html#cb109-1" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb109-2"><a href="correlacion.html#cb109-2" tabindex="-1"></a>  <span class="at">metodo =</span> <span class="fu">c</span>(<span class="st">&quot;Pearson&quot;</span>, <span class="st">&quot;Spearman&quot;</span>),</span>
+<span id="cb109-3"><a href="correlacion.html#cb109-3" tabindex="-1"></a>  <span class="at">rho =</span> <span class="fu">c</span>(</span>
+<span id="cb109-4"><a href="correlacion.html#cb109-4" tabindex="-1"></a>    <span class="fu">cor</span>(df_fe<span class="sc">$</span>ceniza, df_fe<span class="sc">$</span>resistencia, <span class="at">method =</span> <span class="st">&quot;pearson&quot;</span>),</span>
+<span id="cb109-5"><a href="correlacion.html#cb109-5" tabindex="-1"></a>    <span class="fu">cor</span>(df_fe<span class="sc">$</span>ceniza, df_fe<span class="sc">$</span>resistencia, <span class="at">method =</span> <span class="st">&quot;spearman&quot;</span>)</span>
+<span id="cb109-6"><a href="correlacion.html#cb109-6" tabindex="-1"></a>  ),</span>
+<span id="cb109-7"><a href="correlacion.html#cb109-7" tabindex="-1"></a>  <span class="at">p_valor =</span> <span class="fu">c</span>(</span>
+<span id="cb109-8"><a href="correlacion.html#cb109-8" tabindex="-1"></a>    <span class="fu">cor.test</span>(df_fe<span class="sc">$</span>ceniza, df_fe<span class="sc">$</span>resistencia, <span class="at">method =</span> <span class="st">&quot;pearson&quot;</span>)<span class="sc">$</span>p.value,</span>
+<span id="cb109-9"><a href="correlacion.html#cb109-9" tabindex="-1"></a>    <span class="fu">cor.test</span>(df_fe<span class="sc">$</span>ceniza, df_fe<span class="sc">$</span>resistencia, <span class="at">method =</span> <span class="st">&quot;spearman&quot;</span>, <span class="at">exact =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>p.value</span>
+<span id="cb109-10"><a href="correlacion.html#cb109-10" tabindex="-1"></a>  )</span>
+<span id="cb109-11"><a href="correlacion.html#cb109-11" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb109-12"><a href="correlacion.html#cb109-12" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Correlación entre ceniza volante y resistencia (todas las mezclas)&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:corr-global">Table 7.2: </span>Correlación entre ceniza volante y resistencia (todas las mezclas)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+metodo
+</th>
+<th style="text-align:right;">
+rho
+</th>
+<th style="text-align:right;">
+p_valor
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Pearson
+</td>
+<td style="text-align:right;">
+-0.1058
+</td>
+<td style="text-align:right;">
+0.0007
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Spearman
+</td>
+<td style="text-align:right;">
+-0.0780
+</td>
+<td style="text-align:right;">
+0.0123
+</td>
+</tr>
+</tbody>
+</table>
+<p>La correlación global es débil (Spearman <span class="math inline">\(-0.08\)</span>, <span class="math inline">\(p = 0.012\)</span>; Pearson <span class="math inline">\(-0.11\)</span>), pero eso no significa que la ceniza no haga nada. El 55% de las mezclas tiene ceniza igual a 0, y las que sí la usan también tienen menos cemento y menos edad. Esos otros factores tapan la relación.</p>
+</div>
+<div id="correlación-solo-en-mezclas-con-ceniza" class="section level2 hasAnchor" number="7.5">
+<h2><span class="header-section-number">7.5</span> Correlación solo en mezclas con ceniza<a href="correlacion.html#correlaci%C3%B3n-solo-en-mezclas-con-ceniza" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="correlacion.html#cb110-1" tabindex="-1"></a>df_con_ceniza <span class="ot">&lt;-</span> df_fe <span class="sc">|&gt;</span> <span class="fu">filter</span>(ceniza <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb110-2"><a href="correlacion.html#cb110-2" tabindex="-1"></a></span>
+<span id="cb110-3"><a href="correlacion.html#cb110-3" tabindex="-1"></a><span class="fu">cor.test</span>(df_con_ceniza<span class="sc">$</span>ceniza, df_con_ceniza<span class="sc">$</span>resistencia,</span>
+<span id="cb110-4"><a href="correlacion.html#cb110-4" tabindex="-1"></a>         <span class="at">method =</span> <span class="st">&quot;spearman&quot;</span>, <span class="at">exact =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>## 
+##  Spearman&#39;s rank correlation rho
+## 
+## data:  df_con_ceniza$ceniza and df_con_ceniza$resistencia
+## S = 20118332, p-value = 0.000006024
+## alternative hypothesis: true rho is not equal to 0
+## sample estimates:
+##       rho 
+## -0.208346</code></pre>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="correlacion.html#cb112-1" tabindex="-1"></a>df_con_ceniza <span class="sc">|&gt;</span></span>
+<span id="cb112-2"><a href="correlacion.html#cb112-2" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> ceniza, <span class="at">y =</span> resistencia, <span class="at">color =</span> etapa_curado)) <span class="sc">+</span></span>
+<span id="cb112-3"><a href="correlacion.html#cb112-3" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb112-4"><a href="correlacion.html#cb112-4" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb112-5"><a href="correlacion.html#cb112-5" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> cols_etapa) <span class="sc">+</span></span>
+<span id="cb112-6"><a href="correlacion.html#cb112-6" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb112-7"><a href="correlacion.html#cb112-7" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Ceniza volante vs. resistencia (solo mezclas con ceniza)&quot;</span>,</span>
+<span id="cb112-8"><a href="correlacion.html#cb112-8" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Ceniza volante (kg/m³)&quot;</span>,</span>
+<span id="cb112-9"><a href="correlacion.html#cb112-9" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Resistencia (MPa)&quot;</span>,</span>
+<span id="cb112-10"><a href="correlacion.html#cb112-10" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">&quot;Etapa de curado&quot;</span></span>
+<span id="cb112-11"><a href="correlacion.html#cb112-11" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb112-12"><a href="correlacion.html#cb112-12" tabindex="-1"></a>  <span class="fu">tema_libro</span>()</span></code></pre></div>
+<p><img src="Proyecto_Final_Metodos_Estadisticos_files/figure-html/corr-con-ceniza-grafico-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<p>Entre las mezclas que sí usan ceniza la correlación es negativa y algo más fuerte (<span class="math inline">\(\rho = -0.21\)</span>, <span class="math inline">\(p &lt; 0.001\)</span>): a más ceniza, menos resistencia. El gráfico separa las etapas de curado y la tabla de la sección de etapas detalla cada una.</p>
+</div>
+<div id="correlación-a-nivel-de-mezcla" class="section level2 hasAnchor" number="7.6">
+<h2><span class="header-section-number">7.6</span> Correlación a nivel de mezcla<a href="correlacion.html#correlaci%C3%B3n-a-nivel-de-mezcla" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Para respetar la independencia se promedia la resistencia de cada mezcla (una observación por mezcla) y se correlaciona con su dosificación de ceniza. Es una verificación de sensibilidad, porque mezcla las edades.</p>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="correlacion.html#cb113-1" tabindex="-1"></a>df_mezcla <span class="ot">&lt;-</span> df_fe <span class="sc">|&gt;</span></span>
+<span id="cb113-2"><a href="correlacion.html#cb113-2" tabindex="-1"></a>  <span class="fu">group_by</span>(id_mezcla) <span class="sc">|&gt;</span></span>
+<span id="cb113-3"><a href="correlacion.html#cb113-3" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">ceniza =</span> <span class="fu">first</span>(ceniza), <span class="at">resistencia_media =</span> <span class="fu">mean</span>(resistencia), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>)</span>
+<span id="cb113-4"><a href="correlacion.html#cb113-4" tabindex="-1"></a></span>
+<span id="cb113-5"><a href="correlacion.html#cb113-5" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>
+<span id="cb113-6"><a href="correlacion.html#cb113-6" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb113-7"><a href="correlacion.html#cb113-7" tabindex="-1"></a>    <span class="at">conjunto =</span> <span class="st">&quot;Todas las mezclas&quot;</span>,</span>
+<span id="cb113-8"><a href="correlacion.html#cb113-8" tabindex="-1"></a>    <span class="at">n_mezclas =</span> <span class="fu">nrow</span>(df_mezcla),</span>
+<span id="cb113-9"><a href="correlacion.html#cb113-9" tabindex="-1"></a>    <span class="at">spearman =</span> <span class="fu">cor</span>(df_mezcla<span class="sc">$</span>ceniza, df_mezcla<span class="sc">$</span>resistencia_media, <span class="at">method =</span> <span class="st">&quot;spearman&quot;</span>),</span>
+<span id="cb113-10"><a href="correlacion.html#cb113-10" tabindex="-1"></a>    <span class="at">p_valor =</span> <span class="fu">cor.test</span>(df_mezcla<span class="sc">$</span>ceniza, df_mezcla<span class="sc">$</span>resistencia_media,</span>
+<span id="cb113-11"><a href="correlacion.html#cb113-11" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">&quot;spearman&quot;</span>, <span class="at">exact =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>p.value</span>
+<span id="cb113-12"><a href="correlacion.html#cb113-12" tabindex="-1"></a>  ),</span>
+<span id="cb113-13"><a href="correlacion.html#cb113-13" tabindex="-1"></a>  df_mezcla <span class="sc">|&gt;</span></span>
+<span id="cb113-14"><a href="correlacion.html#cb113-14" tabindex="-1"></a>    <span class="fu">filter</span>(ceniza <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb113-15"><a href="correlacion.html#cb113-15" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb113-16"><a href="correlacion.html#cb113-16" tabindex="-1"></a>      <span class="at">conjunto =</span> <span class="st">&quot;Solo mezclas con ceniza&quot;</span>,</span>
+<span id="cb113-17"><a href="correlacion.html#cb113-17" tabindex="-1"></a>      <span class="at">n_mezclas =</span> <span class="fu">n</span>(),</span>
+<span id="cb113-18"><a href="correlacion.html#cb113-18" tabindex="-1"></a>      <span class="at">spearman =</span> <span class="fu">cor</span>(ceniza, resistencia_media, <span class="at">method =</span> <span class="st">&quot;spearman&quot;</span>),</span>
+<span id="cb113-19"><a href="correlacion.html#cb113-19" tabindex="-1"></a>      <span class="at">p_valor =</span> <span class="fu">cor.test</span>(ceniza, resistencia_media, <span class="at">method =</span> <span class="st">&quot;spearman&quot;</span>, <span class="at">exact =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>p.value</span>
+<span id="cb113-20"><a href="correlacion.html#cb113-20" tabindex="-1"></a>    )</span>
+<span id="cb113-21"><a href="correlacion.html#cb113-21" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb113-22"><a href="correlacion.html#cb113-22" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Correlación de Spearman a nivel de mezcla&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:corr-mezcla">Table 7.3: </span>Correlación de Spearman a nivel de mezcla
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+conjunto
+</th>
+<th style="text-align:right;">
+n_mezclas
+</th>
+<th style="text-align:right;">
+spearman
+</th>
+<th style="text-align:right;">
+p_valor
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Todas las mezclas
+</td>
+<td style="text-align:right;">
+428
+</td>
+<td style="text-align:right;">
+-0.1441
+</td>
+<td style="text-align:right;">
+0.0028
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Solo mezclas con ceniza
+</td>
+<td style="text-align:right;">
+216
+</td>
+<td style="text-align:right;">
+-0.3796
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+</tr>
+</tbody>
+</table>
+<p>Con una sola observación por mezcla, la relación negativa se mantiene y es más fuerte: <span class="math inline">\(-0.14\)</span> con las 428 mezclas y <span class="math inline">\(-0.38\)</span> solo con las 216 que usan ceniza. No se debe a repetir mezclas.</p>
+</div>
+<div id="correlación-por-etapa-de-curado" class="section level2 hasAnchor" number="7.7">
+<h2><span class="header-section-number">7.7</span> Correlación por etapa de curado<a href="correlacion.html#correlaci%C3%B3n-por-etapa-de-curado" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="correlacion.html#cb114-1" tabindex="-1"></a>df_fe <span class="sc">|&gt;</span></span>
+<span id="cb114-2"><a href="correlacion.html#cb114-2" tabindex="-1"></a>  <span class="fu">group_by</span>(etapa_curado) <span class="sc">|&gt;</span></span>
+<span id="cb114-3"><a href="correlacion.html#cb114-3" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb114-4"><a href="correlacion.html#cb114-4" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb114-5"><a href="correlacion.html#cb114-5" tabindex="-1"></a>    <span class="at">spearman =</span> <span class="fu">cor</span>(ceniza, resistencia, <span class="at">method =</span> <span class="st">&quot;spearman&quot;</span>),</span>
+<span id="cb114-6"><a href="correlacion.html#cb114-6" tabindex="-1"></a>    <span class="at">p_valor =</span> <span class="fu">cor.test</span>(ceniza, resistencia, <span class="at">method =</span> <span class="st">&quot;spearman&quot;</span>, <span class="at">exact =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>p.value,</span>
+<span id="cb114-7"><a href="correlacion.html#cb114-7" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span></span>
+<span id="cb114-8"><a href="correlacion.html#cb114-8" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb114-9"><a href="correlacion.html#cb114-9" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Correlación de Spearman entre ceniza y resistencia por etapa&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:corr-por-etapa">Table 7.4: </span>Correlación de Spearman entre ceniza y resistencia por etapa
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+etapa_curado
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+spearman
+</th>
+<th style="text-align:right;">
+p_valor
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Temprano (&lt;= 7d)
+</td>
+<td style="text-align:right;">
+262
+</td>
+<td style="text-align:right;">
+-0.0013
+</td>
+<td style="text-align:right;">
+0.9833
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Estándar (14-28d)
+</td>
+<td style="text-align:right;">
+487
+</td>
+<td style="text-align:right;">
+-0.2477
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tardío (&gt; 28d)
+</td>
+<td style="text-align:right;">
+281
+</td>
+<td style="text-align:right;">
+-0.0435
+</td>
+<td style="text-align:right;">
+0.4681
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="correlación-parcial" class="section level2 hasAnchor" number="7.8">
+<h2><span class="header-section-number">7.8</span> Correlación parcial<a href="correlacion.html#correlaci%C3%B3n-parcial" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Para medir la asociación entre ceniza y resistencia <strong>descontando</strong> el efecto de la edad y de los demás ingredientes, se correlacionan los residuos de ambas variables tras regresarlas sobre esos controles.</p>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="correlacion.html#cb115-1" tabindex="-1"></a>controles <span class="ot">&lt;-</span> <span class="er">~</span> log_edad <span class="sc">+</span> cemento <span class="sc">+</span> escoria <span class="sc">+</span> agua <span class="sc">+</span> superplast</span>
+<span id="cb115-2"><a href="correlacion.html#cb115-2" tabindex="-1"></a></span>
+<span id="cb115-3"><a href="correlacion.html#cb115-3" tabindex="-1"></a>resid_resistencia <span class="ot">&lt;-</span> <span class="fu">resid</span>(<span class="fu">lm</span>(<span class="fu">update</span>(controles, resistencia <span class="sc">~</span> .), <span class="at">data =</span> df_fe))</span>
+<span id="cb115-4"><a href="correlacion.html#cb115-4" tabindex="-1"></a>resid_ceniza      <span class="ot">&lt;-</span> <span class="fu">resid</span>(<span class="fu">lm</span>(<span class="fu">update</span>(controles, ceniza <span class="sc">~</span> .), <span class="at">data =</span> df_fe))</span>
+<span id="cb115-5"><a href="correlacion.html#cb115-5" tabindex="-1"></a></span>
+<span id="cb115-6"><a href="correlacion.html#cb115-6" tabindex="-1"></a><span class="fu">cor.test</span>(resid_ceniza, resid_resistencia, <span class="at">method =</span> <span class="st">&quot;pearson&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+##  Pearson&#39;s product-moment correlation
+## 
+## data:  resid_ceniza and resid_resistencia
+## t = 11.368, df = 1028, p-value &lt; 0.00000000000000022
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.2787699 0.3873398
+## sample estimates:
+##       cor 
+## 0.3341629</code></pre>
+<p>Al descontar la edad y los demás ingredientes, la correlación pasa de <span class="math inline">\(-0.11\)</span> a <strong><span class="math inline">\(+0.33\)</span></strong> (IC 0.28 a 0.39). Cambia de signo: la ceniza se usa en mezclas con menos cemento y escoria y ensayadas más jóvenes, que son más débiles por otras razones. Una vez igualado eso, más ceniza va con más resistencia.</p>
+</div>
+<div id="matriz-de-correlaciones-con-las-variables-clave" class="section level2 hasAnchor" number="7.9">
+<h2><span class="header-section-number">7.9</span> Matriz de correlaciones con las variables clave<a href="correlacion.html#matriz-de-correlaciones-con-las-variables-clave" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="correlacion.html#cb117-1" tabindex="-1"></a>df_fe <span class="sc">|&gt;</span></span>
+<span id="cb117-2"><a href="correlacion.html#cb117-2" tabindex="-1"></a>  <span class="fu">select</span>(resistencia, ceniza, pct_ceniza_total, log_edad, cemento,</span>
+<span id="cb117-3"><a href="correlacion.html#cb117-3" tabindex="-1"></a>         escoria, agua, superplast, razon_agua_aglutinante) <span class="sc">|&gt;</span></span>
+<span id="cb117-4"><a href="correlacion.html#cb117-4" tabindex="-1"></a>  <span class="fu">cor</span>(<span class="at">method =</span> <span class="st">&quot;spearman&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb117-5"><a href="correlacion.html#cb117-5" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb117-6"><a href="correlacion.html#cb117-6" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Matriz de correlaciones de Spearman&quot;</span>, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:corr-matriz">Table 7.5: </span>Matriz de correlaciones de Spearman
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+resistencia
+</th>
+<th style="text-align:right;">
+ceniza
+</th>
+<th style="text-align:right;">
+pct_ceniza_total
+</th>
+<th style="text-align:right;">
+log_edad
+</th>
+<th style="text-align:right;">
+cemento
+</th>
+<th style="text-align:right;">
+escoria
+</th>
+<th style="text-align:right;">
+agua
+</th>
+<th style="text-align:right;">
+superplast
+</th>
+<th style="text-align:right;">
+razon_agua_aglutinante
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+resistencia
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+-0.08
+</td>
+<td style="text-align:right;">
+-0.12
+</td>
+<td style="text-align:right;">
+0.60
+</td>
+<td style="text-align:right;">
+0.48
+</td>
+<td style="text-align:right;">
+0.16
+</td>
+<td style="text-align:right;">
+-0.31
+</td>
+<td style="text-align:right;">
+0.35
+</td>
+<td style="text-align:right;">
+-0.61
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ceniza
+</td>
+<td style="text-align:right;">
+-0.08
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+0.98
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+-0.42
+</td>
+<td style="text-align:right;">
+-0.25
+</td>
+<td style="text-align:right;">
+-0.28
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+-0.11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pct_ceniza_total
+</td>
+<td style="text-align:right;">
+-0.12
+</td>
+<td style="text-align:right;">
+0.98
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+0.01
+</td>
+<td style="text-align:right;">
+-0.46
+</td>
+<td style="text-align:right;">
+-0.31
+</td>
+<td style="text-align:right;">
+-0.30
+</td>
+<td style="text-align:right;">
+0.44
+</td>
+<td style="text-align:right;">
+-0.03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+log_edad
+</td>
+<td style="text-align:right;">
+0.60
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.01
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+-0.02
+</td>
+<td style="text-align:right;">
+0.09
+</td>
+<td style="text-align:right;">
+-0.01
+</td>
+<td style="text-align:right;">
+0.05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cemento
+</td>
+<td style="text-align:right;">
+0.48
+</td>
+<td style="text-align:right;">
+-0.42
+</td>
+<td style="text-align:right;">
+-0.46
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+-0.25
+</td>
+<td style="text-align:right;">
+-0.09
+</td>
+<td style="text-align:right;">
+0.04
+</td>
+<td style="text-align:right;">
+-0.45
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+escoria
+</td>
+<td style="text-align:right;">
+0.16
+</td>
+<td style="text-align:right;">
+-0.25
+</td>
+<td style="text-align:right;">
+-0.31
+</td>
+<td style="text-align:right;">
+-0.02
+</td>
+<td style="text-align:right;">
+-0.25
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+0.05
+</td>
+<td style="text-align:right;">
+0.09
+</td>
+<td style="text-align:right;">
+-0.35
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+agua
+</td>
+<td style="text-align:right;">
+-0.31
+</td>
+<td style="text-align:right;">
+-0.28
+</td>
+<td style="text-align:right;">
+-0.30
+</td>
+<td style="text-align:right;">
+0.09
+</td>
+<td style="text-align:right;">
+-0.09
+</td>
+<td style="text-align:right;">
+0.05
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+-0.69
+</td>
+<td style="text-align:right;">
+0.58
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+superplast
+</td>
+<td style="text-align:right;">
+0.35
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+0.44
+</td>
+<td style="text-align:right;">
+-0.01
+</td>
+<td style="text-align:right;">
+0.04
+</td>
+<td style="text-align:right;">
+0.09
+</td>
+<td style="text-align:right;">
+-0.69
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+-0.61
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+razon_agua_aglutinante
+</td>
+<td style="text-align:right;">
+-0.61
+</td>
+<td style="text-align:right;">
+-0.11
+</td>
+<td style="text-align:right;">
+-0.03
+</td>
+<td style="text-align:right;">
+0.05
+</td>
+<td style="text-align:right;">
+-0.45
+</td>
+<td style="text-align:right;">
+-0.35
+</td>
+<td style="text-align:right;">
+0.58
+</td>
+<td style="text-align:right;">
+-0.61
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+</tr>
+</tbody>
+</table>
+<p>Las variables más asociadas con la resistencia son la razón agua/aglutinante (<span class="math inline">\(-0.61\)</span>), la edad (<code>log_edad</code>, <span class="math inline">\(0.60\)</span>) y el cemento (<span class="math inline">\(0.48\)</span>). La ceniza casi no se asocia con la resistencia (<span class="math inline">\(-0.08\)</span>), pero sí con otros ingredientes: menos cemento (<span class="math inline">\(-0.42\)</span>) y más superplastificante (<span class="math inline">\(0.45\)</span>). Además, <code>ceniza</code> y <code>pct_ceniza_total</code> son casi lo mismo (<span class="math inline">\(0.98\)</span>), por eso en el modelo se usa solo una.</p>
+</div>
+<div id="conclusión-parcial-del-objetivo-4" class="section level2 hasAnchor" number="7.10">
+<h2><span class="header-section-number">7.10</span> Conclusión parcial del objetivo 4<a href="correlacion.html#conclusi%C3%B3n-parcial-del-objetivo-4" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li><strong>Sin ajustar</strong>, la correlación entre ceniza y resistencia es débil y negativa (<span class="math inline">\(-0.08\)</span> con todas las mezclas, <span class="math inline">\(-0.21\)</span> solo con las que usan ceniza).</li>
+<li><strong>Ajustada</strong> por edad e ingredientes, es positiva (<span class="math inline">\(+0.33\)</span>).</li>
+<li>La relación cambia de signo porque la ceniza viaja junto con otras diferencias de receta. Una correlación débil aquí no significa que la ceniza no tenga efecto.</li>
+</ul>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="anova.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="rlm.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": false,
+    "twitter": false,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": null,
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

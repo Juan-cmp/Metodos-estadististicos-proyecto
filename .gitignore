@@ -17,3 +17,5 @@ $RECYCLE.BIN/
 _book
 _bookdown_files
 rsconnect
+# Guias de estudio (material personal, no versionar)
+guia_*.pdf
