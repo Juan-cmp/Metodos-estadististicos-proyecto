@@ -110,7 +110,9 @@ calidad_datos <- tibble(
 
 calidad_datos |>
   tabla_kbl("Calidad y estructura de los datos", digits = 0)
+```
 
+```{r calidad-duplicados}
 duplicados <- tibble(
   indicador = "Filas duplicadas",
   cantidad = sum(duplicated(df_clean))

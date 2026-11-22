@@ -23,7 +23,7 @@
 <meta name="author" content="Camilo Padilla &amp; Juan Campo" />
 
 
-<meta name="date" content="2026-11-21" />
+<meta name="date" content="2026-11-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -274,7 +274,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.7.1" data-path="rlm.html"><a href="rlm.html#interpretaci%C3%B3n-de-los-coeficientes"><i class="fa fa-check"></i><b>8.7.1</b> Interpretación de los coeficientes</a></li>
 <li class="chapter" data-level="8.7.2" data-path="rlm.html"><a href="rlm.html#retrotransformaci%C3%B3n-y-escenarios-en-mpa"><i class="fa fa-check"></i><b>8.7.2</b> Retrotransformación y escenarios en MPa</a></li>
 </ul></li>
-<li class="chapter" data-level="8.8" data-path="rlm.html"><a href="rlm.html#conclusi%C3%B3n-parcial-del-objetivo-5"><i class="fa fa-check"></i><b>8.8</b> Conclusión parcial del objetivo 5</a></li>
+<li class="chapter" data-level="8.8" data-path="rlm.html"><a href="rlm.html#el-modelo-final-c%C3%B3mo-se-ve"><i class="fa fa-check"></i><b>8.8</b> El modelo final: cómo se ve</a>
+<ul>
+<li class="chapter" data-level="8.8.1" data-path="rlm.html"><a href="rlm.html#ecuaci%C3%B3n-ajustada"><i class="fa fa-check"></i><b>8.8.1</b> Ecuación ajustada</a></li>
+<li class="chapter" data-level="8.8.2" data-path="rlm.html"><a href="rlm.html#las-tres-rectas-del-modelo"><i class="fa fa-check"></i><b>8.8.2</b> Las tres rectas del modelo</a></li>
+<li class="chapter" data-level="8.8.3" data-path="rlm.html"><a href="rlm.html#valores-observados-frente-a-predichos"><i class="fa fa-check"></i><b>8.8.3</b> Valores observados frente a predichos</a></li>
+</ul></li>
+<li class="chapter" data-level="8.9" data-path="rlm.html"><a href="rlm.html#conclusi%C3%B3n-parcial-del-objetivo-5"><i class="fa fa-check"></i><b>8.9</b> Conclusión parcial del objetivo 5</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="conclusiones.html"><a href="conclusiones.html"><i class="fa fa-check"></i><b>9</b> Conclusiones</a>
 <ul>
@@ -536,7 +542,7 @@ No se rechaza H0
 </table>
 <div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="anova.html#cb82-1" tabindex="-1"></a><span class="fu">qq_normal</span>(<span class="fu">residuals</span>(modelo_anova), <span class="st">&quot;Gráfico Q-Q: residuos del ANOVA&quot;</span>)</span></code></pre></div>
 <p><img src="Proyecto_Final_Metodos_Estadisticos_files/figure-html/anova-qq-residuos-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
-<p><strong>Decisión sobre la prueba.</strong> Homogeneidad de varianzas: no se rechaza H0, por lo que el ANOVA clásico y Tukey son adecuados (<span class="math inline">\(p 0.374\)</span>). Como la normalidad de los residuos se rechaza o es dudosa, los resultados se respaldan con Kruskal-Wallis.</p>
+<p><strong>Decisión sobre la prueba.</strong> Homogeneidad de varianzas: no se rechaza H0, por lo que el ANOVA clásico y Tukey son adecuados (<span class="math inline">\(p = 0.374\)</span>). Como la normalidad de los residuos se rechaza o es dudosa, los resultados se respaldan con Kruskal-Wallis.</p>
 </div>
 <div id="anova-1" class="section level2 hasAnchor" number="6.4">
 <h2><span class="header-section-number">6.4</span> ANOVA<a href="anova.html#anova-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -978,29 +984,211 @@ Se rechaza H0
 ## 2   1020 52036  2    997.06 9.7722 0.00006254 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="anova.html#cb105-1" tabindex="-1"></a><span class="fu">summary</span>(m_con_inter)<span class="sc">$</span>coefficients</span></code></pre></div>
-<pre><code>##                                         Estimate  Std. Error    t value
-## (Intercept)                          12.85635874 3.003854491   4.279954
-## ceniza                                0.05228905 0.008647629   6.046634
-## etapa_curadoEstándar (14-28d)        17.37219663 0.697314260  24.913009
-## etapa_curadoTardío (&gt; 28d)           26.94148153 0.768043866  35.078051
-## cemento                               0.11178018 0.002938278  38.042754
-## escoria                               0.08795370 0.003409712  25.795053
-## agua                                 -0.18495648 0.014951294 -12.370600
-## superplast                            0.07039318 0.059694029   1.179233
-## ceniza:etapa_curadoEstándar (14-28d) -0.01639220 0.009364107  -1.750536
-## ceniza:etapa_curadoTardío (&gt; 28d)     0.02257321 0.010547450   2.140158
-##                                                                                                                                                                                                                                            Pr(&gt;|t|)
-## (Intercept)                          0.000020453651387128191964110551781530489279248286038637161254882812500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-## ceniza                               0.000000002072608934343973243743727841170709780271863564848899841308593750000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-## etapa_curadoEstándar (14-28d)        0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000021616893332679659469296173934793614535010419785976409912109375000000000000000000000000000000000000
-## etapa_curadoTardío (&gt; 28d)           0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001799123754327980068178430284
-## cemento                              0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007418975
-## escoria                              0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000023348624252747862746915769038835719584312755614519119262695312500000000000000000000000000000
-## agua                                 0.000000000000000000000000000000007500944358241017572395958890041356426081620156764984130859375000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-## superplast                           0.238580315363282197127503536648873705416917800903320312500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-## ceniza:etapa_curadoEstándar (14-28d) 0.080326546525546660415528776866267435252666473388671875000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-## ceniza:etapa_curadoTardío (&gt; 28d)    0.032578695389627675138566331725087366066873073577880859375000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</code></pre>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="anova.html#cb105-1" tabindex="-1"></a>coef_inter <span class="ot">&lt;-</span> <span class="fu">summary</span>(m_con_inter)<span class="sc">$</span>coefficients</span>
+<span id="cb105-2"><a href="anova.html#cb105-2" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb105-3"><a href="anova.html#cb105-3" tabindex="-1"></a>  <span class="at">termino =</span> <span class="fu">rownames</span>(coef_inter),</span>
+<span id="cb105-4"><a href="anova.html#cb105-4" tabindex="-1"></a>  <span class="at">estimacion =</span> coef_inter[, <span class="st">&quot;Estimate&quot;</span>],</span>
+<span id="cb105-5"><a href="anova.html#cb105-5" tabindex="-1"></a>  <span class="at">error_est =</span> coef_inter[, <span class="st">&quot;Std. Error&quot;</span>],</span>
+<span id="cb105-6"><a href="anova.html#cb105-6" tabindex="-1"></a>  <span class="at">t =</span> coef_inter[, <span class="st">&quot;t value&quot;</span>],</span>
+<span id="cb105-7"><a href="anova.html#cb105-7" tabindex="-1"></a>  <span class="at">p_valor =</span> coef_inter[, <span class="st">&quot;Pr(&gt;|t|)&quot;</span>]</span>
+<span id="cb105-8"><a href="anova.html#cb105-8" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb105-9"><a href="anova.html#cb105-9" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Coeficientes del modelo con interacción ceniza x etapa (escala original, MPa)&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:anova-interaccion-coef">Table 6.6: </span>Coeficientes del modelo con interacción ceniza x etapa (escala original, MPa)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+termino
+</th>
+<th style="text-align:right;">
+estimacion
+</th>
+<th style="text-align:right;">
+error_est
+</th>
+<th style="text-align:right;">
+t
+</th>
+<th style="text-align:right;">
+p_valor
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+12.8564
+</td>
+<td style="text-align:right;">
+3.0039
+</td>
+<td style="text-align:right;">
+4.2800
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ceniza
+</td>
+<td style="text-align:right;">
+0.0523
+</td>
+<td style="text-align:right;">
+0.0086
+</td>
+<td style="text-align:right;">
+6.0466
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+etapa_curadoEstándar (14-28d)
+</td>
+<td style="text-align:right;">
+17.3722
+</td>
+<td style="text-align:right;">
+0.6973
+</td>
+<td style="text-align:right;">
+24.9130
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+etapa_curadoTardío (&gt; 28d)
+</td>
+<td style="text-align:right;">
+26.9415
+</td>
+<td style="text-align:right;">
+0.7680
+</td>
+<td style="text-align:right;">
+35.0781
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cemento
+</td>
+<td style="text-align:right;">
+0.1118
+</td>
+<td style="text-align:right;">
+0.0029
+</td>
+<td style="text-align:right;">
+38.0428
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+escoria
+</td>
+<td style="text-align:right;">
+0.0880
+</td>
+<td style="text-align:right;">
+0.0034
+</td>
+<td style="text-align:right;">
+25.7951
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+agua
+</td>
+<td style="text-align:right;">
+-0.1850
+</td>
+<td style="text-align:right;">
+0.0150
+</td>
+<td style="text-align:right;">
+-12.3706
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+superplast
+</td>
+<td style="text-align:right;">
+0.0704
+</td>
+<td style="text-align:right;">
+0.0597
+</td>
+<td style="text-align:right;">
+1.1792
+</td>
+<td style="text-align:right;">
+0.2386
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ceniza:etapa_curadoEstándar (14-28d)
+</td>
+<td style="text-align:right;">
+-0.0164
+</td>
+<td style="text-align:right;">
+0.0094
+</td>
+<td style="text-align:right;">
+-1.7505
+</td>
+<td style="text-align:right;">
+0.0803
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ceniza:etapa_curadoTardío (&gt; 28d)
+</td>
+<td style="text-align:right;">
+0.0226
+</td>
+<td style="text-align:right;">
+0.0105
+</td>
+<td style="text-align:right;">
+2.1402
+</td>
+<td style="text-align:right;">
+0.0326
+</td>
+</tr>
+</tbody>
+</table>
 <p>Al controlar por los ingredientes, la interacción es clara (<span class="math inline">\(p &lt; 0.001\)</span>). Cada kg/m³ de ceniza agregado, sin quitar cemento, aporta <strong>+0.052 MPa</strong> en la etapa temprana, <strong>+0.036</strong> en la estándar y <strong>+0.075</strong> en la tardía. Dicho en 100 kg/m³: +5.2, +3.6 y +7.5 MPa. La ceniza ayuda en las tres etapas, menos en la estándar y más en la tardía.</p>
 </div>
 <div id="conclusión-parcial-del-objetivo-3" class="section level2 hasAnchor" number="6.9">

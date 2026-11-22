@@ -194,7 +194,9 @@ m_completo <- lm(
 
 vif_tabla(m_completo) |>
   tabla_kbl("VIF del modelo depurado (ocho predictores)", digits = 2)
+```
 
+```{r rlm-icn-depurado}
 tibble(
   indicador = c("kappa(modelo)", "ICN exacto", "ICN con predictores estandarizados"),
   valor = c(kappa(m_completo), icn(m_completo), icn(m_completo, estandarizar = TRUE))
@@ -257,7 +259,7 @@ Con un nivel de significancia de $0.05$, Breusch-Pagan y los contrastes de norma
 
 El RESET y Durbin-Watson también rechazan; ambos se discuten más abajo, porque una transformación de la respuesta no los corrige.
 
-> **Sobre la independencia.** Durbin-Watson rechaza la independencia en todos los modelos (estadístico cercano a 1.4, autocorrelación positiva). No es un efecto temporal: las filas no tienen un orden temporal conocido. La causa es la estructura de los datos descrita en la sección \@ref(estructura-mezclas): las 1,030 filas corresponden a `r n_distinct(df_rlm$id_mezcla)` mezclas, y una misma mezcla se ensaya a varias edades, con filas consecutivas de la misma mezcla. Sus residuos están correlacionados. Esto no sesga los coeficientes, pero **subestima los errores estándar**, por lo que la inferencia del modelo final se corrige agrupando por mezcla.
+> **Sobre la independencia.** Durbin-Watson rechaza la independencia en todos los modelos (en este, $DW = `r round(unname(lmtest::dwtest(m_orig)$statistic), 2)`$, menor que 2: autocorrelación positiva). No es un efecto temporal: las filas no tienen un orden temporal conocido. La causa es la estructura de los datos descrita en la sección \@ref(estructura-mezclas): las 1,030 filas corresponden a `r n_distinct(df_rlm$id_mezcla)` mezclas, y una misma mezcla se ensaya a varias edades, con filas consecutivas de la misma mezcla. Sus residuos están correlacionados. Esto no sesga los coeficientes, pero **subestima los errores estándar**, por lo que la inferencia del modelo final se corrige agrupando por mezcla.
 
 ### Elección de la transformación
 
@@ -300,6 +302,45 @@ bind_rows(
   comparar_t(m_t_raiz, "raiz(y)")
 ) |>
   tabla_kbl("Comparación de transformaciones de la respuesta (T1-T3: terciles del valor ajustado)", digits = 4)
+```
+
+La tabla se entiende mejor mirando los residuos. A la izquierda de cada panel, los residuos frente al valor ajustado: un buen modelo muestra una nube pareja alrededor de 0. Abajo, la desviación estándar de los residuos en cada tercio del valor ajustado: barras parejas indican varianza constante.
+
+```{r rlm-residuos-transformaciones, fig.height=4.6}
+res_t <- bind_rows(
+  tibble(escala = "Resistencia original", ajustado = fitted(m_t_orig), residuo = resid(m_t_orig)),
+  tibble(escala = "Logaritmo", ajustado = fitted(m_t_log), residuo = resid(m_t_log)),
+  tibble(escala = "Raíz cuadrada", ajustado = fitted(m_t_raiz), residuo = resid(m_t_raiz))
+) |>
+  mutate(escala = factor(escala, levels = c("Resistencia original", "Logaritmo", "Raíz cuadrada")))
+
+ggplot(res_t, aes(ajustado, residuo)) +
+  geom_hline(yintercept = 0, color = "#0b0b0b", linewidth = 0.5) +
+  geom_point(color = col_azul, alpha = 0.45, size = 1.2) +
+  facet_wrap(~ escala, scales = "free") +
+  labs(title = "Residuos frente al valor ajustado, según la escala de la respuesta",
+       x = "Valor ajustado", y = "Residuo") +
+  tema_libro()
+```
+
+```{r rlm-terciles-transformaciones, fig.height=3.8}
+sd_t <- bind_rows(
+  tibble(escala = "Resistencia original", tercil = paste("Tercil", 1:3), sd = sd_terciles(m_t_orig)),
+  tibble(escala = "Logaritmo", tercil = paste("Tercil", 1:3), sd = sd_terciles(m_t_log)),
+  tibble(escala = "Raíz cuadrada", tercil = paste("Tercil", 1:3), sd = sd_terciles(m_t_raiz))
+) |>
+  mutate(escala = factor(escala, levels = c("Resistencia original", "Logaritmo", "Raíz cuadrada")))
+
+ggplot(sd_t, aes(tercil, sd, fill = escala)) +
+  geom_col(width = 0.7, show.legend = FALSE) +
+  geom_text(aes(label = sprintf("%.2f", sd)), vjust = -0.4, size = 3.2, color = "#52514e") +
+  scale_fill_manual(values = c(col_azul, col_naranja, col_azul_claro)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  facet_wrap(~ escala, scales = "free_y") +
+  labs(title = "Desviación estándar de los residuos por tercil del valor ajustado",
+       subtitle = "Barras parejas = varianza constante",
+       x = NULL, y = "Desviación estándar") +
+  tema_libro()
 ```
 
 - **Escala original:** la dispersión crece con el nivel (razón de desviaciones de `r round(max(sd_terciles(m_t_orig)) / min(sd_terciles(m_t_orig)), 2)`) y falla la normalidad.
@@ -402,7 +443,9 @@ tibble(
   valor = c(kappa(m_sel), icn(m_sel, estandarizar = TRUE))
 ) |>
   tabla_kbl("Número de condición del modelo seleccionado", digits = 2)
+```
 
+```{r rlm-vif-seleccion}
 vif_tabla(m_sel) |>
   tabla_kbl("VIF del modelo seleccionado", digits = 2)
 ```
@@ -539,14 +582,17 @@ bind_rows(
   resumen_modelo(m_amp, "Final + log_edad (solo sensibilidad)")
 ) |>
   tabla_kbl("Sensibilidad: efecto de la edad dentro de cada etapa", digits = 4)
+```
 
-tabla_robusta(m_amp, vcov_cluster(m_amp, df_rlm$id_mezcla),
-              gl = n_distinct(df_rlm$id_mezcla) - 1) |>
+```{r rlm-sensibilidad-ceniza}
+coef_amp <- tabla_robusta(m_amp, vcov_cluster(m_amp, df_rlm$id_mezcla),
+                          gl = n_distinct(df_rlm$id_mezcla) - 1)
+coef_amp |>
   filter(str_detect(termino, "ceniza")) |>
   tabla_kbl("Coeficientes de ceniza en el modelo ampliado (errores agrupados por mezcla)", digits = 5)
 ```
 
-Si la interacción ceniza × etapa sigue siendo significativa en el modelo ampliado, la conclusión sobre el efecto diferenciado de la ceniza no depende de la forma en que se codifica la edad. Que la etapa no capture toda la influencia de la edad es una limitación del modelo, aceptada porque el objetivo exige una variable cualitativa con dummies.
+Al agregar `log_edad`, los dos términos de interacción ceniza × etapa siguen siendo significativos con errores agrupados por mezcla ($p `r fmt_p(coef_amp$p_valor[coef_amp$termino == "ceniza:etapaEstandar"])`$ en la etapa estándar y $p `r fmt_p(coef_amp$p_valor[coef_amp$termino == "ceniza:etapaTardio"])`$ en la tardía). Por tanto, la conclusión sobre el efecto diferenciado de la ceniza no depende de la forma en que se codifica la edad. Que la etapa no capture toda la influencia de la edad es una limitación del modelo, aceptada porque el objetivo exige una variable cualitativa con dummies.
 
 ### Inferencia robusta: HC3 y errores agrupados por mezcla
 
@@ -599,7 +645,9 @@ tibble(
   valor = c(length(influyentes), max(cook), sum(hatvalues(modelo_final) > 2 * p_final / n_obs))
 ) |>
   tabla_kbl("Diagnóstico de influencia del modelo final", digits = 4)
+```
 
+```{r rlm-influencia-sensibilidad}
 # Sensibilidad: coeficientes sin las observaciones influyentes
 m_sin_infl <- update(modelo_final, data = df_rlm[-influyentes, ])
 
@@ -677,6 +725,96 @@ tab_esc |>
 La tabla permite responder en las unidades del problema si sustituir cemento por ceniza compromete la resistencia en cada etapa. Los escenarios suponen que el resto de ingredientes permanece en su valor medio y que `cemento` e `ceniza` se mueven dentro del rango observado.
 
 Con el modelo ajustado, **sustituir** 100 kg/m³ de cemento por ceniza reduce la resistencia en las tres etapas, y la pérdida es mayor en la etapa estándar y menor en la tardía, mientras que **agregar** ceniza sin quitar cemento la aumenta. La ceniza tiene un aporte positivo propio, pero ese aporte no alcanza a compensar la resistencia perdida al retirar cemento en el mismo volumen.
+
+## El modelo final: cómo se ve
+
+### Ecuación ajustada
+
+Con los coeficientes estimados, el modelo final en la escala de la raíz cuadrada es:
+
+```{r rlm-ecuacion, results='asis', echo=FALSE}
+b_f <- coef(modelo_final)
+num <- function(x) sprintf("%+.4f", x)
+comunes <- setdiff(names(b_f), c("(Intercept)", "ceniza", grep("etapa", names(b_f), value = TRUE)))
+txt_comunes <- paste0(num(b_f[comunes]), "\\,\\text{", comunes, "}", collapse = " ")
+
+cat("$$\\begin{aligned}\n",
+    "\\sqrt{\\widehat{\\text{Resistencia}}} &= ", sprintf("%.4f", b_f["(Intercept)"]), " ",
+    num(b_f["ceniza"]), "\\,\\text{ceniza} ", txt_comunes, " \\\\\n",
+    "&\\quad ", num(b_f["etapaEstandar"]), "\\,D_{Est} ", num(b_f["etapaTardio"]), "\\,D_{Tar} \\\\\n",
+    "&\\quad ", num(b_f["ceniza:etapaEstandar"]), "\\,(\\text{ceniza}\\times D_{Est}) ",
+    num(b_f["ceniza:etapaTardio"]), "\\,(\\text{ceniza}\\times D_{Tar})\n",
+    "\\end{aligned}$$\n", sep = "")
+```
+
+Como la etapa es una variable dummy, el modelo equivale a **tres ecuaciones**, una por etapa de curado. Todas comparten el efecto de cemento, escoria y agua; lo que cambia es el intercepto y la pendiente de la ceniza:
+
+```{r rlm-ecuaciones-etapa}
+ecuaciones <- tibble(
+  etapa = levels(df_rlm$etapa),
+  intercepto = b_f["(Intercept)"] + c(0, b_f["etapaEstandar"], b_f["etapaTardio"]),
+  pendiente_ceniza = b_f["ceniza"] + c(0, b_f["ceniza:etapaEstandar"], b_f["ceniza:etapaTardio"])
+)
+
+ecuaciones |>
+  tabla_kbl("Intercepto y pendiente de la ceniza en cada etapa (escala raiz de MPa)", digits = 4)
+```
+
+```{r rlm-ecuaciones-texto, results='asis', echo=FALSE}
+cat("$$\\begin{aligned}\n")
+for (i in seq_len(nrow(ecuaciones))) {
+  cat("\\text{", as.character(ecuaciones$etapa[i]), "}:\\quad \\sqrt{\\hat{y}} &= ",
+      sprintf("%.4f", ecuaciones$intercepto[i]), " ", num(ecuaciones$pendiente_ceniza[i]),
+      "\\,\\text{ceniza} ", txt_comunes, if (i < nrow(ecuaciones)) " \\\\\n" else "\n", sep = "")
+}
+cat("\\end{aligned}$$\n")
+```
+
+### Las tres rectas del modelo
+
+El gráfico muestra la resistencia predicha (en MPa, retrotransformada) en función de la ceniza para cada etapa, con cemento, escoria y agua en sus valores medios, sobre los datos observados. Las pendientes distintas son la interacción ceniza × etapa.
+
+```{r rlm-rectas-modelo, fig.height=5}
+malla <- expand_grid(
+  ceniza = seq(0, max(df_rlm$ceniza), length.out = 100),
+  etapa = factor(levels(df_rlm$etapa), levels = levels(df_rlm$etapa))
+) |>
+  mutate(cemento = mean(df_rlm$cemento), escoria = mean(df_rlm$escoria), agua = mean(df_rlm$agua))
+
+pr <- predict(modelo_final, newdata = malla, interval = "confidence")
+malla <- malla |>
+  mutate(ajuste = pr[, "fit"]^2, inf = pr[, "lwr"]^2, sup = pr[, "upr"]^2)
+
+ggplot() +
+  geom_point(data = df_rlm, aes(ceniza, resistencia, color = etapa), alpha = 0.3, size = 1.2) +
+  geom_ribbon(data = malla, aes(ceniza, ymin = inf, ymax = sup, fill = etapa), alpha = 0.2) +
+  geom_line(data = malla, aes(ceniza, ajuste, color = etapa), linewidth = 1.1) +
+  scale_color_manual(values = cols_etapa) +
+  scale_fill_manual(values = cols_etapa) +
+  labs(title = "Modelo final: resistencia predicha por etapa de curado",
+       subtitle = "Cemento, escoria y agua en sus medias; banda = IC del 95% de la mediana",
+       x = "Ceniza volante (kg/m³)", y = "Resistencia (MPa)") +
+  tema_libro()
+```
+
+### Valores observados frente a predichos
+
+```{r rlm-obs-pred, fig.height=5}
+df_op <- df_rlm |>
+  mutate(predicho = fitted(modelo_final)^2)
+
+ggplot(df_op, aes(predicho, resistencia, color = etapa)) +
+  geom_abline(slope = 1, intercept = 0, color = "#0b0b0b", linewidth = 0.5) +
+  geom_point(alpha = 0.55, size = 1.3) +
+  scale_color_manual(values = cols_etapa) +
+  coord_equal() +
+  labs(title = "Resistencia observada frente a la predicha",
+       subtitle = "Los puntos sobre la diagonal son predicciones perfectas",
+       x = "Resistencia predicha (MPa)", y = "Resistencia observada (MPa)") +
+  tema_libro()
+```
+
+La correlación al cuadrado entre la resistencia observada y la predicha (ya en MPa) es `r round(cor(df_op$resistencia, df_op$predicho)^2, 3)`, y el error típico de predicción es de unos `r round(sqrt(mean((df_op$resistencia - df_op$predicho)^2)), 1)` MPa.
 
 ## Conclusión parcial del objetivo 5
 

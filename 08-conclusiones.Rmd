@@ -14,7 +14,7 @@
 
 - **El tiempo de curado es lo que más pesa.** Pasar de la etapa temprana a la tardía sube la resistencia en unos 26 MPa.
 - **La ceniza no tiene un efecto único: depende de cómo se use y de la edad.**
-  - Si se **agrega** ceniza sin quitar cemento, la resistencia sube (entre +4 y +10 MPa por 100 kg/m³, según la etapa), sobre todo a edad tardía.
+  - Si se **agrega** ceniza sin quitar cemento, la resistencia sube (entre +4 y +10 MPa por 100 kg/m³, según la etapa), sobre todo a edad tardía. Estas cifras vienen del modelo final del capítulo \@ref(rlm), en escala raíz y retrotransformado. El modelo exploratorio del capítulo \@ref(anova), en escala original, da valores parecidos (+3.6 a +7.5 MPa) con el mismo patrón: la menor ganancia en la etapa estándar y la mayor en la tardía.
   - Si la ceniza **sustituye** cemento, la resistencia baja: cerca de **21%** menos en las etapas temprana y estándar y cerca de **7%** menos en la tardía. Con edades largas la pérdida casi se compensa.
 - **La comparación directa entre mezclas con y sin ceniza engaña.** Las mezclas con ceniza usan menos cemento y escoria y se ensayaron más jóvenes. Por eso la diferencia cruda no mide el efecto de la ceniza.
 

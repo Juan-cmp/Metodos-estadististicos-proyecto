@@ -141,6 +141,6 @@ tabla_robusta <- function(m, V, gl) {
 
 # p-valor formateado para usar en el texto
 fmt_p <- function(p) {
-  ifelse(p < 0.001, "< 0.001", formatC(p, format = "f", digits = 3))
+  ifelse(p < 0.001, "< 0.001", paste("=", formatC(p, format = "f", digits = 3)))
 }
 ```

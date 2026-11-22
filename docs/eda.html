@@ -23,7 +23,7 @@
 <meta name="author" content="Camilo Padilla &amp; Juan Campo" />
 
 
-<meta name="date" content="2026-11-21" />
+<meta name="date" content="2026-11-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -274,7 +274,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.7.1" data-path="rlm.html"><a href="rlm.html#interpretaci%C3%B3n-de-los-coeficientes"><i class="fa fa-check"></i><b>8.7.1</b> Interpretación de los coeficientes</a></li>
 <li class="chapter" data-level="8.7.2" data-path="rlm.html"><a href="rlm.html#retrotransformaci%C3%B3n-y-escenarios-en-mpa"><i class="fa fa-check"></i><b>8.7.2</b> Retrotransformación y escenarios en MPa</a></li>
 </ul></li>
-<li class="chapter" data-level="8.8" data-path="rlm.html"><a href="rlm.html#conclusi%C3%B3n-parcial-del-objetivo-5"><i class="fa fa-check"></i><b>8.8</b> Conclusión parcial del objetivo 5</a></li>
+<li class="chapter" data-level="8.8" data-path="rlm.html"><a href="rlm.html#el-modelo-final-c%C3%B3mo-se-ve"><i class="fa fa-check"></i><b>8.8</b> El modelo final: cómo se ve</a>
+<ul>
+<li class="chapter" data-level="8.8.1" data-path="rlm.html"><a href="rlm.html#ecuaci%C3%B3n-ajustada"><i class="fa fa-check"></i><b>8.8.1</b> Ecuación ajustada</a></li>
+<li class="chapter" data-level="8.8.2" data-path="rlm.html"><a href="rlm.html#las-tres-rectas-del-modelo"><i class="fa fa-check"></i><b>8.8.2</b> Las tres rectas del modelo</a></li>
+<li class="chapter" data-level="8.8.3" data-path="rlm.html"><a href="rlm.html#valores-observados-frente-a-predichos"><i class="fa fa-check"></i><b>8.8.3</b> Valores observados frente a predichos</a></li>
+</ul></li>
+<li class="chapter" data-level="8.9" data-path="rlm.html"><a href="rlm.html#conclusi%C3%B3n-parcial-del-objetivo-5"><i class="fa fa-check"></i><b>8.9</b> Conclusión parcial del objetivo 5</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="conclusiones.html"><a href="conclusiones.html"><i class="fa fa-check"></i><b>9</b> Conclusiones</a>
 <ul>
@@ -770,7 +776,7 @@ double
 <span id="cb6-7"><a href="eda.html#cb6-7" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Filas duplicadas del conjunto de datos&quot;</span>)</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:calidad-datos">Table 3.2: </span>Filas duplicadas del conjunto de datos
+<span id="tab:calidad-duplicados">Table 3.3: </span>Filas duplicadas del conjunto de datos
 </caption>
 <thead>
 <tr>
@@ -822,7 +828,7 @@ Filas duplicadas
 <span id="cb7-24"><a href="eda.html#cb7-24" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Estadisticas descriptivas de las nueve variables&quot;</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:tabla-descriptiva">Table 3.3: </span>Estadisticas descriptivas de las nueve variables
+<span id="tab:tabla-descriptiva">Table 3.4: </span>Estadisticas descriptivas de las nueve variables
 </caption>
 <thead>
 <tr>
@@ -1335,7 +1341,7 @@ la resistencia muestra una distribución con forma parecida a una <strong>simét
 <span id="cb10-22"><a href="eda.html#cb10-22" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Estadisticas descriptivas de ceniza volante y edad&quot;</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-4">Table 3.4: </span>Estadisticas descriptivas de ceniza volante y edad
+<span id="tab:unnamed-chunk-4">Table 3.5: </span>Estadisticas descriptivas de ceniza volante y edad
 </caption>
 <thead>
 <tr>
@@ -1652,7 +1658,7 @@ En lugar de analizar los kilos sueltos de cada material, se crearon dos indicado
 <span id="cb25-25"><a href="eda.html#cb25-25" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Estadisticas descriptivas de las nuevas variables numericas&quot;</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:tabla-nuevas-variables-numericas">Table 3.5: </span>Estadisticas descriptivas de las nuevas variables numericas
+<span id="tab:tabla-nuevas-variables-numericas">Table 3.6: </span>Estadisticas descriptivas de las nuevas variables numericas
 </caption>
 <thead>
 <tr>
@@ -1852,7 +1858,7 @@ razon_agua_cementante
 <span id="cb26-17"><a href="eda.html#cb26-17" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Frecuencias de las nuevas variables categoricas&quot;</span>)</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:tabla-nuevas-variables-categoricas">Table 3.6: </span>Frecuencias de las nuevas variables categoricas
+<span id="tab:tabla-nuevas-variables-categoricas">Table 3.7: </span>Frecuencias de las nuevas variables categoricas
 </caption>
 <thead>
 <tr>
@@ -2007,7 +2013,7 @@ Con superplastificante
 <span id="cb27-21"><a href="eda.html#cb27-21" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Mezclas distintas frente a ensayos&quot;</span>, <span class="at">digits =</span> <span class="dv">0</span>)</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:tabla-estructura-mezclas">Table 3.7: </span>Mezclas distintas frente a ensayos
+<span id="tab:tabla-estructura-mezclas">Table 3.8: </span>Mezclas distintas frente a ensayos
 </caption>
 <thead>
 <tr>
@@ -2245,7 +2251,7 @@ Máximo de filas de una misma mezcla
 <span id="cb55-39"><a href="eda.html#cb55-39" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Resumen de las pruebas de normalidad de Lilliefors&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:tabla-pruebas-normalidad">Table 3.8: </span>Resumen de las pruebas de normalidad de Lilliefors
+<span id="tab:tabla-pruebas-normalidad">Table 3.9: </span>Resumen de las pruebas de normalidad de Lilliefors
 </caption>
 <thead>
 <tr>

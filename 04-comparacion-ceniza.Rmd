@@ -155,7 +155,9 @@ bind_rows(
            "Var(error) es constante", lmtest::bptest(modelo_ajustado)$p.value)
 ) |>
   tabla_kbl("Supuestos de los errores del modelo ajustado (escala original)", digits = 4)
+```
 
+```{r comp-vif-ajustado}
 car::vif(modelo_ajustado) |>
   enframe(name = "variable", value = "VIF") |>
   tabla_kbl("VIF del modelo ajustado (problema si VIF > 5)", digits = 2)

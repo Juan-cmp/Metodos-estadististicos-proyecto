@@ -195,7 +195,18 @@ m_con_inter <- lm(
 )
 
 anova(m_sin_inter, m_con_inter)
-summary(m_con_inter)$coefficients
+```
+
+```{r anova-interaccion-coef}
+coef_inter <- summary(m_con_inter)$coefficients
+tibble(
+  termino = rownames(coef_inter),
+  estimacion = coef_inter[, "Estimate"],
+  error_est = coef_inter[, "Std. Error"],
+  t = coef_inter[, "t value"],
+  p_valor = coef_inter[, "Pr(>|t|)"]
+) |>
+  tabla_kbl("Coeficientes del modelo con interacción ceniza x etapa (escala original, MPa)", digits = 4)
 ```
 
 Al controlar por los ingredientes, la interacción es clara ($p < 0.001$). Cada kg/m³ de ceniza agregado, sin quitar cemento, aporta **+0.052 MPa** en la etapa temprana, **+0.036** en la estándar y **+0.075** en la tardía. Dicho en 100 kg/m³: +5.2, +3.6 y +7.5 MPa. La ceniza ayuda en las tres etapas, menos en la estándar y más en la tardía.
