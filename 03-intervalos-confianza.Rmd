@@ -59,6 +59,26 @@ ic_resistencia <- tibble(
 tabla_kbl(ic_resistencia, "IC del 95% para la resistencia media (MPa)")
 ```
 
+```{r ic-resistencia-grafico, fig.height=3.2}
+ic_resistencia |>
+  mutate(
+    metodo = c("t de Student", "Bootstrap por filas", "Bootstrap por mezclas"),
+    metodo = factor(metodo, levels = rev(metodo)),
+    corrige = metodo == "Bootstrap por mezclas"
+  ) |>
+  ggplot(aes(x = media, y = metodo, color = corrige)) +
+  geom_errorbarh(aes(xmin = limite_inferior, xmax = limite_superior), height = 0.25, linewidth = 1) +
+  geom_point(size = 3) +
+  geom_text(aes(x = limite_superior, label = sprintf("%.1f – %.1f", limite_inferior, limite_superior)),
+            hjust = -0.15, size = 3.3, color = "#52514e") +
+  scale_color_manual(values = c("FALSE" = col_azul_claro, "TRUE" = col_azul), guide = "none") +
+  scale_x_continuous(expand = expansion(mult = c(0.05, 0.25))) +
+  labs(title = "IC del 95% para la resistencia media según el método",
+       subtitle = "El intervalo por mezclas es casi el doble de ancho",
+       x = "Resistencia media (MPa)", y = NULL) +
+  tema_libro()
+```
+
 La resistencia media de las mezclas es de unos **35.8 MPa**. El intervalo t la sitúa entre 34.8 y 36.8 MPa, pero es demasiado estrecho, porque las filas de una misma mezcla se parecen entre sí. El intervalo que sí respeta esa estructura (bootstrap por mezclas) va de **34.1 a 37.7 MPa**, casi el doble de ancho, y es el que conviene reportar.
 
 ## Ceniza volante

@@ -452,6 +452,35 @@ vif_tabla(m_sel) |>
 
 Todos los VIF son menores que 5: el modelo seleccionado no presenta multicolinealidad.
 
+El gráfico resume el proceso. Cada barra es el VIF de una variable (para la etapa, su VIF equivalente $GVIF^{1/gl}$), y la línea marca el umbral de 5:
+
+```{r rlm-vif-grafico, fig.height=5.5}
+vif_pasos <- bind_rows(
+  vif_tabla(m_redundante) |> mutate(paso = "1. Todas las variables"),
+  vif_tabla(m_completo) |> mutate(paso = "2. Sin redundantes"),
+  vif_tabla(m_sel) |> mutate(paso = "3. Modelo seleccionado")
+) |>
+  mutate(termino = factor(termino, levels = rev(unique(vif_tabla(m_redundante)$termino))))
+
+ggplot(vif_pasos, aes(VIF_equiv, termino, fill = problema)) +
+  geom_col(width = 0.7) +
+  geom_vline(xintercept = 5, color = "#e34948", linewidth = 0.7, linetype = "dashed") +
+  geom_text(aes(label = sprintf("%.1f", VIF_equiv)), hjust = -0.2, size = 3, color = "#52514e") +
+  scale_fill_manual(values = c("FALSE" = col_azul, "TRUE" = col_naranja),
+                    labels = c("FALSE" = "VIF ≤ 5", "TRUE" = "VIF > 5")) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.25))) +
+  coord_cartesian(clip = "off") +
+  facet_wrap(~ paso, nrow = 1) +
+  labs(title = "Factor de inflación de la varianza en cada paso",
+       subtitle = "Línea discontinua: umbral de multicolinealidad (VIF = 5)",
+       x = "VIF", y = NULL) +
+  tema_libro()
+```
+
+- **Paso 1:** con las variables redundantes, los VIF más altos son los de `ceniza`, `log_edad` y `usa_ceniza`, que son justamente las variables duplicadas (`usa_ceniza` repite a `ceniza` y `log_edad` repite a `etapa`).
+- **Paso 2:** al quitar las redundantes, la etapa queda cerca de 1. Los ingredientes siguen entre 5 y 8, porque en un metro cúbico se compensan entre sí.
+- **Paso 3:** la selección por AIC con la restricción $VIF \le 5$ deja todas las barras bajo el umbral.
+
 ## ¿Depende el efecto de la ceniza de la etapa de curado?
 
 La pregunta de investigación es si la ceniza reduce la resistencia temprana y la mejora con el curado. Eso corresponde a una **interacción** entre ceniza y etapa. Se contrasta con una prueba $F$ de modelos anidados:
@@ -630,6 +659,48 @@ car::linearHypothesis(
 
 Con los errores robustos, los coeficientes principales siguen siendo significativos y la interacción se mantiene, aunque con p-valores más grandes que los clásicos (lo esperado al corregir la dependencia). Las conclusiones del modelo final son por tanto robustas.
 
+El resultado central del modelo es la pendiente de la ceniza en cada etapa. El gráfico la muestra con su intervalo de confianza del 95%, con errores clásicos y con errores agrupados por mezcla:
+
+```{r rlm-pendientes-grafico, fig.height=3.8}
+pendiente_ic <- function(pesos, V, gl, etapa, tipo) {
+  b <- coef(modelo_final)
+  l <- setNames(rep(0, length(b)), names(b))
+  l[names(pesos)] <- pesos
+  est <- sum(l * b)
+  ee <- sqrt(drop(t(l) %*% V %*% l))
+  margen <- qt(0.975, gl) * ee
+  tibble(etapa = etapa, tipo = tipo,
+         inf = 100 * (est - margen), sup = 100 * (est + margen), est = 100 * est)
+}
+
+pesos_etapa <- list(
+  Temprano = c(ceniza = 1),
+  Estandar = c(ceniza = 1, "ceniza:etapaEstandar" = 1),
+  Tardio = c(ceniza = 1, "ceniza:etapaTardio" = 1)
+)
+
+pend <- bind_rows(
+  purrr::imap_dfr(pesos_etapa, ~ pendiente_ic(.x, vcov(modelo_final), modelo_final$df.residual, .y, "Errores clásicos")),
+  purrr::imap_dfr(pesos_etapa, ~ pendiente_ic(.x, V_cl, G_rlm - 1, .y, "Agrupados por mezcla"))
+) |>
+  mutate(etapa = factor(etapa, levels = c("Tardio", "Estandar", "Temprano"),
+                        labels = c("Tardío", "Estándar", "Temprano")),
+         tipo = factor(tipo, levels = c("Errores clásicos", "Agrupados por mezcla")))
+
+ggplot(pend, aes(est, etapa, color = tipo)) +
+  geom_vline(xintercept = 0, color = "#c3c2b7") +
+  geom_errorbarh(aes(xmin = inf, xmax = sup), height = 0.25, linewidth = 0.9,
+                 position = position_dodge(width = 0.5)) +
+  geom_point(size = 2.8, position = position_dodge(width = 0.5)) +
+  scale_color_manual(values = c(col_azul_claro, col_azul)) +
+  labs(title = "Efecto de 100 kg/m³ adicionales de ceniza, por etapa",
+       subtitle = "Cemento, escoria y agua constantes; IC del 95%",
+       x = "Cambio en raíz(resistencia)", y = NULL) +
+  tema_libro()
+```
+
+Ningún intervalo cruza el cero, ni siquiera con errores agrupados: la ceniza agregada aumenta la resistencia en las tres etapas. El efecto es menor en la etapa estándar y mayor en la tardía, y los intervalos de esas dos etapas no se solapan.
+
 ### Observaciones influyentes
 
 ```{r rlm-influencia}
@@ -640,7 +711,7 @@ influyentes <- which(cook > 4 / n_obs)
 
 tibble(
   indicador = c("Observaciones con distancia de Cook > 4/n",
-                "Distancia de Cook maxima",
+                "Distancia de Cook máxima",
                 "Observaciones con apalancamiento > 2p/n"),
   valor = c(length(influyentes), max(cook), sum(hatvalues(modelo_final) > 2 * p_final / n_obs))
 ) |>

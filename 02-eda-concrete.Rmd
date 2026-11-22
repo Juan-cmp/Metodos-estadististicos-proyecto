@@ -2,19 +2,19 @@
 
 En este capítulo analizamos las variables cuantitativas del dataset de Concrete Compressive Strength (Resistencia del Concreto).
 
-## Dataset y ficha tecnica
+## Dataset y ficha técnica
 
 - **Fuente:** UCI Machine Learning Repository (Donado por el Prof. I-Cheng Yeh, 2007).
 
 - **Área:** Ingeniería Civil / Ciencia de Materiales.
 
-- **Número de Observaciones (**N**):** 1,030 mezclas experimentales.
+- **Número de Observaciones (**N**):** 1,030 ensayos de resistencia (428 mezclas distintas, ver sección \@ref(estructura-mezclas)).
 
 - **Número de Variables:** 9 variables cuantitativas (8 independientes + 1 dependiente).
 
 - **Valores Faltantes:** Ninguno.
 
-## Importamos librerias
+## Importamos librerías
 
 ```{r}
 library(tidyverse) 
@@ -42,7 +42,7 @@ df<- Concrete_Data
 ```
 
 ## Diccionario de Variables
-Aclaramos que cada observacion representa un ensayo de laboratorio con una receta individual con ingredientes mezclados para hacer un metro cubico de cemento, el tiempo que se dejo reposar y la fuerza que resistio.
+Aclaramos que cada observación representa un ensayo de laboratorio: una receta con los ingredientes para un metro cúbico de concreto, el tiempo que se dejó curar y la fuerza que resistió.
 
 Todas las variables son cuantitativas continuas:
 
@@ -79,7 +79,7 @@ diccionario_variables |>
   tabla_kbl("Diccionario de variables del conjunto de datos")
 ```
 
-## Exploración del data set.
+## Exploración del dataset
 
 Resumimos los nombres de las variables
 ```{r}
@@ -148,12 +148,12 @@ tabla_descriptiva <- df_clean |>
   )
 
 tabla_descriptiva |>
-  tabla_kbl("Estadisticas descriptivas de las nueve variables", digits = 3)
+  tabla_kbl("Estadísticas descriptivas de las nueve variables", digits = 3)
 ```
 
 ### Exploración de la variable de respuesta
 
-```{r Concrete Compressive strenght}
+```{r eda-resistencia-descriptiva}
 tabla_resistencia <- df_clean %>% summarise(n = length(resistencia),
                  media = mean(resistencia),
                  sd = sd(resistencia),
@@ -167,18 +167,18 @@ tabla_resistencia <- df_clean %>% summarise(n = length(resistencia),
                  curtosis = kurtosis(resistencia))
 
 tabla_resistencia |>
-  tabla_kbl("Estadisticas descriptivas de la resistencia a la compresion", digits = 3)
+  tabla_kbl("Estadísticas descriptivas de la resistencia a la compresión", digits = 3)
 ```
-Vemos que las 1030 observaciones de mezclas de concreto, tienen una resistencia de comprension de 35.817 MPa, con una desviación estándar de 16.70 MPa. Además, el 50% de las mezclas tienen una resistencia igual o menor a 34.442 MPa. Además, se observa una mezcla de concreto experimental con resistencia de 85.59 MPa siendo esta la observación con mayor Resistencia final a la compresión y otras con la minima resistencia entre las observaciones con 2.33 MPa.
+Vemos que los 1030 ensayos tienen una resistencia media a la compresión de 35.82 MPa, con una desviación estándar de 16.71 MPa. El 50% de los ensayos tiene una resistencia igual o menor a 34.44 MPa. La resistencia máxima observada es de 82.60 MPa y la mínima de 2.33 MPa.
 
 ```{r}
 options(scipen = 999)
 hist_densidad(df_clean, resistencia, 2, "Distribución de la resistencia del concreto", "Resistencia")
 ```
 la resistencia muestra una distribución con forma parecida a una **simétrica con forma de campana**, centrada en torno a los $35\text{ MPa}$ y abarcando un rango desde los $2.3$ hasta los $82.6\text{ MPa}$. La curva de densidad sugiere un comportamiento cercano a la **distribución normal**, reflejando una muestra equilibrada que abarca desde concretos convencionales hasta mezclas de alto rendimiento.
-## Exploracion de las varibles independientes
+## Exploración de las variables independientes
 
-Creamos la siguiente tabla para observar de forma descriptiva las variables independientes que analizaremos y asi complementar el analisis de los boxplots con ella.
+Creamos la siguiente tabla para observar de forma descriptiva las variables independientes que analizaremos y así complementar el análisis de los boxplots con ella.
 
 ```{r}
 tabla_independientes <- df_clean |> select(ceniza, edad) |> 
@@ -202,7 +202,7 @@ tabla_independientes <- df_clean |> select(ceniza, edad) |>
     curtosis = round(kurtosis(valor), 3))
 
 tabla_independientes |>
-  tabla_kbl("Estadisticas descriptivas de ceniza volante y edad", digits = 3)
+  tabla_kbl("Estadísticas descriptivas de ceniza volante y edad", digits = 3)
   
 ```
 
@@ -246,7 +246,7 @@ hist_densidad(df_clean, edad, 14, "Distribución del Tiempo de Curado", "Tiempo 
 ```
 La distribución exhibe un marcado sesgo positivo con picos, concentrando la gran mayoría de las observaciones en los $28\text{ días}$ la cual es la edad estándar de diseño y en periodos tempranos ($\le 7\text{ días}$). La densidad decae drásticamente a partir de los $56\text{ días}$, extendiéndose en una cola larga hasta los $365\text{ días}$, lo cual evidencia una distribución **no normal** explicada por el diseño experimental enfocado en etapas normativas de obra.
 
-## Anlisis Univariado de las variables
+## Análisis univariado de las variables
 
 ```{r Boxplots-univariado-independientes, fig.height=12, fig.alt=12}
 
@@ -288,7 +288,7 @@ p3 <- df %>%
 ```{r}
 p1 
 ```
-### Analisis boxplot Fly Ash
+### Análisis del boxplot de ceniza volante
 
 Se observa una distribución atipica con alta dispersión de los datos,  además por la tabla anterior la media del uso de ceniza en las mezclas es $54.2 kg/m^3$ y una desviación estándar de $64 kg/m^3$
 
@@ -297,14 +297,14 @@ Sin embargo el diagrama de caja muestra que el 50% de los valores de ceniza coin
 ¿porque hay este comportamiento de los datos centrado en cero?
 esto se debe a que el conjunto de datos contiene mezclas de control convencionales elaboradas exclusivamente con cemento tradicional para servir de base comparativa. Por ende, la ceniza volante actúa como un componente opcional.
 
-### Analisis boxplot tiempo de curado
+### Análisis del boxplot de tiempo de curado
 ```{r}
 p2
 ```
 
 La variable $\text{Age}$ (días de curado) presenta una concentración en edades tempranas y unagran dispersión, reflejada en un tiempo promedio de curado de $45.7\text{ días}$ y una desviación estándar de $63.2\text{ días}$.
 
-El boxplot nos permite observar una distribución sesgada a la derecha, tambien el $50\%$ de las muestras fueron ensayadas a los $28\text{ días}$ o menos, el $25\%$ inferior corresponde a edades tempranas iguales o menores a $7\text{ días}$, y el $75\%$ central se concentra por debajo de los $56\text{ días}$. No obstante, el diagrama de caja evidencia una serie de **valores extremos** en la parte superior, con esayos a los $90$, $180$, $270$ y hasta un máximo de $365\text{ días}$ es decir un año completo de curado.
+El boxplot nos permite observar una distribución sesgada a la derecha: el $50\%$ de las muestras se ensayó a los $28\text{ días}$ o menos, el $25\%$ inferior corresponde a edades tempranas iguales o menores a $7\text{ días}$ y el $75\%$ se ensayó a los $56\text{ días}$ o menos. No obstante, el diagrama de caja evidencia una serie de **valores extremos** en la parte superior, con ensayos a los $90$, $180$, $270$ y hasta un máximo de $365\text{ días}$ es decir un año completo de curado.
 
 **¿Por qué existen valores atípicos tan elevados?**  
 En la práctica de la ingeniería civil, los ensayos estándar de control de calidad se realizan de forma rutinaria a los $7$, $14$ y principalmente a los $28\text{ días}$. Los tiempos de curado prolongados ($> 90\text{ días}$) son ensayos de investigación concebidos para evaluar la durabilidad a largo plazo y la reacción tardía de adiciones minerales como la ceniza volante.
@@ -320,7 +320,7 @@ Para la variable objetivo "resistencia", se observa un comportamiento mucho más
 
 El 50% de los datos tienen una resistencia menor o igual a $34.5\text{ MPa}$, mostrando una **notable cercanía con el promedio de resistencia de las mezclas de concreto ($35.8\text{ MPa}$)**. En cuanto al rango intercuartílico, el $25\%$ de las mezclas con menor resistencia registran valores iguales o inferiores a $23.7\text{ MPa}$, mientras que el $75\%$ de las muestras se sitúan por debajo de los $46.1\text{ MPa}$. Los bigotes abarcan un rango que va desde un mínimo de $2.3\text{ MPa}$ (concreto de muy baja resistencia) hasta aproximadamente los $80.0\text{ MPa}$. Se aprecian únicamente unos pocos **valores atípicos superiores** que alcanzan un máximo de $82.6\text{ MPa}$.  
 
-## Analisis Bivariado
+## Análisis bivariado
 
 ```{r, fig.width= 13, fig.height= 13}
 df_clean |>
@@ -333,7 +333,7 @@ df_clean |>
 ```
 
 
-### Creacion de nuevas variables
+### Creación de nuevas variables
 
 Para acercarnos a los objetivos propuestos crearemos nuevas variables las cuales son producto de la transformación y combinación de las variables originales:
 ```{r}
@@ -435,7 +435,7 @@ tabla_nuevas_numericas <- df_fe |>
   )
 
 tabla_nuevas_numericas |>
-  tabla_kbl("Estadisticas descriptivas de las nuevas variables numericas", digits = 3)
+  tabla_kbl("Estadísticas descriptivas de las nuevas variables numéricas", digits = 3)
 ```
 
 ```{r tabla-nuevas-variables-categoricas}

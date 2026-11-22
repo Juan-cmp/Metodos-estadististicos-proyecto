@@ -12,7 +12,7 @@ description: "Análisis estadístico del efecto de la ceniza volante y el tiempo
 
 # Presentación
 
-Este proyecto presenta un análisis estadístico de la resistencia a la compresión del concreto a partir del conjunto de datos **Concrete Compressive Strength**, compuesto por 1.030 mezclas experimentales.
+Este proyecto presenta un análisis estadístico de la resistencia a la compresión del concreto a partir del conjunto de datos **Concrete Compressive Strength**, compuesto por 1.030 ensayos de resistencia sobre 428 mezclas distintas (cada mezcla se ensaya a una o varias edades de curado).
 
 El estudio examina la relación entre la incorporación de ceniza volante, el tiempo de curado y la resistencia alcanzada por el concreto. Para ello, se aplican técnicas de análisis exploratorio, pruebas de hipótesis, comparación de grupos, análisis de correlación y modelación estadística, con el propósito de evaluar el comportamiento del material y la viabilidad del uso de la ceniza volante como sustituto parcial del cemento.
 

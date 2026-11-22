@@ -16,6 +16,34 @@
 - **La ceniza no tiene un efecto único: depende de cómo se use y de la edad.**
   - Si se **agrega** ceniza sin quitar cemento, la resistencia sube (entre +4 y +10 MPa por 100 kg/m³, según la etapa), sobre todo a edad tardía. Estas cifras vienen del modelo final del capítulo \@ref(rlm), en escala raíz y retrotransformado. El modelo exploratorio del capítulo \@ref(anova), en escala original, da valores parecidos (+3.6 a +7.5 MPa) con el mismo patrón: la menor ganancia en la etapa estándar y la mayor en la tardía.
   - Si la ceniza **sustituye** cemento, la resistencia baja: cerca de **21%** menos en las etapas temprana y estándar y cerca de **7%** menos en la tardía. Con edades largas la pérdida casi se compensa.
+```{r conclusiones-escenarios, echo=FALSE, fig.height=4.2}
+tab_esc |>
+  filter(escenario != "Control") |>
+  left_join(control, by = "etapa") |>
+  mutate(
+    diferencia = mediana_MPa - control_MPa,
+    pct = 100 * diferencia / control_MPa,
+    uso = if_else(str_starts(escenario, "Sustitucion"),
+                  "Sustituir 100 kg/m³ de cemento por ceniza",
+                  "Agregar 100 kg/m³ de ceniza sin quitar cemento"),
+    etapa = factor(etapa, levels = c("Temprano", "Estandar", "Tardio"),
+                   labels = c("Temprano (≤ 7 d)", "Estándar (14–28 d)", "Tardío (> 28 d)"))
+  ) |>
+  ggplot(aes(etapa, diferencia, fill = uso)) +
+  geom_hline(yintercept = 0, color = "#0b0b0b", linewidth = 0.4) +
+  geom_col(position = position_dodge(width = 0.75), width = 0.7) +
+  geom_text(aes(label = sprintf("%+.1f MPa\n(%+.0f%%)", diferencia, pct),
+                vjust = if_else(diferencia > 0, -0.25, 1.15)),
+            position = position_dodge(width = 0.75), size = 3.2, color = "#52514e", lineheight = 0.9) +
+  scale_fill_manual(values = c(col_azul, col_naranja)) +
+  scale_y_continuous(expand = expansion(mult = 0.3)) +
+  labs(title = "Cambio de la resistencia frente a una mezcla sin ceniza",
+       subtitle = "Modelo final; escoria y agua en sus medias",
+       x = NULL, y = "Diferencia en la resistencia (MPa)") +
+  tema_libro() +
+  guides(fill = guide_legend(nrow = 2))
+```
+
 - **La comparación directa entre mezclas con y sin ceniza engaña.** Las mezclas con ceniza usan menos cemento y escoria y se ensayaron más jóvenes. Por eso la diferencia cruda no mide el efecto de la ceniza.
 
 ## Limitaciones

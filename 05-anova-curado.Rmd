@@ -172,8 +172,12 @@ bind_rows(
            "Var(error) es constante", lmtest::bptest(modelo_dos_factores)$p.value)
 ) |>
   tabla_kbl("Verificación de supuestos del ANOVA de dos factores", digits = 4)
+```
 
-summary(modelo_dos_factores)
+El diseño es desbalanceado (las seis celdas tienen tamaños distintos), así que el ANOVA secuencial (Tipo I) dependería del orden en que entran los factores. Se usan sumas de cuadrados **Tipo II**, que evalúan cada efecto principal ajustado por el otro:
+
+```{r anova-dos-factores-tipo2}
+car::Anova(lm(resistencia ~ usa_ceniza * etapa_curado, data = df_fe), type = "II")
 ```
 
 Si estos supuestos fallan, la interacción debe confirmarse con un modelo que corrija la escala de la respuesta; ese análisis se hace en el capítulo \@ref(rlm), donde se transforma la respuesta y se verifican los supuestos de forma completa.

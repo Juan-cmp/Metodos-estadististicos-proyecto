@@ -160,23 +160,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="3" data-path="eda.html"><a href="eda.html"><i class="fa fa-check"></i><b>3</b> Análisis Exploratorio de Datos (EDA)</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="eda.html"><a href="eda.html#dataset-y-ficha-tecnica"><i class="fa fa-check"></i><b>3.1</b> Dataset y ficha tecnica</a></li>
-<li class="chapter" data-level="3.2" data-path="eda.html"><a href="eda.html#importamos-librerias"><i class="fa fa-check"></i><b>3.2</b> Importamos librerias</a></li>
+<li class="chapter" data-level="3.1" data-path="eda.html"><a href="eda.html#dataset-y-ficha-t%C3%A9cnica"><i class="fa fa-check"></i><b>3.1</b> Dataset y ficha técnica</a></li>
+<li class="chapter" data-level="3.2" data-path="eda.html"><a href="eda.html#importamos-librer%C3%ADas"><i class="fa fa-check"></i><b>3.2</b> Importamos librerías</a></li>
 <li class="chapter" data-level="3.3" data-path="eda.html"><a href="eda.html#carga-de-datos"><i class="fa fa-check"></i><b>3.3</b> Carga de Datos</a></li>
 <li class="chapter" data-level="3.4" data-path="eda.html"><a href="eda.html#diccionario-de-variables"><i class="fa fa-check"></i><b>3.4</b> Diccionario de Variables</a></li>
-<li class="chapter" data-level="3.5" data-path="eda.html"><a href="eda.html#exploraci%C3%B3n-del-data-set."><i class="fa fa-check"></i><b>3.5</b> Exploración del data set.</a></li>
+<li class="chapter" data-level="3.5" data-path="eda.html"><a href="eda.html#exploraci%C3%B3n-del-dataset"><i class="fa fa-check"></i><b>3.5</b> Exploración del dataset</a></li>
 <li class="chapter" data-level="3.6" data-path="eda.html"><a href="eda.html#calidad-y-estructura-de-los-datos"><i class="fa fa-check"></i><b>3.6</b> Calidad y estructura de los datos</a></li>
 <li class="chapter" data-level="3.7" data-path="eda.html"><a href="eda.html#tabla-descriptiva-de-las-variables"><i class="fa fa-check"></i><b>3.7</b> Tabla descriptiva de las variables</a>
 <ul>
 <li class="chapter" data-level="3.7.1" data-path="eda.html"><a href="eda.html#exploraci%C3%B3n-de-la-variable-de-respuesta"><i class="fa fa-check"></i><b>3.7.1</b> Exploración de la variable de respuesta</a></li>
 </ul></li>
-<li class="chapter" data-level="3.8" data-path="eda.html"><a href="eda.html#anlisis-univariado-de-las-variables"><i class="fa fa-check"></i><b>3.8</b> Anlisis Univariado de las variables</a>
+<li class="chapter" data-level="3.8" data-path="eda.html"><a href="eda.html#an%C3%A1lisis-univariado-de-las-variables"><i class="fa fa-check"></i><b>3.8</b> Análisis univariado de las variables</a>
 <ul>
-<li class="chapter" data-level="3.8.1" data-path="eda.html"><a href="eda.html#analisis-boxplot-tiempo-de-curado"><i class="fa fa-check"></i><b>3.8.1</b> Analisis boxplot tiempo de curado</a></li>
+<li class="chapter" data-level="3.8.1" data-path="eda.html"><a href="eda.html#an%C3%A1lisis-del-boxplot-de-tiempo-de-curado"><i class="fa fa-check"></i><b>3.8.1</b> Análisis del boxplot de tiempo de curado</a></li>
 </ul></li>
-<li class="chapter" data-level="3.9" data-path="eda.html"><a href="eda.html#analisis-bivariado"><i class="fa fa-check"></i><b>3.9</b> Analisis Bivariado</a>
+<li class="chapter" data-level="3.9" data-path="eda.html"><a href="eda.html#an%C3%A1lisis-bivariado"><i class="fa fa-check"></i><b>3.9</b> Análisis bivariado</a>
 <ul>
-<li class="chapter" data-level="3.9.1" data-path="eda.html"><a href="eda.html#creacion-de-nuevas-variables"><i class="fa fa-check"></i><b>3.9.1</b> Creacion de nuevas variables</a></li>
+<li class="chapter" data-level="3.9.1" data-path="eda.html"><a href="eda.html#creaci%C3%B3n-de-nuevas-variables"><i class="fa fa-check"></i><b>3.9.1</b> Creación de nuevas variables</a></li>
 <li class="chapter" data-level="3.9.2" data-path="eda.html"><a href="eda.html#tabla-descriptiva-de-las-nuevas-variables"><i class="fa fa-check"></i><b>3.9.2</b> Tabla descriptiva de las nuevas variables</a></li>
 <li class="chapter" data-level="3.9.3" data-path="eda.html"><a href="eda.html#estructura-mezclas"><i class="fa fa-check"></i><b>3.9.3</b> Estructura de los datos: mezclas medidas a varias edades</a></li>
 </ul></li>
@@ -524,31 +524,49 @@ Bootstrap por mezclas (2000 réplicas, corrige dependencia)
 </tr>
 </tbody>
 </table>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="ic.html#cb58-1" tabindex="-1"></a>ic_resistencia <span class="sc">|&gt;</span></span>
+<span id="cb58-2"><a href="ic.html#cb58-2" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb58-3"><a href="ic.html#cb58-3" tabindex="-1"></a>    <span class="at">metodo =</span> <span class="fu">c</span>(<span class="st">&quot;t de Student&quot;</span>, <span class="st">&quot;Bootstrap por filas&quot;</span>, <span class="st">&quot;Bootstrap por mezclas&quot;</span>),</span>
+<span id="cb58-4"><a href="ic.html#cb58-4" tabindex="-1"></a>    <span class="at">metodo =</span> <span class="fu">factor</span>(metodo, <span class="at">levels =</span> <span class="fu">rev</span>(metodo)),</span>
+<span id="cb58-5"><a href="ic.html#cb58-5" tabindex="-1"></a>    <span class="at">corrige =</span> metodo <span class="sc">==</span> <span class="st">&quot;Bootstrap por mezclas&quot;</span></span>
+<span id="cb58-6"><a href="ic.html#cb58-6" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb58-7"><a href="ic.html#cb58-7" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> media, <span class="at">y =</span> metodo, <span class="at">color =</span> corrige)) <span class="sc">+</span></span>
+<span id="cb58-8"><a href="ic.html#cb58-8" tabindex="-1"></a>  <span class="fu">geom_errorbarh</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> limite_inferior, <span class="at">xmax =</span> limite_superior), <span class="at">height =</span> <span class="fl">0.25</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb58-9"><a href="ic.html#cb58-9" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb58-10"><a href="ic.html#cb58-10" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">x =</span> limite_superior, <span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">&quot;%.1f – %.1f&quot;</span>, limite_inferior, limite_superior)),</span>
+<span id="cb58-11"><a href="ic.html#cb58-11" tabindex="-1"></a>            <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.15</span>, <span class="at">size =</span> <span class="fl">3.3</span>, <span class="at">color =</span> <span class="st">&quot;#52514e&quot;</span>) <span class="sc">+</span></span>
+<span id="cb58-12"><a href="ic.html#cb58-12" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;FALSE&quot;</span> <span class="ot">=</span> col_azul_claro, <span class="st">&quot;TRUE&quot;</span> <span class="ot">=</span> col_azul), <span class="at">guide =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb58-13"><a href="ic.html#cb58-13" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.25</span>))) <span class="sc">+</span></span>
+<span id="cb58-14"><a href="ic.html#cb58-14" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;IC del 95% para la resistencia media según el método&quot;</span>,</span>
+<span id="cb58-15"><a href="ic.html#cb58-15" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">&quot;El intervalo por mezclas es casi el doble de ancho&quot;</span>,</span>
+<span id="cb58-16"><a href="ic.html#cb58-16" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Resistencia media (MPa)&quot;</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb58-17"><a href="ic.html#cb58-17" tabindex="-1"></a>  <span class="fu">tema_libro</span>()</span></code></pre></div>
+<p><img src="Proyecto_Final_Metodos_Estadisticos_files/figure-html/ic-resistencia-grafico-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
 <p>La resistencia media de las mezclas es de unos <strong>35.8 MPa</strong>. El intervalo t la sitúa entre 34.8 y 36.8 MPa, pero es demasiado estrecho, porque las filas de una misma mezcla se parecen entre sí. El intervalo que sí respeta esa estructura (bootstrap por mezclas) va de <strong>34.1 a 37.7 MPa</strong>, casi el doble de ancho, y es el que conviene reportar.</p>
 </div>
 <div id="ceniza-volante-1" class="section level2 hasAnchor" number="4.3">
 <h2><span class="header-section-number">4.3</span> Ceniza volante<a href="ic.html#ceniza-volante-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>La ceniza tiene una gran proporción de ceros, así que se reporta el intervalo para todas las mezclas y para las que sí contienen ceniza.</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="ic.html#cb58-1" tabindex="-1"></a>ic_ceniza <span class="ot">&lt;-</span> <span class="cf">function</span>(x, etiqueta) {</span>
-<span id="cb58-2"><a href="ic.html#cb58-2" tabindex="-1"></a>  ic <span class="ot">&lt;-</span> <span class="fu">t.test</span>(x, <span class="at">conf.level =</span> <span class="fl">0.95</span>)</span>
-<span id="cb58-3"><a href="ic.html#cb58-3" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
-<span id="cb58-4"><a href="ic.html#cb58-4" tabindex="-1"></a>  b <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">5000</span>, <span class="fu">mean</span>(<span class="fu">sample</span>(x, <span class="at">replace =</span> <span class="cn">TRUE</span>)))</span>
-<span id="cb58-5"><a href="ic.html#cb58-5" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
-<span id="cb58-6"><a href="ic.html#cb58-6" tabindex="-1"></a>    <span class="at">grupo =</span> etiqueta,</span>
-<span id="cb58-7"><a href="ic.html#cb58-7" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">length</span>(x),</span>
-<span id="cb58-8"><a href="ic.html#cb58-8" tabindex="-1"></a>    <span class="at">media =</span> <span class="fu">mean</span>(x),</span>
-<span id="cb58-9"><a href="ic.html#cb58-9" tabindex="-1"></a>    <span class="at">ic_t_inf =</span> ic<span class="sc">$</span>conf.int[<span class="dv">1</span>],</span>
-<span id="cb58-10"><a href="ic.html#cb58-10" tabindex="-1"></a>    <span class="at">ic_t_sup =</span> ic<span class="sc">$</span>conf.int[<span class="dv">2</span>],</span>
-<span id="cb58-11"><a href="ic.html#cb58-11" tabindex="-1"></a>    <span class="at">ic_boot_inf =</span> <span class="fu">quantile</span>(b, <span class="fl">0.025</span>),</span>
-<span id="cb58-12"><a href="ic.html#cb58-12" tabindex="-1"></a>    <span class="at">ic_boot_sup =</span> <span class="fu">quantile</span>(b, <span class="fl">0.975</span>)</span>
-<span id="cb58-13"><a href="ic.html#cb58-13" tabindex="-1"></a>  )</span>
-<span id="cb58-14"><a href="ic.html#cb58-14" tabindex="-1"></a>}</span>
-<span id="cb58-15"><a href="ic.html#cb58-15" tabindex="-1"></a></span>
-<span id="cb58-16"><a href="ic.html#cb58-16" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>
-<span id="cb58-17"><a href="ic.html#cb58-17" tabindex="-1"></a>  <span class="fu">ic_ceniza</span>(df_fe<span class="sc">$</span>ceniza, <span class="st">&quot;Todas las mezclas&quot;</span>),</span>
-<span id="cb58-18"><a href="ic.html#cb58-18" tabindex="-1"></a>  <span class="fu">ic_ceniza</span>(df_fe<span class="sc">$</span>ceniza[df_fe<span class="sc">$</span>ceniza <span class="sc">&gt;</span> <span class="dv">0</span>], <span class="st">&quot;Solo mezclas con ceniza&quot;</span>)</span>
-<span id="cb58-19"><a href="ic.html#cb58-19" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb58-20"><a href="ic.html#cb58-20" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;IC del 95% para la dosificación media de ceniza volante (kg/m³)&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="ic.html#cb59-1" tabindex="-1"></a>ic_ceniza <span class="ot">&lt;-</span> <span class="cf">function</span>(x, etiqueta) {</span>
+<span id="cb59-2"><a href="ic.html#cb59-2" tabindex="-1"></a>  ic <span class="ot">&lt;-</span> <span class="fu">t.test</span>(x, <span class="at">conf.level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb59-3"><a href="ic.html#cb59-3" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<span id="cb59-4"><a href="ic.html#cb59-4" tabindex="-1"></a>  b <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">5000</span>, <span class="fu">mean</span>(<span class="fu">sample</span>(x, <span class="at">replace =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb59-5"><a href="ic.html#cb59-5" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb59-6"><a href="ic.html#cb59-6" tabindex="-1"></a>    <span class="at">grupo =</span> etiqueta,</span>
+<span id="cb59-7"><a href="ic.html#cb59-7" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">length</span>(x),</span>
+<span id="cb59-8"><a href="ic.html#cb59-8" tabindex="-1"></a>    <span class="at">media =</span> <span class="fu">mean</span>(x),</span>
+<span id="cb59-9"><a href="ic.html#cb59-9" tabindex="-1"></a>    <span class="at">ic_t_inf =</span> ic<span class="sc">$</span>conf.int[<span class="dv">1</span>],</span>
+<span id="cb59-10"><a href="ic.html#cb59-10" tabindex="-1"></a>    <span class="at">ic_t_sup =</span> ic<span class="sc">$</span>conf.int[<span class="dv">2</span>],</span>
+<span id="cb59-11"><a href="ic.html#cb59-11" tabindex="-1"></a>    <span class="at">ic_boot_inf =</span> <span class="fu">quantile</span>(b, <span class="fl">0.025</span>),</span>
+<span id="cb59-12"><a href="ic.html#cb59-12" tabindex="-1"></a>    <span class="at">ic_boot_sup =</span> <span class="fu">quantile</span>(b, <span class="fl">0.975</span>)</span>
+<span id="cb59-13"><a href="ic.html#cb59-13" tabindex="-1"></a>  )</span>
+<span id="cb59-14"><a href="ic.html#cb59-14" tabindex="-1"></a>}</span>
+<span id="cb59-15"><a href="ic.html#cb59-15" tabindex="-1"></a></span>
+<span id="cb59-16"><a href="ic.html#cb59-16" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>
+<span id="cb59-17"><a href="ic.html#cb59-17" tabindex="-1"></a>  <span class="fu">ic_ceniza</span>(df_fe<span class="sc">$</span>ceniza, <span class="st">&quot;Todas las mezclas&quot;</span>),</span>
+<span id="cb59-18"><a href="ic.html#cb59-18" tabindex="-1"></a>  <span class="fu">ic_ceniza</span>(df_fe<span class="sc">$</span>ceniza[df_fe<span class="sc">$</span>ceniza <span class="sc">&gt;</span> <span class="dv">0</span>], <span class="st">&quot;Solo mezclas con ceniza&quot;</span>)</span>
+<span id="cb59-19"><a href="ic.html#cb59-19" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb59-20"><a href="ic.html#cb59-20" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;IC del 95% para la dosificación media de ceniza volante (kg/m³)&quot;</span>)</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:ic-ceniza">Table 4.3: </span>IC del 95% para la dosificación media de ceniza volante (kg/m³)
@@ -631,16 +649,16 @@ Solo mezclas con ceniza
 </div>
 <div id="resistencia-por-grupo" class="section level2 hasAnchor" number="4.4">
 <h2><span class="header-section-number">4.4</span> Resistencia por grupo<a href="ic.html#resistencia-por-grupo" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="ic.html#cb59-1" tabindex="-1"></a>df_fe <span class="sc">|&gt;</span></span>
-<span id="cb59-2"><a href="ic.html#cb59-2" tabindex="-1"></a>  <span class="fu">group_by</span>(usa_ceniza) <span class="sc">|&gt;</span></span>
-<span id="cb59-3"><a href="ic.html#cb59-3" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb59-4"><a href="ic.html#cb59-4" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
-<span id="cb59-5"><a href="ic.html#cb59-5" tabindex="-1"></a>    <span class="at">media =</span> <span class="fu">mean</span>(resistencia),</span>
-<span id="cb59-6"><a href="ic.html#cb59-6" tabindex="-1"></a>    <span class="at">ic_inf =</span> <span class="fu">t.test</span>(resistencia)<span class="sc">$</span>conf.int[<span class="dv">1</span>],</span>
-<span id="cb59-7"><a href="ic.html#cb59-7" tabindex="-1"></a>    <span class="at">ic_sup =</span> <span class="fu">t.test</span>(resistencia)<span class="sc">$</span>conf.int[<span class="dv">2</span>],</span>
-<span id="cb59-8"><a href="ic.html#cb59-8" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span></span>
-<span id="cb59-9"><a href="ic.html#cb59-9" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb59-10"><a href="ic.html#cb59-10" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;IC del 95% de la resistencia media según uso de ceniza (MPa)&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="ic.html#cb60-1" tabindex="-1"></a>df_fe <span class="sc">|&gt;</span></span>
+<span id="cb60-2"><a href="ic.html#cb60-2" tabindex="-1"></a>  <span class="fu">group_by</span>(usa_ceniza) <span class="sc">|&gt;</span></span>
+<span id="cb60-3"><a href="ic.html#cb60-3" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb60-4"><a href="ic.html#cb60-4" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb60-5"><a href="ic.html#cb60-5" tabindex="-1"></a>    <span class="at">media =</span> <span class="fu">mean</span>(resistencia),</span>
+<span id="cb60-6"><a href="ic.html#cb60-6" tabindex="-1"></a>    <span class="at">ic_inf =</span> <span class="fu">t.test</span>(resistencia)<span class="sc">$</span>conf.int[<span class="dv">1</span>],</span>
+<span id="cb60-7"><a href="ic.html#cb60-7" tabindex="-1"></a>    <span class="at">ic_sup =</span> <span class="fu">t.test</span>(resistencia)<span class="sc">$</span>conf.int[<span class="dv">2</span>],</span>
+<span id="cb60-8"><a href="ic.html#cb60-8" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span></span>
+<span id="cb60-9"><a href="ic.html#cb60-9" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb60-10"><a href="ic.html#cb60-10" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;IC del 95% de la resistencia media según uso de ceniza (MPa)&quot;</span>)</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:ic-resistencia-grupos">Table 4.4: </span>IC del 95% de la resistencia media según uso de ceniza (MPa)
