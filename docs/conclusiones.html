@@ -266,8 +266,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.6" data-path="rlm.html"><a href="rlm.html#supuestos-de-los-errores-del-modelo-final"><i class="fa fa-check"></i><b>8.6</b> Supuestos de los errores del modelo final</a>
 <ul>
 <li class="chapter" data-level="8.6.1" data-path="rlm.html"><a href="rlm.html#falta-de-linealidad-reset"><i class="fa fa-check"></i><b>8.6.1</b> Falta de linealidad (RESET)</a></li>
-<li class="chapter" data-level="8.6.2" data-path="rlm.html"><a href="rlm.html#inferencia-robusta-hc3-y-errores-agrupados-por-mezcla"><i class="fa fa-check"></i><b>8.6.2</b> Inferencia robusta: HC3 y errores agrupados por mezcla</a></li>
-<li class="chapter" data-level="8.6.3" data-path="rlm.html"><a href="rlm.html#observaciones-influyentes"><i class="fa fa-check"></i><b>8.6.3</b> Observaciones influyentes</a></li>
+<li class="chapter" data-level="8.6.2" data-path="rlm.html"><a href="rlm.html#modelo-alternativo-con-la-edad-continua"><i class="fa fa-check"></i><b>8.6.2</b> Modelo alternativo con la edad continua</a></li>
+<li class="chapter" data-level="8.6.3" data-path="rlm.html"><a href="rlm.html#inferencia-robusta-hc3-y-errores-agrupados-por-mezcla"><i class="fa fa-check"></i><b>8.6.3</b> Inferencia robusta: HC3 y errores agrupados por mezcla</a></li>
+<li class="chapter" data-level="8.6.4" data-path="rlm.html"><a href="rlm.html#observaciones-influyentes"><i class="fa fa-check"></i><b>8.6.4</b> Observaciones influyentes</a></li>
 </ul></li>
 <li class="chapter" data-level="8.7" data-path="rlm.html"><a href="rlm.html#interpretaci%C3%B3n-del-modelo-final"><i class="fa fa-check"></i><b>8.7</b> Interpretación del modelo final</a>
 <ul>
@@ -348,7 +349,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="recomendaciones-y-trabajo-futuro" class="section level2 hasAnchor" number="9.4">
 <h2><span class="header-section-number">9.4</span> Recomendaciones y trabajo futuro<a href="conclusiones.html#recomendaciones-y-trabajo-futuro" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ul>
-<li>Usar la <strong>edad como variable continua</strong> (por ejemplo, su logaritmo) en lugar de tres etapas. Mejora mucho el ajuste.</li>
+<li>Usar la <strong>edad como variable continua</strong> (por ejemplo, su logaritmo) en lugar de tres etapas. En la sección <a href="rlm.html#modelo-alternativo-con-la-edad-continua">8.6.2</a> se comprobó que mejora poco el ajuste (<span class="math inline">\(R^2\)</span> ajustado de 0.826 a 0.84 como máximo) y no resuelve la falta de linealidad, pero permite describir el efecto de la ceniza en cualquier edad y no solo por etapa.</li>
 <li>Ajustar un <strong>modelo mixto</strong> con un efecto aleatorio por mezcla, que trata la repetición de forma directa.</li>
 <li>Para decidir una receta, <strong>comparar sustituciones parciales</strong> (por ejemplo, 10% a 20% del cemento) frente a la mezcla de control.</li>
 <li>Confirmar con un <strong>experimento controlado</strong> (la misma receta con y sin ceniza) antes de atribuir causalidad.</li>

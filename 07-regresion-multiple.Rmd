@@ -623,6 +623,40 @@ coef_amp |>
 
 Al agregar `log_edad`, los dos términos de interacción ceniza × etapa siguen siendo significativos con errores agrupados por mezcla ($p `r fmt_p(coef_amp$p_valor[coef_amp$termino == "ceniza:etapaEstandar"])`$ en la etapa estándar y $p `r fmt_p(coef_amp$p_valor[coef_amp$termino == "ceniza:etapaTardio"])`$ en la tardía). Por tanto, la conclusión sobre el efecto diferenciado de la ceniza no depende de la forma en que se codifica la edad. Que la etapa no capture toda la influencia de la edad es una limitación del modelo, aceptada porque el objetivo exige una variable cualitativa con dummies.
 
+### Modelo alternativo con la edad continua
+
+La alternativa natural es reemplazar la etapa por la edad continua (`log_edad`), con la misma interacción con la ceniza. Se comparan tres versiones con el modelo final:
+
+```{r rlm-edad-continua}
+m_edad <- lm(raiz_resistencia ~ ceniza * log_edad + cemento + escoria + agua, data = df_rlm)
+m_edad2 <- update(m_edad, . ~ . + I(log_edad^2))
+
+resumen_alt <- function(m, nombre) {
+  resumen_modelo(m, nombre) |>
+    dplyr::select(modelo, p, R2_ajustado, AIC) |>
+    mutate(RESET_p = sub("^= ", "", fmt_p(lmtest::resettest(m)$p.value)))
+}
+
+bind_rows(
+  resumen_alt(modelo_final, "Final: ceniza × etapa (dummies)"),
+  resumen_alt(m_edad, "ceniza × log_edad, sin etapa"),
+  resumen_alt(m_edad2, "ceniza × log_edad + log_edad²"),
+  resumen_alt(m_amp, "Final + log_edad (sensibilidad)")
+) |>
+  tabla_kbl("Modelo final frente a modelos con la edad continua", digits = 4)
+
+coef_edad <- tabla_robusta(m_edad, vcov_cluster(m_edad, df_rlm$id_mezcla),
+                           gl = n_distinct(df_rlm$id_mezcla) - 1)
+b_e <- coef(m_edad)
+pend_edad <- function(dias) 100 * (b_e["ceniza"] + b_e["ceniza:log_edad"] * log(dias))
+```
+
+- **Cambiar la etapa por `log_edad` no mejora el ajuste:** el $R^2$ ajustado pasa de `r round(summary(modelo_final)$adj.r.squared, 3)` a `r round(summary(m_edad)$adj.r.squared, 3)`. Ni siquiera con el término cuadrático (`r round(summary(m_edad2)$adj.r.squared, 3)`) o combinando etapa y `log_edad` (`r round(summary(m_amp)$adj.r.squared, 3)`) la ganancia pasa de unas centésimas.
+- **El RESET sigue rechazando la forma lineal en todas las versiones**, así que la falta de linealidad no se debe solo a la forma de medir la edad.
+- **La conclusión sobre la ceniza se mantiene:** su efecto es positivo y crece con la edad, de `r sprintf("%.2f", pend_edad(3))` a los 3 días a `r sprintf("%.2f", pend_edad(365))` a los 365 días (escala raíz, por cada 100 kg/m³). La interacción ceniza × edad es significativa con errores agrupados por mezcla ($p `r fmt_p(coef_edad$p_valor[coef_edad$termino == "ceniza:log_edad"])`$).
+
+Por tanto, se conserva el modelo con la etapa: cumple el objetivo de usar una variable cualitativa con dummies, ajusta casi igual y lleva a la misma conclusión.
+
 ### Inferencia robusta: HC3 y errores agrupados por mezcla
 
 El estimador HC3 corrige la heterocedasticidad. El estimador agrupado por mezcla (CR1) corrige además la correlación entre las filas de una misma mezcla; es el más adecuado para esta estructura de datos.

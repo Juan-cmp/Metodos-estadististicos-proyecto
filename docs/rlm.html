@@ -266,8 +266,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.6" data-path="rlm.html"><a href="rlm.html#supuestos-de-los-errores-del-modelo-final"><i class="fa fa-check"></i><b>8.6</b> Supuestos de los errores del modelo final</a>
 <ul>
 <li class="chapter" data-level="8.6.1" data-path="rlm.html"><a href="rlm.html#falta-de-linealidad-reset"><i class="fa fa-check"></i><b>8.6.1</b> Falta de linealidad (RESET)</a></li>
-<li class="chapter" data-level="8.6.2" data-path="rlm.html"><a href="rlm.html#inferencia-robusta-hc3-y-errores-agrupados-por-mezcla"><i class="fa fa-check"></i><b>8.6.2</b> Inferencia robusta: HC3 y errores agrupados por mezcla</a></li>
-<li class="chapter" data-level="8.6.3" data-path="rlm.html"><a href="rlm.html#observaciones-influyentes"><i class="fa fa-check"></i><b>8.6.3</b> Observaciones influyentes</a></li>
+<li class="chapter" data-level="8.6.2" data-path="rlm.html"><a href="rlm.html#modelo-alternativo-con-la-edad-continua"><i class="fa fa-check"></i><b>8.6.2</b> Modelo alternativo con la edad continua</a></li>
+<li class="chapter" data-level="8.6.3" data-path="rlm.html"><a href="rlm.html#inferencia-robusta-hc3-y-errores-agrupados-por-mezcla"><i class="fa fa-check"></i><b>8.6.3</b> Inferencia robusta: HC3 y errores agrupados por mezcla</a></li>
+<li class="chapter" data-level="8.6.4" data-path="rlm.html"><a href="rlm.html#observaciones-influyentes"><i class="fa fa-check"></i><b>8.6.4</b> Observaciones influyentes</a></li>
 </ul></li>
 <li class="chapter" data-level="8.7" data-path="rlm.html"><a href="rlm.html#interpretaci%C3%B3n-del-modelo-final"><i class="fa fa-check"></i><b>8.7</b> Interpretación del modelo final</a>
 <ul>
@@ -3131,29 +3132,153 @@ ceniza:etapaTardio
 </table>
 <p>Al agregar <code>log_edad</code>, los dos términos de interacción ceniza × etapa siguen siendo significativos con errores agrupados por mezcla (<span class="math inline">\(p &lt; 0.001\)</span> en la etapa estándar y <span class="math inline">\(p = 0.003\)</span> en la tardía). Por tanto, la conclusión sobre el efecto diferenciado de la ceniza no depende de la forma en que se codifica la edad. Que la etapa no capture toda la influencia de la edad es una limitación del modelo, aceptada porque el objetivo exige una variable cualitativa con dummies.</p>
 </div>
-<div id="inferencia-robusta-hc3-y-errores-agrupados-por-mezcla" class="section level3 hasAnchor" number="8.6.2">
-<h3><span class="header-section-number">8.6.2</span> Inferencia robusta: HC3 y errores agrupados por mezcla<a href="rlm.html#inferencia-robusta-hc3-y-errores-agrupados-por-mezcla" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>El estimador HC3 corrige la heterocedasticidad. El estimador agrupado por mezcla (CR1) corrige además la correlación entre las filas de una misma mezcla; es el más adecuado para esta estructura de datos.</p>
-<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="rlm.html#cb163-1" tabindex="-1"></a>V_hc3 <span class="ot">&lt;-</span> <span class="fu">vcov_hc3</span>(modelo_final)</span>
-<span id="cb163-2"><a href="rlm.html#cb163-2" tabindex="-1"></a>V_cl <span class="ot">&lt;-</span> <span class="fu">vcov_cluster</span>(modelo_final, df_rlm<span class="sc">$</span>id_mezcla)</span>
-<span id="cb163-3"><a href="rlm.html#cb163-3" tabindex="-1"></a>G_rlm <span class="ot">&lt;-</span> <span class="fu">n_distinct</span>(df_rlm<span class="sc">$</span>id_mezcla)</span>
-<span id="cb163-4"><a href="rlm.html#cb163-4" tabindex="-1"></a></span>
-<span id="cb163-5"><a href="rlm.html#cb163-5" tabindex="-1"></a><span class="fu">tibble</span>(</span>
-<span id="cb163-6"><a href="rlm.html#cb163-6" tabindex="-1"></a>  <span class="at">termino =</span> <span class="fu">names</span>(<span class="fu">coef</span>(modelo_final)),</span>
-<span id="cb163-7"><a href="rlm.html#cb163-7" tabindex="-1"></a>  <span class="at">estimacion =</span> <span class="fu">coef</span>(modelo_final),</span>
-<span id="cb163-8"><a href="rlm.html#cb163-8" tabindex="-1"></a>  <span class="at">ee_clasico =</span> <span class="fu">summary</span>(modelo_final)<span class="sc">$</span>coefficients[, <span class="st">&quot;Std. Error&quot;</span>],</span>
-<span id="cb163-9"><a href="rlm.html#cb163-9" tabindex="-1"></a>  <span class="at">ee_HC3 =</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(V_hc3)),</span>
-<span id="cb163-10"><a href="rlm.html#cb163-10" tabindex="-1"></a>  <span class="at">ee_por_mezcla =</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(V_cl)),</span>
-<span id="cb163-11"><a href="rlm.html#cb163-11" tabindex="-1"></a>  <span class="at">p_clasico =</span> <span class="fu">summary</span>(modelo_final)<span class="sc">$</span>coefficients[, <span class="st">&quot;Pr(&gt;|t|)&quot;</span>],</span>
-<span id="cb163-12"><a href="rlm.html#cb163-12" tabindex="-1"></a>  <span class="at">p_HC3 =</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="fu">abs</span>(<span class="fu">coef</span>(modelo_final) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(V_hc3))),</span>
-<span id="cb163-13"><a href="rlm.html#cb163-13" tabindex="-1"></a>                 modelo_final<span class="sc">$</span>df.residual, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>),</span>
-<span id="cb163-14"><a href="rlm.html#cb163-14" tabindex="-1"></a>  <span class="at">p_por_mezcla =</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="fu">abs</span>(<span class="fu">coef</span>(modelo_final) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(V_cl))),</span>
-<span id="cb163-15"><a href="rlm.html#cb163-15" tabindex="-1"></a>                        G_rlm <span class="sc">-</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb163-16"><a href="rlm.html#cb163-16" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb163-17"><a href="rlm.html#cb163-17" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Errores estándar y p-valores: clásicos, HC3 y agrupados por mezcla&quot;</span>, <span class="at">digits =</span> <span class="dv">5</span>)</span></code></pre></div>
+<div id="modelo-alternativo-con-la-edad-continua" class="section level3 hasAnchor" number="8.6.2">
+<h3><span class="header-section-number">8.6.2</span> Modelo alternativo con la edad continua<a href="rlm.html#modelo-alternativo-con-la-edad-continua" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>La alternativa natural es reemplazar la etapa por la edad continua (<code>log_edad</code>), con la misma interacción con la ceniza. Se comparan tres versiones con el modelo final:</p>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="rlm.html#cb163-1" tabindex="-1"></a>m_edad <span class="ot">&lt;-</span> <span class="fu">lm</span>(raiz_resistencia <span class="sc">~</span> ceniza <span class="sc">*</span> log_edad <span class="sc">+</span> cemento <span class="sc">+</span> escoria <span class="sc">+</span> agua, <span class="at">data =</span> df_rlm)</span>
+<span id="cb163-2"><a href="rlm.html#cb163-2" tabindex="-1"></a>m_edad2 <span class="ot">&lt;-</span> <span class="fu">update</span>(m_edad, . <span class="sc">~</span> . <span class="sc">+</span> <span class="fu">I</span>(log_edad<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb163-3"><a href="rlm.html#cb163-3" tabindex="-1"></a></span>
+<span id="cb163-4"><a href="rlm.html#cb163-4" tabindex="-1"></a>resumen_alt <span class="ot">&lt;-</span> <span class="cf">function</span>(m, nombre) {</span>
+<span id="cb163-5"><a href="rlm.html#cb163-5" tabindex="-1"></a>  <span class="fu">resumen_modelo</span>(m, nombre) <span class="sc">|&gt;</span></span>
+<span id="cb163-6"><a href="rlm.html#cb163-6" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(modelo, p, R2_ajustado, AIC) <span class="sc">|&gt;</span></span>
+<span id="cb163-7"><a href="rlm.html#cb163-7" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">RESET_p =</span> <span class="fu">sub</span>(<span class="st">&quot;^= &quot;</span>, <span class="st">&quot;&quot;</span>, <span class="fu">fmt_p</span>(lmtest<span class="sc">::</span><span class="fu">resettest</span>(m)<span class="sc">$</span>p.value)))</span>
+<span id="cb163-8"><a href="rlm.html#cb163-8" tabindex="-1"></a>}</span>
+<span id="cb163-9"><a href="rlm.html#cb163-9" tabindex="-1"></a></span>
+<span id="cb163-10"><a href="rlm.html#cb163-10" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>
+<span id="cb163-11"><a href="rlm.html#cb163-11" tabindex="-1"></a>  <span class="fu">resumen_alt</span>(modelo_final, <span class="st">&quot;Final: ceniza × etapa (dummies)&quot;</span>),</span>
+<span id="cb163-12"><a href="rlm.html#cb163-12" tabindex="-1"></a>  <span class="fu">resumen_alt</span>(m_edad, <span class="st">&quot;ceniza × log_edad, sin etapa&quot;</span>),</span>
+<span id="cb163-13"><a href="rlm.html#cb163-13" tabindex="-1"></a>  <span class="fu">resumen_alt</span>(m_edad2, <span class="st">&quot;ceniza × log_edad + log_edad²&quot;</span>),</span>
+<span id="cb163-14"><a href="rlm.html#cb163-14" tabindex="-1"></a>  <span class="fu">resumen_alt</span>(m_amp, <span class="st">&quot;Final + log_edad (sensibilidad)&quot;</span>)</span>
+<span id="cb163-15"><a href="rlm.html#cb163-15" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb163-16"><a href="rlm.html#cb163-16" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Modelo final frente a modelos con la edad continua&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:rlm-robusto">Table 8.20: </span>Errores estándar y p-valores: clásicos, HC3 y agrupados por mezcla
+<span id="tab:rlm-edad-continua">Table 8.20: </span>Modelo final frente a modelos con la edad continua
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+modelo
+</th>
+<th style="text-align:right;">
+p
+</th>
+<th style="text-align:right;">
+R2_ajustado
+</th>
+<th style="text-align:right;">
+AIC
+</th>
+<th style="text-align:left;">
+RESET_p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Final: ceniza × etapa (dummies)
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0.8258
+</td>
+<td style="text-align:right;">
+1897.570
+</td>
+<td style="text-align:left;">
+&lt; 0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ceniza × log_edad, sin etapa
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+0.8250
+</td>
+<td style="text-align:right;">
+1900.367
+</td>
+<td style="text-align:left;">
+&lt; 0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ceniza × log_edad + log_edad²
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+0.8321
+</td>
+<td style="text-align:right;">
+1858.637
+</td>
+<td style="text-align:left;">
+&lt; 0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Final + log_edad (sensibilidad)
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.8420
+</td>
+<td style="text-align:right;">
+1797.987
+</td>
+<td style="text-align:left;">
+&lt; 0.001
+</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="rlm.html#cb164-1" tabindex="-1"></a>coef_edad <span class="ot">&lt;-</span> <span class="fu">tabla_robusta</span>(m_edad, <span class="fu">vcov_cluster</span>(m_edad, df_rlm<span class="sc">$</span>id_mezcla),</span>
+<span id="cb164-2"><a href="rlm.html#cb164-2" tabindex="-1"></a>                           <span class="at">gl =</span> <span class="fu">n_distinct</span>(df_rlm<span class="sc">$</span>id_mezcla) <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb164-3"><a href="rlm.html#cb164-3" tabindex="-1"></a>b_e <span class="ot">&lt;-</span> <span class="fu">coef</span>(m_edad)</span>
+<span id="cb164-4"><a href="rlm.html#cb164-4" tabindex="-1"></a>pend_edad <span class="ot">&lt;-</span> <span class="cf">function</span>(dias) <span class="dv">100</span> <span class="sc">*</span> (b_e[<span class="st">&quot;ceniza&quot;</span>] <span class="sc">+</span> b_e[<span class="st">&quot;ceniza:log_edad&quot;</span>] <span class="sc">*</span> <span class="fu">log</span>(dias))</span></code></pre></div>
+<ul>
+<li><strong>Cambiar la etapa por <code>log_edad</code> no mejora el ajuste:</strong> el <span class="math inline">\(R^2\)</span> ajustado pasa de 0.826 a 0.825. Ni siquiera con el término cuadrático (0.832) o combinando etapa y <code>log_edad</code> (0.842) la ganancia pasa de unas centésimas.</li>
+<li><strong>El RESET sigue rechazando la forma lineal en todas las versiones</strong>, así que la falta de linealidad no se debe solo a la forma de medir la edad.</li>
+<li><strong>La conclusión sobre la ceniza se mantiene:</strong> su efecto es positivo y crece con la edad, de 0.48 a los 3 días a 0.79 a los 365 días (escala raíz, por cada 100 kg/m³). La interacción ceniza × edad es significativa con errores agrupados por mezcla (<span class="math inline">\(p = 0.039\)</span>).</li>
+</ul>
+<p>Por tanto, se conserva el modelo con la etapa: cumple el objetivo de usar una variable cualitativa con dummies, ajusta casi igual y lleva a la misma conclusión.</p>
+</div>
+<div id="inferencia-robusta-hc3-y-errores-agrupados-por-mezcla" class="section level3 hasAnchor" number="8.6.3">
+<h3><span class="header-section-number">8.6.3</span> Inferencia robusta: HC3 y errores agrupados por mezcla<a href="rlm.html#inferencia-robusta-hc3-y-errores-agrupados-por-mezcla" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>El estimador HC3 corrige la heterocedasticidad. El estimador agrupado por mezcla (CR1) corrige además la correlación entre las filas de una misma mezcla; es el más adecuado para esta estructura de datos.</p>
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="rlm.html#cb165-1" tabindex="-1"></a>V_hc3 <span class="ot">&lt;-</span> <span class="fu">vcov_hc3</span>(modelo_final)</span>
+<span id="cb165-2"><a href="rlm.html#cb165-2" tabindex="-1"></a>V_cl <span class="ot">&lt;-</span> <span class="fu">vcov_cluster</span>(modelo_final, df_rlm<span class="sc">$</span>id_mezcla)</span>
+<span id="cb165-3"><a href="rlm.html#cb165-3" tabindex="-1"></a>G_rlm <span class="ot">&lt;-</span> <span class="fu">n_distinct</span>(df_rlm<span class="sc">$</span>id_mezcla)</span>
+<span id="cb165-4"><a href="rlm.html#cb165-4" tabindex="-1"></a></span>
+<span id="cb165-5"><a href="rlm.html#cb165-5" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb165-6"><a href="rlm.html#cb165-6" tabindex="-1"></a>  <span class="at">termino =</span> <span class="fu">names</span>(<span class="fu">coef</span>(modelo_final)),</span>
+<span id="cb165-7"><a href="rlm.html#cb165-7" tabindex="-1"></a>  <span class="at">estimacion =</span> <span class="fu">coef</span>(modelo_final),</span>
+<span id="cb165-8"><a href="rlm.html#cb165-8" tabindex="-1"></a>  <span class="at">ee_clasico =</span> <span class="fu">summary</span>(modelo_final)<span class="sc">$</span>coefficients[, <span class="st">&quot;Std. Error&quot;</span>],</span>
+<span id="cb165-9"><a href="rlm.html#cb165-9" tabindex="-1"></a>  <span class="at">ee_HC3 =</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(V_hc3)),</span>
+<span id="cb165-10"><a href="rlm.html#cb165-10" tabindex="-1"></a>  <span class="at">ee_por_mezcla =</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(V_cl)),</span>
+<span id="cb165-11"><a href="rlm.html#cb165-11" tabindex="-1"></a>  <span class="at">p_clasico =</span> <span class="fu">summary</span>(modelo_final)<span class="sc">$</span>coefficients[, <span class="st">&quot;Pr(&gt;|t|)&quot;</span>],</span>
+<span id="cb165-12"><a href="rlm.html#cb165-12" tabindex="-1"></a>  <span class="at">p_HC3 =</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="fu">abs</span>(<span class="fu">coef</span>(modelo_final) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(V_hc3))),</span>
+<span id="cb165-13"><a href="rlm.html#cb165-13" tabindex="-1"></a>                 modelo_final<span class="sc">$</span>df.residual, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb165-14"><a href="rlm.html#cb165-14" tabindex="-1"></a>  <span class="at">p_por_mezcla =</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="fu">abs</span>(<span class="fu">coef</span>(modelo_final) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(V_cl))),</span>
+<span id="cb165-15"><a href="rlm.html#cb165-15" tabindex="-1"></a>                        G_rlm <span class="sc">-</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb165-16"><a href="rlm.html#cb165-16" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb165-17"><a href="rlm.html#cb165-17" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Errores estándar y p-valores: clásicos, HC3 y agrupados por mezcla&quot;</span>, <span class="at">digits =</span> <span class="dv">5</span>)</span></code></pre></div>
+<table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:rlm-robusto">Table 8.21: </span>Errores estándar y p-valores: clásicos, HC3 y agrupados por mezcla
 </caption>
 <thead>
 <tr>
@@ -3421,11 +3546,11 @@ ceniza:etapaTardio
 </tbody>
 </table>
 <p>Contraste conjunto de la interacción con errores agrupados por mezcla (<span class="math inline">\(H_0\)</span>: el efecto de la ceniza no depende de la etapa):</p>
-<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="rlm.html#cb164-1" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">linearHypothesis</span>(</span>
-<span id="cb164-2"><a href="rlm.html#cb164-2" tabindex="-1"></a>  modelo_final,</span>
-<span id="cb164-3"><a href="rlm.html#cb164-3" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;ceniza:etapaEstandar = 0&quot;</span>, <span class="st">&quot;ceniza:etapaTardio = 0&quot;</span>),</span>
-<span id="cb164-4"><a href="rlm.html#cb164-4" tabindex="-1"></a>  <span class="at">vcov. =</span> V_cl</span>
-<span id="cb164-5"><a href="rlm.html#cb164-5" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="rlm.html#cb166-1" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">linearHypothesis</span>(</span>
+<span id="cb166-2"><a href="rlm.html#cb166-2" tabindex="-1"></a>  modelo_final,</span>
+<span id="cb166-3"><a href="rlm.html#cb166-3" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;ceniza:etapaEstandar = 0&quot;</span>, <span class="st">&quot;ceniza:etapaTardio = 0&quot;</span>),</span>
+<span id="cb166-4"><a href="rlm.html#cb166-4" tabindex="-1"></a>  <span class="at">vcov. =</span> V_cl</span>
+<span id="cb166-5"><a href="rlm.html#cb166-5" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## 
 ## Linear hypothesis test:
 ## ceniza:etapaEstandar = 0
@@ -3444,61 +3569,61 @@ ceniza:etapaTardio
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>Con los errores robustos, los coeficientes principales siguen siendo significativos y la interacción se mantiene, aunque con p-valores más grandes que los clásicos (lo esperado al corregir la dependencia). Las conclusiones del modelo final son por tanto robustas.</p>
 <p>El resultado central del modelo es la pendiente de la ceniza en cada etapa. El gráfico la muestra con su intervalo de confianza del 95%, con errores clásicos y con errores agrupados por mezcla:</p>
-<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="rlm.html#cb166-1" tabindex="-1"></a>pendiente_ic <span class="ot">&lt;-</span> <span class="cf">function</span>(pesos, V, gl, etapa, tipo) {</span>
-<span id="cb166-2"><a href="rlm.html#cb166-2" tabindex="-1"></a>  b <span class="ot">&lt;-</span> <span class="fu">coef</span>(modelo_final)</span>
-<span id="cb166-3"><a href="rlm.html#cb166-3" tabindex="-1"></a>  l <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">length</span>(b)), <span class="fu">names</span>(b))</span>
-<span id="cb166-4"><a href="rlm.html#cb166-4" tabindex="-1"></a>  l[<span class="fu">names</span>(pesos)] <span class="ot">&lt;-</span> pesos</span>
-<span id="cb166-5"><a href="rlm.html#cb166-5" tabindex="-1"></a>  est <span class="ot">&lt;-</span> <span class="fu">sum</span>(l <span class="sc">*</span> b)</span>
-<span id="cb166-6"><a href="rlm.html#cb166-6" tabindex="-1"></a>  ee <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">drop</span>(<span class="fu">t</span>(l) <span class="sc">%*%</span> V <span class="sc">%*%</span> l))</span>
-<span id="cb166-7"><a href="rlm.html#cb166-7" tabindex="-1"></a>  margen <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, gl) <span class="sc">*</span> ee</span>
-<span id="cb166-8"><a href="rlm.html#cb166-8" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">etapa =</span> etapa, <span class="at">tipo =</span> tipo,</span>
-<span id="cb166-9"><a href="rlm.html#cb166-9" tabindex="-1"></a>         <span class="at">inf =</span> <span class="dv">100</span> <span class="sc">*</span> (est <span class="sc">-</span> margen), <span class="at">sup =</span> <span class="dv">100</span> <span class="sc">*</span> (est <span class="sc">+</span> margen), <span class="at">est =</span> <span class="dv">100</span> <span class="sc">*</span> est)</span>
-<span id="cb166-10"><a href="rlm.html#cb166-10" tabindex="-1"></a>}</span>
-<span id="cb166-11"><a href="rlm.html#cb166-11" tabindex="-1"></a></span>
-<span id="cb166-12"><a href="rlm.html#cb166-12" tabindex="-1"></a>pesos_etapa <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb166-13"><a href="rlm.html#cb166-13" tabindex="-1"></a>  <span class="at">Temprano =</span> <span class="fu">c</span>(<span class="at">ceniza =</span> <span class="dv">1</span>),</span>
-<span id="cb166-14"><a href="rlm.html#cb166-14" tabindex="-1"></a>  <span class="at">Estandar =</span> <span class="fu">c</span>(<span class="at">ceniza =</span> <span class="dv">1</span>, <span class="st">&quot;ceniza:etapaEstandar&quot;</span> <span class="ot">=</span> <span class="dv">1</span>),</span>
-<span id="cb166-15"><a href="rlm.html#cb166-15" tabindex="-1"></a>  <span class="at">Tardio =</span> <span class="fu">c</span>(<span class="at">ceniza =</span> <span class="dv">1</span>, <span class="st">&quot;ceniza:etapaTardio&quot;</span> <span class="ot">=</span> <span class="dv">1</span>)</span>
-<span id="cb166-16"><a href="rlm.html#cb166-16" tabindex="-1"></a>)</span>
-<span id="cb166-17"><a href="rlm.html#cb166-17" tabindex="-1"></a></span>
-<span id="cb166-18"><a href="rlm.html#cb166-18" tabindex="-1"></a>pend <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
-<span id="cb166-19"><a href="rlm.html#cb166-19" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">imap_dfr</span>(pesos_etapa, <span class="sc">~</span> <span class="fu">pendiente_ic</span>(.x, <span class="fu">vcov</span>(modelo_final), modelo_final<span class="sc">$</span>df.residual, .y, <span class="st">&quot;Errores clásicos&quot;</span>)),</span>
-<span id="cb166-20"><a href="rlm.html#cb166-20" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">imap_dfr</span>(pesos_etapa, <span class="sc">~</span> <span class="fu">pendiente_ic</span>(.x, V_cl, G_rlm <span class="sc">-</span> <span class="dv">1</span>, .y, <span class="st">&quot;Agrupados por mezcla&quot;</span>))</span>
-<span id="cb166-21"><a href="rlm.html#cb166-21" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb166-22"><a href="rlm.html#cb166-22" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">etapa =</span> <span class="fu">factor</span>(etapa, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Tardio&quot;</span>, <span class="st">&quot;Estandar&quot;</span>, <span class="st">&quot;Temprano&quot;</span>),</span>
-<span id="cb166-23"><a href="rlm.html#cb166-23" tabindex="-1"></a>                        <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Tardío&quot;</span>, <span class="st">&quot;Estándar&quot;</span>, <span class="st">&quot;Temprano&quot;</span>)),</span>
-<span id="cb166-24"><a href="rlm.html#cb166-24" tabindex="-1"></a>         <span class="at">tipo =</span> <span class="fu">factor</span>(tipo, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Errores clásicos&quot;</span>, <span class="st">&quot;Agrupados por mezcla&quot;</span>)))</span>
-<span id="cb166-25"><a href="rlm.html#cb166-25" tabindex="-1"></a></span>
-<span id="cb166-26"><a href="rlm.html#cb166-26" tabindex="-1"></a><span class="fu">ggplot</span>(pend, <span class="fu">aes</span>(est, etapa, <span class="at">color =</span> tipo)) <span class="sc">+</span></span>
-<span id="cb166-27"><a href="rlm.html#cb166-27" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">&quot;#c3c2b7&quot;</span>) <span class="sc">+</span></span>
-<span id="cb166-28"><a href="rlm.html#cb166-28" tabindex="-1"></a>  <span class="fu">geom_errorbarh</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> inf, <span class="at">xmax =</span> sup), <span class="at">height =</span> <span class="fl">0.25</span>, <span class="at">linewidth =</span> <span class="fl">0.9</span>,</span>
-<span id="cb166-29"><a href="rlm.html#cb166-29" tabindex="-1"></a>                 <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
-<span id="cb166-30"><a href="rlm.html#cb166-30" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.8</span>, <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
-<span id="cb166-31"><a href="rlm.html#cb166-31" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(col_azul_claro, col_azul)) <span class="sc">+</span></span>
-<span id="cb166-32"><a href="rlm.html#cb166-32" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Efecto de 100 kg/m³ adicionales de ceniza, por etapa&quot;</span>,</span>
-<span id="cb166-33"><a href="rlm.html#cb166-33" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">&quot;Cemento, escoria y agua constantes; IC del 95%&quot;</span>,</span>
-<span id="cb166-34"><a href="rlm.html#cb166-34" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Cambio en raíz(resistencia)&quot;</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb166-35"><a href="rlm.html#cb166-35" tabindex="-1"></a>  <span class="fu">tema_libro</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="rlm.html#cb168-1" tabindex="-1"></a>pendiente_ic <span class="ot">&lt;-</span> <span class="cf">function</span>(pesos, V, gl, etapa, tipo) {</span>
+<span id="cb168-2"><a href="rlm.html#cb168-2" tabindex="-1"></a>  b <span class="ot">&lt;-</span> <span class="fu">coef</span>(modelo_final)</span>
+<span id="cb168-3"><a href="rlm.html#cb168-3" tabindex="-1"></a>  l <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">length</span>(b)), <span class="fu">names</span>(b))</span>
+<span id="cb168-4"><a href="rlm.html#cb168-4" tabindex="-1"></a>  l[<span class="fu">names</span>(pesos)] <span class="ot">&lt;-</span> pesos</span>
+<span id="cb168-5"><a href="rlm.html#cb168-5" tabindex="-1"></a>  est <span class="ot">&lt;-</span> <span class="fu">sum</span>(l <span class="sc">*</span> b)</span>
+<span id="cb168-6"><a href="rlm.html#cb168-6" tabindex="-1"></a>  ee <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">drop</span>(<span class="fu">t</span>(l) <span class="sc">%*%</span> V <span class="sc">%*%</span> l))</span>
+<span id="cb168-7"><a href="rlm.html#cb168-7" tabindex="-1"></a>  margen <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, gl) <span class="sc">*</span> ee</span>
+<span id="cb168-8"><a href="rlm.html#cb168-8" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">etapa =</span> etapa, <span class="at">tipo =</span> tipo,</span>
+<span id="cb168-9"><a href="rlm.html#cb168-9" tabindex="-1"></a>         <span class="at">inf =</span> <span class="dv">100</span> <span class="sc">*</span> (est <span class="sc">-</span> margen), <span class="at">sup =</span> <span class="dv">100</span> <span class="sc">*</span> (est <span class="sc">+</span> margen), <span class="at">est =</span> <span class="dv">100</span> <span class="sc">*</span> est)</span>
+<span id="cb168-10"><a href="rlm.html#cb168-10" tabindex="-1"></a>}</span>
+<span id="cb168-11"><a href="rlm.html#cb168-11" tabindex="-1"></a></span>
+<span id="cb168-12"><a href="rlm.html#cb168-12" tabindex="-1"></a>pesos_etapa <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb168-13"><a href="rlm.html#cb168-13" tabindex="-1"></a>  <span class="at">Temprano =</span> <span class="fu">c</span>(<span class="at">ceniza =</span> <span class="dv">1</span>),</span>
+<span id="cb168-14"><a href="rlm.html#cb168-14" tabindex="-1"></a>  <span class="at">Estandar =</span> <span class="fu">c</span>(<span class="at">ceniza =</span> <span class="dv">1</span>, <span class="st">&quot;ceniza:etapaEstandar&quot;</span> <span class="ot">=</span> <span class="dv">1</span>),</span>
+<span id="cb168-15"><a href="rlm.html#cb168-15" tabindex="-1"></a>  <span class="at">Tardio =</span> <span class="fu">c</span>(<span class="at">ceniza =</span> <span class="dv">1</span>, <span class="st">&quot;ceniza:etapaTardio&quot;</span> <span class="ot">=</span> <span class="dv">1</span>)</span>
+<span id="cb168-16"><a href="rlm.html#cb168-16" tabindex="-1"></a>)</span>
+<span id="cb168-17"><a href="rlm.html#cb168-17" tabindex="-1"></a></span>
+<span id="cb168-18"><a href="rlm.html#cb168-18" tabindex="-1"></a>pend <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb168-19"><a href="rlm.html#cb168-19" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">imap_dfr</span>(pesos_etapa, <span class="sc">~</span> <span class="fu">pendiente_ic</span>(.x, <span class="fu">vcov</span>(modelo_final), modelo_final<span class="sc">$</span>df.residual, .y, <span class="st">&quot;Errores clásicos&quot;</span>)),</span>
+<span id="cb168-20"><a href="rlm.html#cb168-20" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">imap_dfr</span>(pesos_etapa, <span class="sc">~</span> <span class="fu">pendiente_ic</span>(.x, V_cl, G_rlm <span class="sc">-</span> <span class="dv">1</span>, .y, <span class="st">&quot;Agrupados por mezcla&quot;</span>))</span>
+<span id="cb168-21"><a href="rlm.html#cb168-21" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb168-22"><a href="rlm.html#cb168-22" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">etapa =</span> <span class="fu">factor</span>(etapa, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Tardio&quot;</span>, <span class="st">&quot;Estandar&quot;</span>, <span class="st">&quot;Temprano&quot;</span>),</span>
+<span id="cb168-23"><a href="rlm.html#cb168-23" tabindex="-1"></a>                        <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Tardío&quot;</span>, <span class="st">&quot;Estándar&quot;</span>, <span class="st">&quot;Temprano&quot;</span>)),</span>
+<span id="cb168-24"><a href="rlm.html#cb168-24" tabindex="-1"></a>         <span class="at">tipo =</span> <span class="fu">factor</span>(tipo, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Errores clásicos&quot;</span>, <span class="st">&quot;Agrupados por mezcla&quot;</span>)))</span>
+<span id="cb168-25"><a href="rlm.html#cb168-25" tabindex="-1"></a></span>
+<span id="cb168-26"><a href="rlm.html#cb168-26" tabindex="-1"></a><span class="fu">ggplot</span>(pend, <span class="fu">aes</span>(est, etapa, <span class="at">color =</span> tipo)) <span class="sc">+</span></span>
+<span id="cb168-27"><a href="rlm.html#cb168-27" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">&quot;#c3c2b7&quot;</span>) <span class="sc">+</span></span>
+<span id="cb168-28"><a href="rlm.html#cb168-28" tabindex="-1"></a>  <span class="fu">geom_errorbarh</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> inf, <span class="at">xmax =</span> sup), <span class="at">height =</span> <span class="fl">0.25</span>, <span class="at">linewidth =</span> <span class="fl">0.9</span>,</span>
+<span id="cb168-29"><a href="rlm.html#cb168-29" tabindex="-1"></a>                 <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
+<span id="cb168-30"><a href="rlm.html#cb168-30" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.8</span>, <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
+<span id="cb168-31"><a href="rlm.html#cb168-31" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(col_azul_claro, col_azul)) <span class="sc">+</span></span>
+<span id="cb168-32"><a href="rlm.html#cb168-32" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Efecto de 100 kg/m³ adicionales de ceniza, por etapa&quot;</span>,</span>
+<span id="cb168-33"><a href="rlm.html#cb168-33" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">&quot;Cemento, escoria y agua constantes; IC del 95%&quot;</span>,</span>
+<span id="cb168-34"><a href="rlm.html#cb168-34" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Cambio en raíz(resistencia)&quot;</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb168-35"><a href="rlm.html#cb168-35" tabindex="-1"></a>  <span class="fu">tema_libro</span>()</span></code></pre></div>
 <p><img src="Proyecto_Final_Metodos_Estadisticos_files/figure-html/rlm-pendientes-grafico-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
 <p>Ningún intervalo cruza el cero, ni siquiera con errores agrupados: la ceniza agregada aumenta la resistencia en las tres etapas. El efecto es menor en la etapa estándar y mayor en la tardía, y los intervalos de esas dos etapas no se solapan.</p>
 </div>
-<div id="observaciones-influyentes" class="section level3 hasAnchor" number="8.6.3">
-<h3><span class="header-section-number">8.6.3</span> Observaciones influyentes<a href="rlm.html#observaciones-influyentes" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="rlm.html#cb167-1" tabindex="-1"></a>n_obs <span class="ot">&lt;-</span> <span class="fu">nrow</span>(df_rlm)</span>
-<span id="cb167-2"><a href="rlm.html#cb167-2" tabindex="-1"></a>p_final <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">coef</span>(modelo_final))</span>
-<span id="cb167-3"><a href="rlm.html#cb167-3" tabindex="-1"></a>cook <span class="ot">&lt;-</span> <span class="fu">cooks.distance</span>(modelo_final)</span>
-<span id="cb167-4"><a href="rlm.html#cb167-4" tabindex="-1"></a>influyentes <span class="ot">&lt;-</span> <span class="fu">which</span>(cook <span class="sc">&gt;</span> <span class="dv">4</span> <span class="sc">/</span> n_obs)</span>
-<span id="cb167-5"><a href="rlm.html#cb167-5" tabindex="-1"></a></span>
-<span id="cb167-6"><a href="rlm.html#cb167-6" tabindex="-1"></a><span class="fu">tibble</span>(</span>
-<span id="cb167-7"><a href="rlm.html#cb167-7" tabindex="-1"></a>  <span class="at">indicador =</span> <span class="fu">c</span>(<span class="st">&quot;Observaciones con distancia de Cook &gt; 4/n&quot;</span>,</span>
-<span id="cb167-8"><a href="rlm.html#cb167-8" tabindex="-1"></a>                <span class="st">&quot;Distancia de Cook máxima&quot;</span>,</span>
-<span id="cb167-9"><a href="rlm.html#cb167-9" tabindex="-1"></a>                <span class="st">&quot;Observaciones con apalancamiento &gt; 2p/n&quot;</span>),</span>
-<span id="cb167-10"><a href="rlm.html#cb167-10" tabindex="-1"></a>  <span class="at">valor =</span> <span class="fu">c</span>(<span class="fu">length</span>(influyentes), <span class="fu">max</span>(cook), <span class="fu">sum</span>(<span class="fu">hatvalues</span>(modelo_final) <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">*</span> p_final <span class="sc">/</span> n_obs))</span>
-<span id="cb167-11"><a href="rlm.html#cb167-11" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb167-12"><a href="rlm.html#cb167-12" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Diagnóstico de influencia del modelo final&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<div id="observaciones-influyentes" class="section level3 hasAnchor" number="8.6.4">
+<h3><span class="header-section-number">8.6.4</span> Observaciones influyentes<a href="rlm.html#observaciones-influyentes" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="rlm.html#cb169-1" tabindex="-1"></a>n_obs <span class="ot">&lt;-</span> <span class="fu">nrow</span>(df_rlm)</span>
+<span id="cb169-2"><a href="rlm.html#cb169-2" tabindex="-1"></a>p_final <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">coef</span>(modelo_final))</span>
+<span id="cb169-3"><a href="rlm.html#cb169-3" tabindex="-1"></a>cook <span class="ot">&lt;-</span> <span class="fu">cooks.distance</span>(modelo_final)</span>
+<span id="cb169-4"><a href="rlm.html#cb169-4" tabindex="-1"></a>influyentes <span class="ot">&lt;-</span> <span class="fu">which</span>(cook <span class="sc">&gt;</span> <span class="dv">4</span> <span class="sc">/</span> n_obs)</span>
+<span id="cb169-5"><a href="rlm.html#cb169-5" tabindex="-1"></a></span>
+<span id="cb169-6"><a href="rlm.html#cb169-6" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb169-7"><a href="rlm.html#cb169-7" tabindex="-1"></a>  <span class="at">indicador =</span> <span class="fu">c</span>(<span class="st">&quot;Observaciones con distancia de Cook &gt; 4/n&quot;</span>,</span>
+<span id="cb169-8"><a href="rlm.html#cb169-8" tabindex="-1"></a>                <span class="st">&quot;Distancia de Cook máxima&quot;</span>,</span>
+<span id="cb169-9"><a href="rlm.html#cb169-9" tabindex="-1"></a>                <span class="st">&quot;Observaciones con apalancamiento &gt; 2p/n&quot;</span>),</span>
+<span id="cb169-10"><a href="rlm.html#cb169-10" tabindex="-1"></a>  <span class="at">valor =</span> <span class="fu">c</span>(<span class="fu">length</span>(influyentes), <span class="fu">max</span>(cook), <span class="fu">sum</span>(<span class="fu">hatvalues</span>(modelo_final) <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">*</span> p_final <span class="sc">/</span> n_obs))</span>
+<span id="cb169-11"><a href="rlm.html#cb169-11" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb169-12"><a href="rlm.html#cb169-12" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Diagnóstico de influencia del modelo final&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:rlm-influencia">Table 8.21: </span>Diagnóstico de influencia del modelo final
+<span id="tab:rlm-influencia">Table 8.22: </span>Diagnóstico de influencia del modelo final
 </caption>
 <thead>
 <tr>
@@ -3537,18 +3662,18 @@ Observaciones con apalancamiento &gt; 2p/n
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="rlm.html#cb168-1" tabindex="-1"></a><span class="co"># Sensibilidad: coeficientes sin las observaciones influyentes</span></span>
-<span id="cb168-2"><a href="rlm.html#cb168-2" tabindex="-1"></a>m_sin_infl <span class="ot">&lt;-</span> <span class="fu">update</span>(modelo_final, <span class="at">data =</span> df_rlm[<span class="sc">-</span>influyentes, ])</span>
-<span id="cb168-3"><a href="rlm.html#cb168-3" tabindex="-1"></a></span>
-<span id="cb168-4"><a href="rlm.html#cb168-4" tabindex="-1"></a><span class="fu">tibble</span>(</span>
-<span id="cb168-5"><a href="rlm.html#cb168-5" tabindex="-1"></a>  <span class="at">termino =</span> <span class="fu">names</span>(<span class="fu">coef</span>(modelo_final)),</span>
-<span id="cb168-6"><a href="rlm.html#cb168-6" tabindex="-1"></a>  <span class="at">con_todas =</span> <span class="fu">coef</span>(modelo_final),</span>
-<span id="cb168-7"><a href="rlm.html#cb168-7" tabindex="-1"></a>  <span class="at">sin_influyentes =</span> <span class="fu">coef</span>(m_sin_infl)</span>
-<span id="cb168-8"><a href="rlm.html#cb168-8" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb168-9"><a href="rlm.html#cb168-9" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Sensibilidad de los coeficientes a las observaciones influyentes&quot;</span>, <span class="at">digits =</span> <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="rlm.html#cb170-1" tabindex="-1"></a><span class="co"># Sensibilidad: coeficientes sin las observaciones influyentes</span></span>
+<span id="cb170-2"><a href="rlm.html#cb170-2" tabindex="-1"></a>m_sin_infl <span class="ot">&lt;-</span> <span class="fu">update</span>(modelo_final, <span class="at">data =</span> df_rlm[<span class="sc">-</span>influyentes, ])</span>
+<span id="cb170-3"><a href="rlm.html#cb170-3" tabindex="-1"></a></span>
+<span id="cb170-4"><a href="rlm.html#cb170-4" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb170-5"><a href="rlm.html#cb170-5" tabindex="-1"></a>  <span class="at">termino =</span> <span class="fu">names</span>(<span class="fu">coef</span>(modelo_final)),</span>
+<span id="cb170-6"><a href="rlm.html#cb170-6" tabindex="-1"></a>  <span class="at">con_todas =</span> <span class="fu">coef</span>(modelo_final),</span>
+<span id="cb170-7"><a href="rlm.html#cb170-7" tabindex="-1"></a>  <span class="at">sin_influyentes =</span> <span class="fu">coef</span>(m_sin_infl)</span>
+<span id="cb170-8"><a href="rlm.html#cb170-8" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb170-9"><a href="rlm.html#cb170-9" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Sensibilidad de los coeficientes a las observaciones influyentes&quot;</span>, <span class="at">digits =</span> <span class="dv">5</span>)</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:rlm-influencia-sensibilidad">Table 8.22: </span>Sensibilidad de los coeficientes a las observaciones influyentes
+<span id="tab:rlm-influencia-sensibilidad">Table 8.23: </span>Sensibilidad de los coeficientes a las observaciones influyentes
 </caption>
 <thead>
 <tr>
@@ -3682,34 +3807,34 @@ ceniza:etapaTardio
 <li><strong>Sustitución:</strong> se reducen 100 kg/m³ de cemento y se agregan 100 kg/m³ de ceniza.</li>
 <li><strong>Adición:</strong> se agregan 100 kg/m³ de ceniza manteniendo el cemento.</li>
 </ul>
-<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="rlm.html#cb169-1" tabindex="-1"></a>cem0 <span class="ot">&lt;-</span> <span class="fu">mean</span>(df_rlm<span class="sc">$</span>cemento)</span>
-<span id="cb169-2"><a href="rlm.html#cb169-2" tabindex="-1"></a></span>
-<span id="cb169-3"><a href="rlm.html#cb169-3" tabindex="-1"></a>escenarios <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
-<span id="cb169-4"><a href="rlm.html#cb169-4" tabindex="-1"></a>  <span class="at">escenario =</span> <span class="fu">c</span>(<span class="st">&quot;Control&quot;</span>, <span class="st">&quot;Sustitucion (-100 cemento, +100 ceniza)&quot;</span>, <span class="st">&quot;Adicion (+100 ceniza)&quot;</span>),</span>
-<span id="cb169-5"><a href="rlm.html#cb169-5" tabindex="-1"></a>  <span class="at">etapa =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;Temprano&quot;</span>, <span class="st">&quot;Estandar&quot;</span>, <span class="st">&quot;Tardio&quot;</span>), <span class="at">levels =</span> <span class="fu">levels</span>(df_rlm<span class="sc">$</span>etapa))</span>
-<span id="cb169-6"><a href="rlm.html#cb169-6" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb169-7"><a href="rlm.html#cb169-7" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb169-8"><a href="rlm.html#cb169-8" tabindex="-1"></a>    <span class="at">ceniza =</span> <span class="fu">if_else</span>(<span class="fu">str_starts</span>(escenario, <span class="st">&quot;Control&quot;</span>), <span class="dv">0</span>, <span class="dv">100</span>),</span>
-<span id="cb169-9"><a href="rlm.html#cb169-9" tabindex="-1"></a>    <span class="at">cemento =</span> <span class="fu">if_else</span>(<span class="fu">str_starts</span>(escenario, <span class="st">&quot;Sustitucion&quot;</span>), cem0 <span class="sc">-</span> <span class="dv">100</span>, cem0),</span>
-<span id="cb169-10"><a href="rlm.html#cb169-10" tabindex="-1"></a>    <span class="at">escoria =</span> <span class="fu">mean</span>(df_rlm<span class="sc">$</span>escoria),</span>
-<span id="cb169-11"><a href="rlm.html#cb169-11" tabindex="-1"></a>    <span class="at">agua =</span> <span class="fu">mean</span>(df_rlm<span class="sc">$</span>agua)</span>
-<span id="cb169-12"><a href="rlm.html#cb169-12" tabindex="-1"></a>  )</span>
-<span id="cb169-13"><a href="rlm.html#cb169-13" tabindex="-1"></a></span>
-<span id="cb169-14"><a href="rlm.html#cb169-14" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_final, <span class="at">newdata =</span> escenarios, <span class="at">interval =</span> <span class="st">&quot;confidence&quot;</span>)</span>
-<span id="cb169-15"><a href="rlm.html#cb169-15" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">summary</span>(modelo_final)<span class="sc">$</span>sigma<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb169-16"><a href="rlm.html#cb169-16" tabindex="-1"></a></span>
-<span id="cb169-17"><a href="rlm.html#cb169-17" tabindex="-1"></a>escenarios <span class="sc">|&gt;</span></span>
-<span id="cb169-18"><a href="rlm.html#cb169-18" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb169-19"><a href="rlm.html#cb169-19" tabindex="-1"></a>    <span class="at">mediana_MPa =</span> pred[, <span class="st">&quot;fit&quot;</span>]<span class="sc">^</span><span class="dv">2</span>,</span>
-<span id="cb169-20"><a href="rlm.html#cb169-20" tabindex="-1"></a>    <span class="at">IC95_inf_MPa =</span> pred[, <span class="st">&quot;lwr&quot;</span>]<span class="sc">^</span><span class="dv">2</span>,</span>
-<span id="cb169-21"><a href="rlm.html#cb169-21" tabindex="-1"></a>    <span class="at">IC95_sup_MPa =</span> pred[, <span class="st">&quot;upr&quot;</span>]<span class="sc">^</span><span class="dv">2</span>,</span>
-<span id="cb169-22"><a href="rlm.html#cb169-22" tabindex="-1"></a>    <span class="at">media_MPa =</span> pred[, <span class="st">&quot;fit&quot;</span>]<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> s2</span>
-<span id="cb169-23"><a href="rlm.html#cb169-23" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb169-24"><a href="rlm.html#cb169-24" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(escenario, etapa, ceniza, cemento, mediana_MPa, IC95_inf_MPa, IC95_sup_MPa, media_MPa) <span class="sc">|&gt;</span></span>
-<span id="cb169-25"><a href="rlm.html#cb169-25" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Resistencia predicha (MPa) por escenario y etapa de curado (IC del 95% para la mediana)&quot;</span>, <span class="at">digits =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="rlm.html#cb171-1" tabindex="-1"></a>cem0 <span class="ot">&lt;-</span> <span class="fu">mean</span>(df_rlm<span class="sc">$</span>cemento)</span>
+<span id="cb171-2"><a href="rlm.html#cb171-2" tabindex="-1"></a></span>
+<span id="cb171-3"><a href="rlm.html#cb171-3" tabindex="-1"></a>escenarios <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
+<span id="cb171-4"><a href="rlm.html#cb171-4" tabindex="-1"></a>  <span class="at">escenario =</span> <span class="fu">c</span>(<span class="st">&quot;Control&quot;</span>, <span class="st">&quot;Sustitucion (-100 cemento, +100 ceniza)&quot;</span>, <span class="st">&quot;Adicion (+100 ceniza)&quot;</span>),</span>
+<span id="cb171-5"><a href="rlm.html#cb171-5" tabindex="-1"></a>  <span class="at">etapa =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;Temprano&quot;</span>, <span class="st">&quot;Estandar&quot;</span>, <span class="st">&quot;Tardio&quot;</span>), <span class="at">levels =</span> <span class="fu">levels</span>(df_rlm<span class="sc">$</span>etapa))</span>
+<span id="cb171-6"><a href="rlm.html#cb171-6" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb171-7"><a href="rlm.html#cb171-7" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb171-8"><a href="rlm.html#cb171-8" tabindex="-1"></a>    <span class="at">ceniza =</span> <span class="fu">if_else</span>(<span class="fu">str_starts</span>(escenario, <span class="st">&quot;Control&quot;</span>), <span class="dv">0</span>, <span class="dv">100</span>),</span>
+<span id="cb171-9"><a href="rlm.html#cb171-9" tabindex="-1"></a>    <span class="at">cemento =</span> <span class="fu">if_else</span>(<span class="fu">str_starts</span>(escenario, <span class="st">&quot;Sustitucion&quot;</span>), cem0 <span class="sc">-</span> <span class="dv">100</span>, cem0),</span>
+<span id="cb171-10"><a href="rlm.html#cb171-10" tabindex="-1"></a>    <span class="at">escoria =</span> <span class="fu">mean</span>(df_rlm<span class="sc">$</span>escoria),</span>
+<span id="cb171-11"><a href="rlm.html#cb171-11" tabindex="-1"></a>    <span class="at">agua =</span> <span class="fu">mean</span>(df_rlm<span class="sc">$</span>agua)</span>
+<span id="cb171-12"><a href="rlm.html#cb171-12" tabindex="-1"></a>  )</span>
+<span id="cb171-13"><a href="rlm.html#cb171-13" tabindex="-1"></a></span>
+<span id="cb171-14"><a href="rlm.html#cb171-14" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_final, <span class="at">newdata =</span> escenarios, <span class="at">interval =</span> <span class="st">&quot;confidence&quot;</span>)</span>
+<span id="cb171-15"><a href="rlm.html#cb171-15" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">summary</span>(modelo_final)<span class="sc">$</span>sigma<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb171-16"><a href="rlm.html#cb171-16" tabindex="-1"></a></span>
+<span id="cb171-17"><a href="rlm.html#cb171-17" tabindex="-1"></a>escenarios <span class="sc">|&gt;</span></span>
+<span id="cb171-18"><a href="rlm.html#cb171-18" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb171-19"><a href="rlm.html#cb171-19" tabindex="-1"></a>    <span class="at">mediana_MPa =</span> pred[, <span class="st">&quot;fit&quot;</span>]<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb171-20"><a href="rlm.html#cb171-20" tabindex="-1"></a>    <span class="at">IC95_inf_MPa =</span> pred[, <span class="st">&quot;lwr&quot;</span>]<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb171-21"><a href="rlm.html#cb171-21" tabindex="-1"></a>    <span class="at">IC95_sup_MPa =</span> pred[, <span class="st">&quot;upr&quot;</span>]<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb171-22"><a href="rlm.html#cb171-22" tabindex="-1"></a>    <span class="at">media_MPa =</span> pred[, <span class="st">&quot;fit&quot;</span>]<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> s2</span>
+<span id="cb171-23"><a href="rlm.html#cb171-23" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb171-24"><a href="rlm.html#cb171-24" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(escenario, etapa, ceniza, cemento, mediana_MPa, IC95_inf_MPa, IC95_sup_MPa, media_MPa) <span class="sc">|&gt;</span></span>
+<span id="cb171-25"><a href="rlm.html#cb171-25" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Resistencia predicha (MPa) por escenario y etapa de curado (IC del 95% para la mediana)&quot;</span>, <span class="at">digits =</span> <span class="dv">1</span>)</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:rlm-escenarios">Table 8.23: </span>Resistencia predicha (MPa) por escenario y etapa de curado (IC del 95% para la mediana)
+<span id="tab:rlm-escenarios">Table 8.24: </span>Resistencia predicha (MPa) por escenario y etapa de curado (IC del 95% para la mediana)
 </caption>
 <thead>
 <tr>
@@ -3976,25 +4101,25 @@ Tardio
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="rlm.html#cb170-1" tabindex="-1"></a>tab_esc <span class="ot">&lt;-</span> escenarios <span class="sc">|&gt;</span></span>
-<span id="cb170-2"><a href="rlm.html#cb170-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mediana_MPa =</span> pred[, <span class="st">&quot;fit&quot;</span>]<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb170-3"><a href="rlm.html#cb170-3" tabindex="-1"></a></span>
-<span id="cb170-4"><a href="rlm.html#cb170-4" tabindex="-1"></a>control <span class="ot">&lt;-</span> tab_esc <span class="sc">|&gt;</span></span>
-<span id="cb170-5"><a href="rlm.html#cb170-5" tabindex="-1"></a>  <span class="fu">filter</span>(escenario <span class="sc">==</span> <span class="st">&quot;Control&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb170-6"><a href="rlm.html#cb170-6" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(etapa, <span class="at">control_MPa =</span> mediana_MPa)</span>
-<span id="cb170-7"><a href="rlm.html#cb170-7" tabindex="-1"></a></span>
-<span id="cb170-8"><a href="rlm.html#cb170-8" tabindex="-1"></a>tab_esc <span class="sc">|&gt;</span></span>
-<span id="cb170-9"><a href="rlm.html#cb170-9" tabindex="-1"></a>  <span class="fu">filter</span>(escenario <span class="sc">!=</span> <span class="st">&quot;Control&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb170-10"><a href="rlm.html#cb170-10" tabindex="-1"></a>  <span class="fu">left_join</span>(control, <span class="at">by =</span> <span class="st">&quot;etapa&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb170-11"><a href="rlm.html#cb170-11" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb170-12"><a href="rlm.html#cb170-12" tabindex="-1"></a>    <span class="at">diferencia_MPa =</span> mediana_MPa <span class="sc">-</span> control_MPa,</span>
-<span id="cb170-13"><a href="rlm.html#cb170-13" tabindex="-1"></a>    <span class="at">diferencia_pct =</span> <span class="dv">100</span> <span class="sc">*</span> diferencia_MPa <span class="sc">/</span> control_MPa</span>
-<span id="cb170-14"><a href="rlm.html#cb170-14" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb170-15"><a href="rlm.html#cb170-15" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(escenario, etapa, control_MPa, mediana_MPa, diferencia_MPa, diferencia_pct) <span class="sc">|&gt;</span></span>
-<span id="cb170-16"><a href="rlm.html#cb170-16" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Cambio de la resistencia (mediana, MPa) frente a la mezcla de control&quot;</span>, <span class="at">digits =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="rlm.html#cb172-1" tabindex="-1"></a>tab_esc <span class="ot">&lt;-</span> escenarios <span class="sc">|&gt;</span></span>
+<span id="cb172-2"><a href="rlm.html#cb172-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mediana_MPa =</span> pred[, <span class="st">&quot;fit&quot;</span>]<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb172-3"><a href="rlm.html#cb172-3" tabindex="-1"></a></span>
+<span id="cb172-4"><a href="rlm.html#cb172-4" tabindex="-1"></a>control <span class="ot">&lt;-</span> tab_esc <span class="sc">|&gt;</span></span>
+<span id="cb172-5"><a href="rlm.html#cb172-5" tabindex="-1"></a>  <span class="fu">filter</span>(escenario <span class="sc">==</span> <span class="st">&quot;Control&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb172-6"><a href="rlm.html#cb172-6" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(etapa, <span class="at">control_MPa =</span> mediana_MPa)</span>
+<span id="cb172-7"><a href="rlm.html#cb172-7" tabindex="-1"></a></span>
+<span id="cb172-8"><a href="rlm.html#cb172-8" tabindex="-1"></a>tab_esc <span class="sc">|&gt;</span></span>
+<span id="cb172-9"><a href="rlm.html#cb172-9" tabindex="-1"></a>  <span class="fu">filter</span>(escenario <span class="sc">!=</span> <span class="st">&quot;Control&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb172-10"><a href="rlm.html#cb172-10" tabindex="-1"></a>  <span class="fu">left_join</span>(control, <span class="at">by =</span> <span class="st">&quot;etapa&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb172-11"><a href="rlm.html#cb172-11" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb172-12"><a href="rlm.html#cb172-12" tabindex="-1"></a>    <span class="at">diferencia_MPa =</span> mediana_MPa <span class="sc">-</span> control_MPa,</span>
+<span id="cb172-13"><a href="rlm.html#cb172-13" tabindex="-1"></a>    <span class="at">diferencia_pct =</span> <span class="dv">100</span> <span class="sc">*</span> diferencia_MPa <span class="sc">/</span> control_MPa</span>
+<span id="cb172-14"><a href="rlm.html#cb172-14" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb172-15"><a href="rlm.html#cb172-15" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(escenario, etapa, control_MPa, mediana_MPa, diferencia_MPa, diferencia_pct) <span class="sc">|&gt;</span></span>
+<span id="cb172-16"><a href="rlm.html#cb172-16" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Cambio de la resistencia (mediana, MPa) frente a la mezcla de control&quot;</span>, <span class="at">digits =</span> <span class="dv">1</span>)</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:rlm-escenarios-diferencia">Table 8.24: </span>Cambio de la resistencia (mediana, MPa) frente a la mezcla de control
+<span id="tab:rlm-escenarios-diferencia">Table 8.25: </span>Cambio de la resistencia (mediana, MPa) frente a la mezcla de control
 </caption>
 <thead>
 <tr>
@@ -4156,17 +4281,17 @@ Tardio
 &amp;\quad -0.0018\,(\text{ceniza}\times D_{Est}) +0.0023\,(\text{ceniza}\times D_{Tar})
 \end{aligned}\]</span></p>
 <p>Como la etapa es una variable dummy, el modelo equivale a <strong>tres ecuaciones</strong>, una por etapa de curado. Todas comparten el efecto de cemento, escoria y agua; lo que cambia es el intercepto y la pendiente de la ceniza:</p>
-<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="rlm.html#cb171-1" tabindex="-1"></a>ecuaciones <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb171-2"><a href="rlm.html#cb171-2" tabindex="-1"></a>  <span class="at">etapa =</span> <span class="fu">levels</span>(df_rlm<span class="sc">$</span>etapa),</span>
-<span id="cb171-3"><a href="rlm.html#cb171-3" tabindex="-1"></a>  <span class="at">intercepto =</span> b_f[<span class="st">&quot;(Intercept)&quot;</span>] <span class="sc">+</span> <span class="fu">c</span>(<span class="dv">0</span>, b_f[<span class="st">&quot;etapaEstandar&quot;</span>], b_f[<span class="st">&quot;etapaTardio&quot;</span>]),</span>
-<span id="cb171-4"><a href="rlm.html#cb171-4" tabindex="-1"></a>  <span class="at">pendiente_ceniza =</span> b_f[<span class="st">&quot;ceniza&quot;</span>] <span class="sc">+</span> <span class="fu">c</span>(<span class="dv">0</span>, b_f[<span class="st">&quot;ceniza:etapaEstandar&quot;</span>], b_f[<span class="st">&quot;ceniza:etapaTardio&quot;</span>])</span>
-<span id="cb171-5"><a href="rlm.html#cb171-5" tabindex="-1"></a>)</span>
-<span id="cb171-6"><a href="rlm.html#cb171-6" tabindex="-1"></a></span>
-<span id="cb171-7"><a href="rlm.html#cb171-7" tabindex="-1"></a>ecuaciones <span class="sc">|&gt;</span></span>
-<span id="cb171-8"><a href="rlm.html#cb171-8" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Intercepto y pendiente de la ceniza en cada etapa (escala raiz de MPa)&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="rlm.html#cb173-1" tabindex="-1"></a>ecuaciones <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb173-2"><a href="rlm.html#cb173-2" tabindex="-1"></a>  <span class="at">etapa =</span> <span class="fu">levels</span>(df_rlm<span class="sc">$</span>etapa),</span>
+<span id="cb173-3"><a href="rlm.html#cb173-3" tabindex="-1"></a>  <span class="at">intercepto =</span> b_f[<span class="st">&quot;(Intercept)&quot;</span>] <span class="sc">+</span> <span class="fu">c</span>(<span class="dv">0</span>, b_f[<span class="st">&quot;etapaEstandar&quot;</span>], b_f[<span class="st">&quot;etapaTardio&quot;</span>]),</span>
+<span id="cb173-4"><a href="rlm.html#cb173-4" tabindex="-1"></a>  <span class="at">pendiente_ceniza =</span> b_f[<span class="st">&quot;ceniza&quot;</span>] <span class="sc">+</span> <span class="fu">c</span>(<span class="dv">0</span>, b_f[<span class="st">&quot;ceniza:etapaEstandar&quot;</span>], b_f[<span class="st">&quot;ceniza:etapaTardio&quot;</span>])</span>
+<span id="cb173-5"><a href="rlm.html#cb173-5" tabindex="-1"></a>)</span>
+<span id="cb173-6"><a href="rlm.html#cb173-6" tabindex="-1"></a></span>
+<span id="cb173-7"><a href="rlm.html#cb173-7" tabindex="-1"></a>ecuaciones <span class="sc">|&gt;</span></span>
+<span id="cb173-8"><a href="rlm.html#cb173-8" tabindex="-1"></a>  <span class="fu">tabla_kbl</span>(<span class="st">&quot;Intercepto y pendiente de la ceniza en cada etapa (escala raiz de MPa)&quot;</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:rlm-ecuaciones-etapa">Table 8.25: </span>Intercepto y pendiente de la ceniza en cada etapa (escala raiz de MPa)
+<span id="tab:rlm-ecuaciones-etapa">Table 8.26: </span>Intercepto y pendiente de la ceniza en cada etapa (escala raiz de MPa)
 </caption>
 <thead>
 <tr>
@@ -4226,42 +4351,42 @@ Tardio
 <div id="las-tres-rectas-del-modelo" class="section level3 hasAnchor" number="8.8.2">
 <h3><span class="header-section-number">8.8.2</span> Las tres rectas del modelo<a href="rlm.html#las-tres-rectas-del-modelo" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>El gráfico muestra la resistencia predicha (en MPa, retrotransformada) en función de la ceniza para cada etapa, con cemento, escoria y agua en sus valores medios, sobre los datos observados. Las pendientes distintas son la interacción ceniza × etapa.</p>
-<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="rlm.html#cb172-1" tabindex="-1"></a>malla <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
-<span id="cb172-2"><a href="rlm.html#cb172-2" tabindex="-1"></a>  <span class="at">ceniza =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="fu">max</span>(df_rlm<span class="sc">$</span>ceniza), <span class="at">length.out =</span> <span class="dv">100</span>),</span>
-<span id="cb172-3"><a href="rlm.html#cb172-3" tabindex="-1"></a>  <span class="at">etapa =</span> <span class="fu">factor</span>(<span class="fu">levels</span>(df_rlm<span class="sc">$</span>etapa), <span class="at">levels =</span> <span class="fu">levels</span>(df_rlm<span class="sc">$</span>etapa))</span>
-<span id="cb172-4"><a href="rlm.html#cb172-4" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb172-5"><a href="rlm.html#cb172-5" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cemento =</span> <span class="fu">mean</span>(df_rlm<span class="sc">$</span>cemento), <span class="at">escoria =</span> <span class="fu">mean</span>(df_rlm<span class="sc">$</span>escoria), <span class="at">agua =</span> <span class="fu">mean</span>(df_rlm<span class="sc">$</span>agua))</span>
-<span id="cb172-6"><a href="rlm.html#cb172-6" tabindex="-1"></a></span>
-<span id="cb172-7"><a href="rlm.html#cb172-7" tabindex="-1"></a>pr <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_final, <span class="at">newdata =</span> malla, <span class="at">interval =</span> <span class="st">&quot;confidence&quot;</span>)</span>
-<span id="cb172-8"><a href="rlm.html#cb172-8" tabindex="-1"></a>malla <span class="ot">&lt;-</span> malla <span class="sc">|&gt;</span></span>
-<span id="cb172-9"><a href="rlm.html#cb172-9" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ajuste =</span> pr[, <span class="st">&quot;fit&quot;</span>]<span class="sc">^</span><span class="dv">2</span>, <span class="at">inf =</span> pr[, <span class="st">&quot;lwr&quot;</span>]<span class="sc">^</span><span class="dv">2</span>, <span class="at">sup =</span> pr[, <span class="st">&quot;upr&quot;</span>]<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb172-10"><a href="rlm.html#cb172-10" tabindex="-1"></a></span>
-<span id="cb172-11"><a href="rlm.html#cb172-11" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb172-12"><a href="rlm.html#cb172-12" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> df_rlm, <span class="fu">aes</span>(ceniza, resistencia, <span class="at">color =</span> etapa), <span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">size =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
-<span id="cb172-13"><a href="rlm.html#cb172-13" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> malla, <span class="fu">aes</span>(ceniza, <span class="at">ymin =</span> inf, <span class="at">ymax =</span> sup, <span class="at">fill =</span> etapa), <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb172-14"><a href="rlm.html#cb172-14" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> malla, <span class="fu">aes</span>(ceniza, ajuste, <span class="at">color =</span> etapa), <span class="at">linewidth =</span> <span class="fl">1.1</span>) <span class="sc">+</span></span>
-<span id="cb172-15"><a href="rlm.html#cb172-15" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> cols_etapa) <span class="sc">+</span></span>
-<span id="cb172-16"><a href="rlm.html#cb172-16" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> cols_etapa) <span class="sc">+</span></span>
-<span id="cb172-17"><a href="rlm.html#cb172-17" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Modelo final: resistencia predicha por etapa de curado&quot;</span>,</span>
-<span id="cb172-18"><a href="rlm.html#cb172-18" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">&quot;Cemento, escoria y agua en sus medias; banda = IC del 95% de la mediana&quot;</span>,</span>
-<span id="cb172-19"><a href="rlm.html#cb172-19" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Ceniza volante (kg/m³)&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Resistencia (MPa)&quot;</span>) <span class="sc">+</span></span>
-<span id="cb172-20"><a href="rlm.html#cb172-20" tabindex="-1"></a>  <span class="fu">tema_libro</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="rlm.html#cb174-1" tabindex="-1"></a>malla <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
+<span id="cb174-2"><a href="rlm.html#cb174-2" tabindex="-1"></a>  <span class="at">ceniza =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="fu">max</span>(df_rlm<span class="sc">$</span>ceniza), <span class="at">length.out =</span> <span class="dv">100</span>),</span>
+<span id="cb174-3"><a href="rlm.html#cb174-3" tabindex="-1"></a>  <span class="at">etapa =</span> <span class="fu">factor</span>(<span class="fu">levels</span>(df_rlm<span class="sc">$</span>etapa), <span class="at">levels =</span> <span class="fu">levels</span>(df_rlm<span class="sc">$</span>etapa))</span>
+<span id="cb174-4"><a href="rlm.html#cb174-4" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb174-5"><a href="rlm.html#cb174-5" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cemento =</span> <span class="fu">mean</span>(df_rlm<span class="sc">$</span>cemento), <span class="at">escoria =</span> <span class="fu">mean</span>(df_rlm<span class="sc">$</span>escoria), <span class="at">agua =</span> <span class="fu">mean</span>(df_rlm<span class="sc">$</span>agua))</span>
+<span id="cb174-6"><a href="rlm.html#cb174-6" tabindex="-1"></a></span>
+<span id="cb174-7"><a href="rlm.html#cb174-7" tabindex="-1"></a>pr <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_final, <span class="at">newdata =</span> malla, <span class="at">interval =</span> <span class="st">&quot;confidence&quot;</span>)</span>
+<span id="cb174-8"><a href="rlm.html#cb174-8" tabindex="-1"></a>malla <span class="ot">&lt;-</span> malla <span class="sc">|&gt;</span></span>
+<span id="cb174-9"><a href="rlm.html#cb174-9" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ajuste =</span> pr[, <span class="st">&quot;fit&quot;</span>]<span class="sc">^</span><span class="dv">2</span>, <span class="at">inf =</span> pr[, <span class="st">&quot;lwr&quot;</span>]<span class="sc">^</span><span class="dv">2</span>, <span class="at">sup =</span> pr[, <span class="st">&quot;upr&quot;</span>]<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb174-10"><a href="rlm.html#cb174-10" tabindex="-1"></a></span>
+<span id="cb174-11"><a href="rlm.html#cb174-11" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb174-12"><a href="rlm.html#cb174-12" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> df_rlm, <span class="fu">aes</span>(ceniza, resistencia, <span class="at">color =</span> etapa), <span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">size =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb174-13"><a href="rlm.html#cb174-13" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> malla, <span class="fu">aes</span>(ceniza, <span class="at">ymin =</span> inf, <span class="at">ymax =</span> sup, <span class="at">fill =</span> etapa), <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb174-14"><a href="rlm.html#cb174-14" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> malla, <span class="fu">aes</span>(ceniza, ajuste, <span class="at">color =</span> etapa), <span class="at">linewidth =</span> <span class="fl">1.1</span>) <span class="sc">+</span></span>
+<span id="cb174-15"><a href="rlm.html#cb174-15" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> cols_etapa) <span class="sc">+</span></span>
+<span id="cb174-16"><a href="rlm.html#cb174-16" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> cols_etapa) <span class="sc">+</span></span>
+<span id="cb174-17"><a href="rlm.html#cb174-17" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Modelo final: resistencia predicha por etapa de curado&quot;</span>,</span>
+<span id="cb174-18"><a href="rlm.html#cb174-18" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">&quot;Cemento, escoria y agua en sus medias; banda = IC del 95% de la mediana&quot;</span>,</span>
+<span id="cb174-19"><a href="rlm.html#cb174-19" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Ceniza volante (kg/m³)&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Resistencia (MPa)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb174-20"><a href="rlm.html#cb174-20" tabindex="-1"></a>  <span class="fu">tema_libro</span>()</span></code></pre></div>
 <p><img src="Proyecto_Final_Metodos_Estadisticos_files/figure-html/rlm-rectas-modelo-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="valores-observados-frente-a-predichos" class="section level3 hasAnchor" number="8.8.3">
 <h3><span class="header-section-number">8.8.3</span> Valores observados frente a predichos<a href="rlm.html#valores-observados-frente-a-predichos" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="rlm.html#cb173-1" tabindex="-1"></a>df_op <span class="ot">&lt;-</span> df_rlm <span class="sc">|&gt;</span></span>
-<span id="cb173-2"><a href="rlm.html#cb173-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">predicho =</span> <span class="fu">fitted</span>(modelo_final)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb173-3"><a href="rlm.html#cb173-3" tabindex="-1"></a></span>
-<span id="cb173-4"><a href="rlm.html#cb173-4" tabindex="-1"></a><span class="fu">ggplot</span>(df_op, <span class="fu">aes</span>(predicho, resistencia, <span class="at">color =</span> etapa)) <span class="sc">+</span></span>
-<span id="cb173-5"><a href="rlm.html#cb173-5" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">&quot;#0b0b0b&quot;</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb173-6"><a href="rlm.html#cb173-6" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.55</span>, <span class="at">size =</span> <span class="fl">1.3</span>) <span class="sc">+</span></span>
-<span id="cb173-7"><a href="rlm.html#cb173-7" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> cols_etapa) <span class="sc">+</span></span>
-<span id="cb173-8"><a href="rlm.html#cb173-8" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
-<span id="cb173-9"><a href="rlm.html#cb173-9" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Resistencia observada frente a la predicha&quot;</span>,</span>
-<span id="cb173-10"><a href="rlm.html#cb173-10" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">&quot;Los puntos sobre la diagonal son predicciones perfectas&quot;</span>,</span>
-<span id="cb173-11"><a href="rlm.html#cb173-11" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Resistencia predicha (MPa)&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Resistencia observada (MPa)&quot;</span>) <span class="sc">+</span></span>
-<span id="cb173-12"><a href="rlm.html#cb173-12" tabindex="-1"></a>  <span class="fu">tema_libro</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="rlm.html#cb175-1" tabindex="-1"></a>df_op <span class="ot">&lt;-</span> df_rlm <span class="sc">|&gt;</span></span>
+<span id="cb175-2"><a href="rlm.html#cb175-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">predicho =</span> <span class="fu">fitted</span>(modelo_final)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb175-3"><a href="rlm.html#cb175-3" tabindex="-1"></a></span>
+<span id="cb175-4"><a href="rlm.html#cb175-4" tabindex="-1"></a><span class="fu">ggplot</span>(df_op, <span class="fu">aes</span>(predicho, resistencia, <span class="at">color =</span> etapa)) <span class="sc">+</span></span>
+<span id="cb175-5"><a href="rlm.html#cb175-5" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">&quot;#0b0b0b&quot;</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb175-6"><a href="rlm.html#cb175-6" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.55</span>, <span class="at">size =</span> <span class="fl">1.3</span>) <span class="sc">+</span></span>
+<span id="cb175-7"><a href="rlm.html#cb175-7" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> cols_etapa) <span class="sc">+</span></span>
+<span id="cb175-8"><a href="rlm.html#cb175-8" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb175-9"><a href="rlm.html#cb175-9" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Resistencia observada frente a la predicha&quot;</span>,</span>
+<span id="cb175-10"><a href="rlm.html#cb175-10" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">&quot;Los puntos sobre la diagonal son predicciones perfectas&quot;</span>,</span>
+<span id="cb175-11"><a href="rlm.html#cb175-11" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Resistencia predicha (MPa)&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Resistencia observada (MPa)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb175-12"><a href="rlm.html#cb175-12" tabindex="-1"></a>  <span class="fu">tema_libro</span>()</span></code></pre></div>
 <p><img src="Proyecto_Final_Metodos_Estadisticos_files/figure-html/rlm-obs-pred-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
 <p>La correlación al cuadrado entre la resistencia observada y la predicha (ya en MPa) es 0.811, y el error típico de predicción es de unos 7.3 MPa.</p>
 </div>

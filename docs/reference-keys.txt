@@ -48,6 +48,7 @@ tab:rlm-supuestos-final
 tab:rlm-terciles-final
 tab:rlm-sensibilidad-edad
 tab:rlm-sensibilidad-ceniza
+tab:rlm-edad-continua
 tab:rlm-robusto
 tab:rlm-influencia
 tab:rlm-influencia-sensibilidad
@@ -143,6 +144,7 @@ coeficientes-e-inferencia
 pendiente-de-la-ceniza-en-cada-etapa
 supuestos-de-los-errores-del-modelo-final
 falta-de-linealidad-reset
+modelo-alternativo-con-la-edad-continua
 inferencia-robusta-hc3-y-errores-agrupados-por-mezcla
 observaciones-influyentes
 interpretación-del-modelo-final
@@ -158,5 +160,3 @@ hallazgos-por-objetivo
 respuesta-a-la-pregunta-de-investigación
 limitaciones
 recomendaciones-y-trabajo-futuro
-exploración-de-las-variables-independientes
-análisis-del-boxplot-de-ceniza-volante

@@ -55,7 +55,7 @@ tab_esc |>
 
 ## Recomendaciones y trabajo futuro
 
-- Usar la **edad como variable continua** (por ejemplo, su logaritmo) en lugar de tres etapas. Mejora mucho el ajuste.
+- Usar la **edad como variable continua** (por ejemplo, su logaritmo) en lugar de tres etapas. En la sección \@ref(modelo-alternativo-con-la-edad-continua) se comprobó que mejora poco el ajuste ($R^2$ ajustado de 0.826 a 0.84 como máximo) y no resuelve la falta de linealidad, pero permite describir el efecto de la ceniza en cualquier edad y no solo por etapa.
 - Ajustar un **modelo mixto** con un efecto aleatorio por mezcla, que trata la repetición de forma directa.
 - Para decidir una receta, **comparar sustituciones parciales** (por ejemplo, 10% a 20% del cemento) frente a la mezcla de control.
 - Confirmar con un **experimento controlado** (la misma receta con y sin ceniza) antes de atribuir causalidad.

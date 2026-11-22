@@ -52,8 +52,75 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
 
 <style type="text/css">
   
@@ -103,30 +170,28 @@
 <ul>
 <li class="chapter" data-level="3.7.1" data-path="eda.html"><a href="eda.html#exploraci%C3%B3n-de-la-variable-de-respuesta"><i class="fa fa-check"></i><b>3.7.1</b> Exploración de la variable de respuesta</a></li>
 </ul></li>
-<li class="chapter" data-level="3.8" data-path="eda.html"><a href="eda.html#exploraci%C3%B3n-de-las-variables-independientes"><i class="fa fa-check"></i><b>3.8</b> Exploración de las variables independientes</a></li>
-<li class="chapter" data-level="3.9" data-path="eda.html"><a href="eda.html#an%C3%A1lisis-univariado-de-las-variables"><i class="fa fa-check"></i><b>3.9</b> Análisis univariado de las variables</a>
+<li class="chapter" data-level="3.8" data-path="eda.html"><a href="eda.html#an%C3%A1lisis-univariado-de-las-variables"><i class="fa fa-check"></i><b>3.8</b> Análisis univariado de las variables</a>
 <ul>
-<li class="chapter" data-level="3.9.1" data-path="eda.html"><a href="eda.html#an%C3%A1lisis-del-boxplot-de-ceniza-volante"><i class="fa fa-check"></i><b>3.9.1</b> Análisis del boxplot de ceniza volante</a></li>
-<li class="chapter" data-level="3.9.2" data-path="eda.html"><a href="eda.html#an%C3%A1lisis-del-boxplot-de-tiempo-de-curado"><i class="fa fa-check"></i><b>3.9.2</b> Análisis del boxplot de tiempo de curado</a></li>
+<li class="chapter" data-level="3.8.1" data-path="eda.html"><a href="eda.html#an%C3%A1lisis-del-boxplot-de-tiempo-de-curado"><i class="fa fa-check"></i><b>3.8.1</b> Análisis del boxplot de tiempo de curado</a></li>
 </ul></li>
-<li class="chapter" data-level="3.10" data-path="eda.html"><a href="eda.html#an%C3%A1lisis-bivariado"><i class="fa fa-check"></i><b>3.10</b> Análisis bivariado</a>
+<li class="chapter" data-level="3.9" data-path="eda.html"><a href="eda.html#an%C3%A1lisis-bivariado"><i class="fa fa-check"></i><b>3.9</b> Análisis bivariado</a>
 <ul>
-<li class="chapter" data-level="3.10.1" data-path="eda.html"><a href="eda.html#creaci%C3%B3n-de-nuevas-variables"><i class="fa fa-check"></i><b>3.10.1</b> Creación de nuevas variables</a></li>
-<li class="chapter" data-level="3.10.2" data-path="eda.html"><a href="eda.html#tabla-descriptiva-de-las-nuevas-variables"><i class="fa fa-check"></i><b>3.10.2</b> Tabla descriptiva de las nuevas variables</a></li>
-<li class="chapter" data-level="3.10.3" data-path="eda.html"><a href="eda.html#estructura-mezclas"><i class="fa fa-check"></i><b>3.10.3</b> Estructura de los datos: mezclas medidas a varias edades</a></li>
+<li class="chapter" data-level="3.9.1" data-path="eda.html"><a href="eda.html#creaci%C3%B3n-de-nuevas-variables"><i class="fa fa-check"></i><b>3.9.1</b> Creación de nuevas variables</a></li>
+<li class="chapter" data-level="3.9.2" data-path="eda.html"><a href="eda.html#tabla-descriptiva-de-las-nuevas-variables"><i class="fa fa-check"></i><b>3.9.2</b> Tabla descriptiva de las nuevas variables</a></li>
+<li class="chapter" data-level="3.9.3" data-path="eda.html"><a href="eda.html#estructura-mezclas"><i class="fa fa-check"></i><b>3.9.3</b> Estructura de los datos: mezclas medidas a varias edades</a></li>
 </ul></li>
-<li class="chapter" data-level="3.11" data-path="eda.html"><a href="eda.html#pruebas-de-normalidad"><i class="fa fa-check"></i><b>3.11</b> Pruebas de normalidad</a>
+<li class="chapter" data-level="3.10" data-path="eda.html"><a href="eda.html#pruebas-de-normalidad"><i class="fa fa-check"></i><b>3.10</b> Pruebas de normalidad</a>
 <ul>
-<li class="chapter" data-level="3.11.1" data-path="eda.html"><a href="eda.html#cemento"><i class="fa fa-check"></i><b>3.11.1</b> Cemento</a></li>
-<li class="chapter" data-level="3.11.2" data-path="eda.html"><a href="eda.html#escoria"><i class="fa fa-check"></i><b>3.11.2</b> Escoria</a></li>
-<li class="chapter" data-level="3.11.3" data-path="eda.html"><a href="eda.html#ceniza-volante"><i class="fa fa-check"></i><b>3.11.3</b> Ceniza volante</a></li>
-<li class="chapter" data-level="3.11.4" data-path="eda.html"><a href="eda.html#agua"><i class="fa fa-check"></i><b>3.11.4</b> Agua</a></li>
-<li class="chapter" data-level="3.11.5" data-path="eda.html"><a href="eda.html#superplastificante"><i class="fa fa-check"></i><b>3.11.5</b> Superplastificante</a></li>
-<li class="chapter" data-level="3.11.6" data-path="eda.html"><a href="eda.html#agregado-grueso"><i class="fa fa-check"></i><b>3.11.6</b> Agregado grueso</a></li>
-<li class="chapter" data-level="3.11.7" data-path="eda.html"><a href="eda.html#agregado-fino"><i class="fa fa-check"></i><b>3.11.7</b> Agregado fino</a></li>
-<li class="chapter" data-level="3.11.8" data-path="eda.html"><a href="eda.html#edad"><i class="fa fa-check"></i><b>3.11.8</b> Edad</a></li>
-<li class="chapter" data-level="3.11.9" data-path="eda.html"><a href="eda.html#resistencia"><i class="fa fa-check"></i><b>3.11.9</b> Resistencia</a></li>
-<li class="chapter" data-level="3.11.10" data-path="eda.html"><a href="eda.html#resumen-de-las-pruebas-de-normalidad"><i class="fa fa-check"></i><b>3.11.10</b> Resumen de las pruebas de normalidad</a></li>
+<li class="chapter" data-level="3.10.1" data-path="eda.html"><a href="eda.html#cemento"><i class="fa fa-check"></i><b>3.10.1</b> Cemento</a></li>
+<li class="chapter" data-level="3.10.2" data-path="eda.html"><a href="eda.html#escoria"><i class="fa fa-check"></i><b>3.10.2</b> Escoria</a></li>
+<li class="chapter" data-level="3.10.3" data-path="eda.html"><a href="eda.html#ceniza-volante"><i class="fa fa-check"></i><b>3.10.3</b> Ceniza volante</a></li>
+<li class="chapter" data-level="3.10.4" data-path="eda.html"><a href="eda.html#agua"><i class="fa fa-check"></i><b>3.10.4</b> Agua</a></li>
+<li class="chapter" data-level="3.10.5" data-path="eda.html"><a href="eda.html#superplastificante"><i class="fa fa-check"></i><b>3.10.5</b> Superplastificante</a></li>
+<li class="chapter" data-level="3.10.6" data-path="eda.html"><a href="eda.html#agregado-grueso"><i class="fa fa-check"></i><b>3.10.6</b> Agregado grueso</a></li>
+<li class="chapter" data-level="3.10.7" data-path="eda.html"><a href="eda.html#agregado-fino"><i class="fa fa-check"></i><b>3.10.7</b> Agregado fino</a></li>
+<li class="chapter" data-level="3.10.8" data-path="eda.html"><a href="eda.html#edad"><i class="fa fa-check"></i><b>3.10.8</b> Edad</a></li>
+<li class="chapter" data-level="3.10.9" data-path="eda.html"><a href="eda.html#resistencia"><i class="fa fa-check"></i><b>3.10.9</b> Resistencia</a></li>
+<li class="chapter" data-level="3.10.10" data-path="eda.html"><a href="eda.html#resumen-de-las-pruebas-de-normalidad"><i class="fa fa-check"></i><b>3.10.10</b> Resumen de las pruebas de normalidad</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="ic.html"><a href="ic.html"><i class="fa fa-check"></i><b>4</b> Intervalos de confianza</a>
@@ -201,8 +266,9 @@
 <li class="chapter" data-level="8.6" data-path="rlm.html"><a href="rlm.html#supuestos-de-los-errores-del-modelo-final"><i class="fa fa-check"></i><b>8.6</b> Supuestos de los errores del modelo final</a>
 <ul>
 <li class="chapter" data-level="8.6.1" data-path="rlm.html"><a href="rlm.html#falta-de-linealidad-reset"><i class="fa fa-check"></i><b>8.6.1</b> Falta de linealidad (RESET)</a></li>
-<li class="chapter" data-level="8.6.2" data-path="rlm.html"><a href="rlm.html#inferencia-robusta-hc3-y-errores-agrupados-por-mezcla"><i class="fa fa-check"></i><b>8.6.2</b> Inferencia robusta: HC3 y errores agrupados por mezcla</a></li>
-<li class="chapter" data-level="8.6.3" data-path="rlm.html"><a href="rlm.html#observaciones-influyentes"><i class="fa fa-check"></i><b>8.6.3</b> Observaciones influyentes</a></li>
+<li class="chapter" data-level="8.6.2" data-path="rlm.html"><a href="rlm.html#modelo-alternativo-con-la-edad-continua"><i class="fa fa-check"></i><b>8.6.2</b> Modelo alternativo con la edad continua</a></li>
+<li class="chapter" data-level="8.6.3" data-path="rlm.html"><a href="rlm.html#inferencia-robusta-hc3-y-errores-agrupados-por-mezcla"><i class="fa fa-check"></i><b>8.6.3</b> Inferencia robusta: HC3 y errores agrupados por mezcla</a></li>
+<li class="chapter" data-level="8.6.4" data-path="rlm.html"><a href="rlm.html#observaciones-influyentes"><i class="fa fa-check"></i><b>8.6.4</b> Observaciones influyentes</a></li>
 </ul></li>
 <li class="chapter" data-level="8.7" data-path="rlm.html"><a href="rlm.html#interpretaci%C3%B3n-del-modelo-final"><i class="fa fa-check"></i><b>8.7</b> Interpretación del modelo final</a>
 <ul>
@@ -308,6 +374,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>
