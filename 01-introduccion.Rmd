@@ -1,5 +1,7 @@
 # Introducción y Objetivos {#intro}
 
+> **Presentación del proyecto:** la presentación de este trabajo está disponible en [Google Drive](https://drive.google.com/file/d/1mDKqY1eqa9fJLAKXdgyvkmJAEqzScfKg/view?usp=sharing).
+
 ## Contexto
 
 En la ingeniería civil y los materiales de construcción, la resistencia a la compresión del concreto es una propiedad fundamental que determina la calidad y seguridad de las estructuras. Esta propiedad determina la capacidad de carga del material y, con ello, la capacidad de una estructura de soportar cargas sin colapsar. De forma tradicional, la verificación de resistencia requiere un periodo estándar de 28 días de curado, es decir, el proceso de control de la humedad y la temperatura para garantizar que el cemento mantenga la hidratación adecuada durante sus primeras etapas de endurecimiento.

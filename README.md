@@ -19,6 +19,7 @@ El proyecto utiliza el conjunto de datos **Concrete Compressive Strength** y pre
 - `_bookdown.yml`: orden de los capitulos y nombre del libro.
 - `_output.yml`: configuracion de la salida HTML.
 - `docs/`: sitio HTML generado.
+- `explicacion/`: pagina HTML independiente (abrir `index.html`) que explica paso a paso el proyecto con graficos animados. Sus datos salen de `generar_datos.R`.
 
 ## Requisitos
 
